@@ -87,13 +87,13 @@ import java.util.Objects;
         },
         examples = {
                 @Example(
-                        syntax = "@Sink(type = ‘websocket’, url = 'ws://localhost:8025/websockets/abc', \n" +
+                        syntax = "@Sink(type = ‘websocket’, url = 'ws://localhost:8025/abc', \n" +
                                 "   @map(type='xml'))\n" +
                                 "define stream Foo (attribute1 string, attribute2 int);",
                         description = "" +
                                 "A sink of type 'websocket' has been defined.\n" +
                                 "All events arriving at Foo stream via websocket will be sent " +
-                                "to the url ws://localhost:8025/websockets/abc."
+                                "to the url ws://localhost:8025/abc."
                 )
         }
 )

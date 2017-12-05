@@ -56,7 +56,6 @@ public class WebSocketServer {
         sslContextFactory.setKeyStoreType("PKCS12");
         sslContextFactory.setTrustStorePassword("wso2carbon");
         sslContextFactory.setTrustStoreType("JKS");
-        sslContextFactory.setMaxCertPathLength(100000000);
         HttpConfiguration httpConfiguration = new HttpConfiguration();
         httpConfiguration.setSecureScheme("https");
         httpConfiguration.setSecurePort(5050);

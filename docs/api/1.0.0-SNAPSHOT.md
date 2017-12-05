@@ -58,11 +58,11 @@
 <span id="examples" class="md-typeset" style="display: block; font-weight: bold;">Examples</span>
 <span id="example-1" class="md-typeset" style="display: block; color: rgba(0, 0, 0, 0.54); font-size: 12.8px; font-weight: bold;">EXAMPLE 1</span>
 ```
-@Sink(type = ‘websocket’, url = 'ws://localhost:8025/websockets/abc', 
+@Sink(type = ‘websocket’, url = 'ws://localhost:8025/abc', 
    @map(type='xml'))
 define stream Foo (attribute1 string, attribute2 int);
 ```
-<p style="word-wrap: break-word">A sink of type 'websocket' has been defined.<br>All events arriving at Foo stream via websocket will be sent to the url ws://localhost:8025/websockets/abc.</p>
+<p style="word-wrap: break-word">A sink of type 'websocket' has been defined.<br>All events arriving at Foo stream via websocket will be sent to the url ws://localhost:8025/abc.</p>
 
 ## Source
 

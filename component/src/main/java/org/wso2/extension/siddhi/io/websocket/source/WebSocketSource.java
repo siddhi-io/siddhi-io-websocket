@@ -126,7 +126,7 @@ public class WebSocketSource extends Source {
                                                                  "' should be greater than 0.");
                 }
             } catch (NumberFormatException e) {
-                throw new SiddhiAppCreationException("The The idle timeout defined in '" + sourceEventListener
+                throw new SiddhiAppCreationException("The idle timeout defined in '" + sourceEventListener
                                                              + "' should be an Integer.");
             }
         }

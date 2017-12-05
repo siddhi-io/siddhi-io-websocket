@@ -44,6 +44,6 @@ public class WebSocketHandshakeListener implements HandshakeListener {
 
     @Override
     public void onError(Throwable throwable) {
-        log.error("Error while connecting with the websocket server.");
+        log.error("Error while connecting with the WebSocket server.");
     }
 }
