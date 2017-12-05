@@ -149,28 +149,17 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>maven-bundle-plugin</artifactId>
-                <extensions>true</extensions>
-                <configuration>
-                    <instructions>
-                        <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
-                        <Bundle-Name>${project.artifactId}</Bundle-Name>
-                        <Export-Package>
-                            org.wso2.extension.siddhi.io.websocket.*
-                        </Export-Package>
-                        <Import-Package>
-                            org.wso2.siddhi.*; version="${siddhi.version.range}",
-                            org.wso2.carbon.transport.http.netty; version="${transport.version.range}",
-                            org.slf4j.*; version="${slf4j.version.range}"
-                        </Import-Package>
-                        <Include-Resource>
-                            META-INF=target/classes/META-INF
-                        </Include-Resource>
-                    </instructions>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
+
+    <properties>
+        <import.package>
+            org.wso2.siddhi.*; version="${siddhi.version.range}",
+            org.wso2.carbon.transport.http.netty; version="${transport.version.range}",
+            org.slf4j.*; version="${slf4j.version.range}"
+        </import.package>
+        <export.package>
+            org.wso2.extension.siddhi.io.websocket.*;version="${project.version}"
+        </export.package>
+    </properties>
 </project>
