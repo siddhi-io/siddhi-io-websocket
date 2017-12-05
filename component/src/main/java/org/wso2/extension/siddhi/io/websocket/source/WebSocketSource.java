@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2017 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *  Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  *  WSO2 Inc. licenses this file to you under the Apache License,
  *  Version 2.0 (the "License"); you may not use this file except
@@ -122,12 +122,12 @@ public class WebSocketSource extends Source {
             try {
                 idleTimeout = Integer.parseInt(idleTimeoutString);
                 if (idleTimeout < -1) {
-                    throw new SiddhiAppCreationException("The idle timeout defined in " + sourceEventListener +
-                                                                 " should be greater than 0.");
+                    throw new SiddhiAppCreationException("The idle timeout defined in '" + sourceEventListener +
+                                                                 "' should be greater than 0.");
                 }
             } catch (NumberFormatException e) {
-                throw new SiddhiAppCreationException("NumberFormatException occured when the " + WebSocketConstants
-                        .IDLE_TIMEOUT + " : " + idleTimeoutString + " is not casting to Integer");
+                throw new SiddhiAppCreationException("The The idle timeout defined in '" + sourceEventListener
+                                                             + "' should be an Integer.");
             }
         }
         try {
@@ -136,11 +136,11 @@ public class WebSocketSource extends Source {
                 throw new SiddhiAppCreationException("Invalid scheme in " + WebSocketConstants.URL + " = " +
                                                              url + ". The scheme of the " + WebSocketConstants.URL +
                                                              " for the websocket server should be either `ws` or "
-                                                             + "`wss`");
+                                                             + "`wss`.");
             }
         } catch (URISyntaxException e) {
-            throw new SiddhiAppCreationException("There is an syntax error in the " + WebSocketConstants.URL +
-                                                         " of the websocket server", e);
+            throw new SiddhiAppCreationException("There is an syntax error in the '" + WebSocketConstants.URL +
+                                                         "' of the websocket server.", e);
         }
         connectorListener = new WebSocketClientConnectorListener();
     }

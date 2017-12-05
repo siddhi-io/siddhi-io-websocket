@@ -35,9 +35,11 @@ public class ResultContainer {
     private List<String> results;
     private CountDownLatch latch;
     private int timeout = 90;
+    private int expectedEventCount = 0;
 
 
     public ResultContainer(int expectedEventCount) {
+        this.expectedEventCount = expectedEventCount;
         eventCount = 0;
         results = new ArrayList<>(expectedEventCount);
         latch = new CountDownLatch(expectedEventCount);
@@ -49,11 +51,15 @@ public class ResultContainer {
         latch.countDown();
     }
 
-    public void eventReceived(byte[] message) throws UnsupportedEncodingException {
-        eventCount++;
-        String text = new String(message, "utf-8");
-        results.add(text);
-        latch.countDown();
+    public void eventReceived(byte[] message) {
+        try {
+            eventCount++;
+            String text = new String(message, "utf-8");
+            results.add(text);
+            latch.countDown();
+        } catch (UnsupportedEncodingException e) {
+            log.error("UnsupportedEncodingException is thrown while converting the message to string.", e);
+        }
     }
 
     public Boolean assertMessageContent(String content) {
@@ -66,12 +72,12 @@ public class ResultContainer {
                 }
                 return false;
             } else {
-                log.error("Expected number of results not received. Only received " + eventCount + " events.");
+                log.error("ExpectedNumber : " + expectedEventCount + " of results not received. Only received " +
+                         eventCount + " events.");
                 return false;
             }
-
         } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
+            log.error("InterruptedException occurred while asserting the message content.");
         }
         return false;
     }

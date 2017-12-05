@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2017 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *  Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  *  WSO2 Inc. licenses this file to you under the Apache License,
  *  Version 2.0 (the "License"); you may not use this file except
@@ -19,18 +19,12 @@
 
 package org.wso2.extension.siddhi.io.websocket.sink.util;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.wso2.transport.http.netty.contract.websocket.HandshakeFuture;
-import org.wso2.transport.http.netty.contract.websocket.HandshakeListener;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketClientConnector;
 import org.wso2.transport.http.netty.contract.websocket.WsClientConnectorConfig;
 import org.wso2.transport.http.netty.contractimpl.HttpWsConnectorFactoryImpl;
 
-import javax.websocket.Session;
-
 public class WebSocketReceiver {
-    private static Logger log = LoggerFactory.getLogger(WebSocketReceiver.class);
 
     public WebSocketReceiver(String url, ResultContainer resultContainer) {
         HttpWsConnectorFactoryImpl httpConnectorFactory = new HttpWsConnectorFactoryImpl();
@@ -38,17 +32,9 @@ public class WebSocketReceiver {
         WebSocketClientConnector clientConnector = httpConnectorFactory.createWsClientConnector(configuration);
         WebSocketClientConnectorListener connectorListener = new WebSocketClientConnectorListener();
         HandshakeFuture handshakeFuture = clientConnector.connect(connectorListener);
-        handshakeFuture.setHandshakeListener(new HandshakeListener() {
-            @Override
-            public void onSuccess(Session session) {
-                connectorListener.setResultContainer(resultContainer);
-            }
-
-            @Override
-            public void onError(Throwable throwable) {
-                log.error("Error while connecting with the websocket serve");
-            }
-        });
+        WebSocketHandshakeListener handshakeListener = new WebSocketHandshakeListener
+                (connectorListener, resultContainer);
+        handshakeFuture.setHandshakeListener(handshakeListener);
     }
 
 }

@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2017 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *  Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  *  WSO2 Inc. licenses this file to you under the Apache License,
  *  Version 2.0 (the "License"); you may not use this file except
@@ -53,13 +53,13 @@ public class WebSocketSinkHandshakeListener implements HandshakeListener {
             }
         } catch (IOException e) {
             throw new SiddhiAppRuntimeException(
-                    "Error while sending events to the " + WebSocketConstants.URL + "of the WebSocket "
-                            + "server defined in " + streamDefinition, e);
+                    "Error while sending events to the '" + WebSocketConstants.URL + "' of the WebSocket "
+                            + "server defined in '" + streamDefinition + "'.", e);
         }
     }
 
     @Override public void onError(Throwable throwable) {
-        throw new SiddhiAppRuntimeException("Error while connecting with the websocket server defined in "
-                                                    + streamDefinition, throwable);
+        throw new SiddhiAppRuntimeException("Error while connecting with the websocket server defined in '"
+                                                    + streamDefinition + "'.", throwable);
     }
 }

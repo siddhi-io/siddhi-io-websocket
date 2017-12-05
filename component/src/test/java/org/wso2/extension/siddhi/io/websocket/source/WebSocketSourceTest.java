@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2017 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *  Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  *  WSO2 Inc. licenses this file to you under the Apache License,
  *  Version 2.0 (the "License"); you may not use this file except
@@ -19,7 +19,6 @@
 
 package org.wso2.extension.siddhi.io.websocket.source;
 
-import org.apache.log4j.Logger;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -38,8 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class WebSocketSourceTestCase {
-    private static final Logger log = Logger.getLogger(WebSocketSourceTestCase.class);
+public class WebSocketSourceTest {
     private AtomicInteger eventCount = new AtomicInteger(0);
     private AtomicInteger eventCount1 = new AtomicInteger(0);
     private List<String> receivedEventNameList;
@@ -58,7 +56,6 @@ public class WebSocketSourceTestCase {
         WebSocketServer.stop();
     }
 
-
     @Test
     public void websocketSinkAndSourceBinaryMapTestCase() throws InterruptedException {
         receivedEventNameList = new ArrayList<>(3);
@@ -76,7 +73,6 @@ public class WebSocketSourceTestCase {
             @Override
             public void receive(Event[] events) {
                 for (Event event : events) {
-                    log.info(event);
                     eventCount.incrementAndGet();
                     receivedEventNameList.add(event.getData(0).toString());
                 }
@@ -125,7 +121,6 @@ public class WebSocketSourceTestCase {
             @Override
             public void receive(Event[] events) {
                 for (Event event : events) {
-                    log.info(event);
                     eventCount.incrementAndGet();
                     receivedEventNameList.add(event.getData(0).toString());
                 }
@@ -157,7 +152,7 @@ public class WebSocketSourceTestCase {
         siddhiAppRuntime.shutdown();
     }
 
-    @Test (expectedExceptions = SiddhiAppValidationException.class)
+    @Test(expectedExceptions = SiddhiAppValidationException.class)
     public void testWebsocketSinkWithoutUri() {
         SiddhiManager siddhiManager = new SiddhiManager();
         siddhiManager.createSiddhiAppRuntime(
@@ -170,7 +165,7 @@ public class WebSocketSourceTestCase {
                         "from FooStream1 select symbol, price, volume insert into BarStream1;");
     }
 
-    @Test (expectedExceptions = SiddhiAppRuntimeException.class)
+    @Test(expectedExceptions = SiddhiAppRuntimeException.class)
     public void testWebsocketSinkInvalidUri() throws InterruptedException {
         SiddhiManager siddhiManager = new SiddhiManager();
         SiddhiAppRuntime executionPlanRuntime = siddhiManager.createSiddhiAppRuntime(
@@ -212,7 +207,6 @@ public class WebSocketSourceTestCase {
             @Override
             public void receive(Event[] events) {
                 for (Event event : events) {
-                    log.info(event);
                     eventCount.incrementAndGet();
                 }
             }
@@ -222,7 +216,6 @@ public class WebSocketSourceTestCase {
             @Override
             public void receive(Event[] events) {
                 for (Event event : events) {
-                    log.info(event);
                     eventCount1.incrementAndGet();
                 }
             }

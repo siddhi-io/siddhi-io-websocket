@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2017 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *  Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  *  WSO2 Inc. licenses this file to you under the Apache License,
  *  Version 2.0 (the "License"); you may not use this file except
@@ -72,8 +72,8 @@ public class WebSocketServer {
             ServerContainer wscontainer = WebSocketServerContainerInitializer.configureContext(context);
             wscontainer.addEndpoint(WebSocketEndpoint.class);
             server.start();
-        } catch (Throwable t) {
-            log.error("Error while starting the server", t);
+        } catch (Exception e) {
+            log.error("Error while starting the WebSocket server.", e);
         }
     }
 

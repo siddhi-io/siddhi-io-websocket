@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2017 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *  Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  *  WSO2 Inc. licenses this file to you under the Apache License,
  *  Version 2.0 (the "License"); you may not use this file except
@@ -28,8 +28,6 @@ import org.wso2.transport.http.netty.contract.websocket.WebSocketControlMessage;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketInitMessage;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketTextMessage;
 
-import java.io.UnsupportedEncodingException;
-
 /**
  * {@code WebSocketClientConnectorListener } Handle the websocket connector listener tasks.
  */
@@ -55,11 +53,7 @@ public class WebSocketClientConnectorListener implements WebSocketConnectorListe
     @Override
     public void onMessage(WebSocketBinaryMessage binaryMessage) {
         byte[] receivedBinaryTextToClient = binaryMessage.getByteArray();
-        try {
-            resultContainer.eventReceived(receivedBinaryTextToClient);
-        } catch (UnsupportedEncodingException e) {
-           log.error("UnsupportedEncodingException is thrown");
-        }
+        resultContainer.eventReceived(receivedBinaryTextToClient);
     }
 
     @Override
@@ -68,12 +62,11 @@ public class WebSocketClientConnectorListener implements WebSocketConnectorListe
 
     @Override
     public void onMessage(WebSocketCloseMessage closeMessage) {
-
     }
 
     @Override
     public void onError(Throwable throwable) {
-        log.debug("Error while connecting with the websocket server");
+        log.error("There is an error in the message format.", throwable);
     }
 
     @Override

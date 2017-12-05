@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2017 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *  Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  *  WSO2 Inc. licenses this file to you under the Apache License,
  *  Version 2.0 (the "License"); you may not use this file except
@@ -28,16 +28,16 @@ import javax.websocket.server.ServerEndpoint;
 public class WebSocketEndpoint {
 
     @OnMessage
-    public void onTextMessage(Session session, String message) {
-        for (Session s : session.getOpenSessions()) {
-            s.getAsyncRemote().sendText(message);
+    public void onTextMessage(Session sess, String message) {
+        for (Session session : sess.getOpenSessions()) {
+            session.getAsyncRemote().sendText(message);
         }
     }
 
     @OnMessage
-    public void onBinaryMessage(Session session, byte[] message) {
-        for (Session s : session.getOpenSessions()) {
-            s.getAsyncRemote().sendBinary(ByteBuffer.wrap(message));
+    public void onBinaryMessage(Session sess, byte[] message) {
+        for (Session session : sess.getOpenSessions()) {
+            session.getAsyncRemote().sendBinary(ByteBuffer.wrap(message));
         }
     }
 }
