@@ -45,7 +45,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * {@code WebsocketSource } Handles the websocket receiving tasks.
+ * {@code WebsocketSource } Receiving the siddhi events from the WebSocket server.
  */
 
 @Extension(

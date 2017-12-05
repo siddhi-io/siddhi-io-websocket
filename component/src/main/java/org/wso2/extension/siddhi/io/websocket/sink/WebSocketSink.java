@@ -46,7 +46,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * {@code WebsocketSink } Handle the websocket publishing tasks.
+ * {@code WebsocketSink } Publishing the siddhi events to the WebSocket server.
  */
 
 @Extension(
