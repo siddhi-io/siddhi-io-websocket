@@ -130,10 +130,15 @@ public class WebSocketSink extends Sink {
         this.idleTimeoutString = optionHolder.validateAndGetStaticValue
                 (WebSocketConstants.IDLE_TIMEOUT, null);
         if (idleTimeoutString != null) {
-            idleTimeout = Integer.parseInt(idleTimeoutString);
-            if (idleTimeout < -1) {
-                throw new SiddhiAppCreationException("The idle timeout defined in " + streamDefinition +
-                                                             " should be greater than 0.");
+            try {
+                idleTimeout = Integer.parseInt(idleTimeoutString);
+                if (idleTimeout < -1) {
+                    throw new SiddhiAppCreationException("The idle timeout defined in " + streamDefinition +
+                                                                 " should be greater than 0.");
+                }
+            } catch (NumberFormatException e) {
+                throw new SiddhiAppCreationException("NumberFormatException occured when the " + WebSocketConstants
+                        .IDLE_TIMEOUT + " : " + idleTimeoutString + " is not casting to Integer");
             }
         }
         connectorListener = new WebSocketClientConnectorListener();

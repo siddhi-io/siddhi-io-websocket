@@ -119,15 +119,20 @@ public class WebSocketSource extends Source {
                 (WebSocketConstants.IDLE_TIMEOUT, null);
         this.sourceEventListener = sourceEventListener;
         if (idleTimeoutString != null) {
-            idleTimeout = Integer.parseInt(idleTimeoutString);
-            if (idleTimeout < -1) {
-                throw new SiddhiAppCreationException("The idle timeout defined in " + sourceEventListener +
-                                                             " should be greater than 0.");
+            try {
+                idleTimeout = Integer.parseInt(idleTimeoutString);
+                if (idleTimeout < -1) {
+                    throw new SiddhiAppCreationException("The idle timeout defined in " + sourceEventListener +
+                                                                 " should be greater than 0.");
+                }
+            } catch (NumberFormatException e) {
+                throw new SiddhiAppCreationException("NumberFormatException occured when the " + WebSocketConstants
+                        .IDLE_TIMEOUT + " : " + idleTimeoutString + " is not casting to Integer");
             }
         }
         try {
             String scheme = (new URI(url)).getScheme();
-            if (!Objects.equals("ws", scheme)  && !Objects.equals("wss", scheme)) {
+            if (!Objects.equals("ws", scheme) && !Objects.equals("wss", scheme)) {
                 throw new SiddhiAppCreationException("Invalid scheme in " + WebSocketConstants.URL + " = " +
                                                              url + ". The scheme of the " + WebSocketConstants.URL +
                                                              " for the websocket server should be either `ws` or "
