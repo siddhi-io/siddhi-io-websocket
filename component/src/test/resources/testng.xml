@@ -22,7 +22,8 @@
 <suite name="Generic Integration test suite">
     <test name="websocket testcases">
         <classes>
-            <class name="org.wso2.extension.siddhi.io.websocket.sink.WebsocketSinkTestCase" />
+            <class name="org.wso2.extension.siddhi.io.websocket.sink.WebSocketSinkTestCase" />
+            <class name="org.wso2.extension.siddhi.io.websocket.source.WebSocketSourceTestCase" />
         </classes>
     </test>
 </suite>

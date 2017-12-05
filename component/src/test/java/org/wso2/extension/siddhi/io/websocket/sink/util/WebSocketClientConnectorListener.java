@@ -17,11 +17,10 @@
  *
  */
 
-package org.wso2.extension.siddhi.io.websocket.util;
+package org.wso2.extension.siddhi.io.websocket.sink.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.siddhi.core.stream.input.source.SourceEventListener;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketBinaryMessage;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketCloseMessage;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketConnectorListener;
@@ -29,16 +28,18 @@ import org.wso2.transport.http.netty.contract.websocket.WebSocketControlMessage;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketInitMessage;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketTextMessage;
 
+import java.io.UnsupportedEncodingException;
+
 /**
  * {@code WebSocketClientConnectorListener } Handle the websocket connector listener tasks.
  */
 public class WebSocketClientConnectorListener implements WebSocketConnectorListener {
     private static final Logger log = LoggerFactory.getLogger(WebSocketConnectorListener.class);
 
-    private SourceEventListener sourceEventListener = null;
+    private ResultContainer resultContainer = null;
 
-    public void setSourceEventListener(SourceEventListener eventListener) {
-        sourceEventListener = eventListener;
+    public void setResultContainer(ResultContainer eventListener) {
+        resultContainer = eventListener;
     }
 
     @Override
@@ -47,17 +48,17 @@ public class WebSocketClientConnectorListener implements WebSocketConnectorListe
 
     @Override
     public void onMessage(WebSocketTextMessage textMessage) {
-        String receivedTextMessage = textMessage.getText();
-        if (sourceEventListener != null) {
-            sourceEventListener.onEvent(receivedTextMessage, null);
-        }
+        String receivedTextToClient = textMessage.getText();
+        resultContainer.eventReceived(receivedTextToClient);
     }
 
     @Override
     public void onMessage(WebSocketBinaryMessage binaryMessage) {
-        byte[] receivedBinaryMessage = binaryMessage.getByteArray();
-        if (sourceEventListener != null) {
-            sourceEventListener.onEvent(receivedBinaryMessage, null);
+        byte[] receivedBinaryTextToClient = binaryMessage.getByteArray();
+        try {
+            resultContainer.eventReceived(receivedBinaryTextToClient);
+        } catch (UnsupportedEncodingException e) {
+           log.error("UnsupportedEncodingException is thrown");
         }
     }
 
@@ -67,11 +68,12 @@ public class WebSocketClientConnectorListener implements WebSocketConnectorListe
 
     @Override
     public void onMessage(WebSocketCloseMessage closeMessage) {
+
     }
 
     @Override
     public void onError(Throwable throwable) {
-     //  log.error("Error while reading the message", throwable);
+        log.debug("Error while connecting with the websocket server");
     }
 
     @Override

@@ -25,24 +25,41 @@
         <artifactId>wso2</artifactId>
         <version>5</version>
     </parent>
+
     <groupId>org.wso2.extension.siddhi.io.websocket</groupId>
     <artifactId>siddhi-io-websocket-parent</artifactId>
     <packaging>pom</packaging>
     <version>1.0.0-SNAPSHOT</version>
+
     <modules>
         <module>component</module>
     </modules>
+
+    <scm>
+        <connection>scm:git:https://github.com/wso2-extensions/siddhi-io-websocket.git</connection>
+        <url>https://github.com/wso2-extensions/siddhi-io-websocket.git</url>
+        <developerConnection>scm:git:https://github.com/wso2-extensions/siddhi-io-websocket.git
+        </developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
     <properties>
-        <siddhi.version>4.0.0-M111</siddhi.version>
+        <siddhi.version>4.0.0-beta2</siddhi.version>
+        <siddhi.version.range>[4.0.0-M13, 4.0.0-beta2)</siddhi.version.range>
         <log4j.version>1.2.17.wso2v1</log4j.version>
-        <carbon.feature.plugin.version>3.0.0</carbon.feature.plugin.version>
+        <carbon.feature.plugin.version>3.1.1</carbon.feature.plugin.version>
         <maven.surefire.plugin.version>2.12.4</maven.surefire.plugin.version>
-        <testing.version>6.8</testing.version>
-        <siddhi.map.xml.version>4.0.3</siddhi.map.xml.version>
-        <siddhi.map.binary.version>1.0.4</siddhi.map.binary.version>
+        <testng.version>6.8</testng.version>
+        <siddhi.map.xml.version>4.0.6</siddhi.map.xml.version>
+        <siddhi.map.binary.version>1.0.6</siddhi.map.binary.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jacoco.version>0.7.9</jacoco.version>
-        <carbon.transport.version>6.0.34</carbon.transport.version>
+        <transport.version>6.0.52</transport.version>
+        <transport.version.range>[6.0.50, 6.0.52)</transport.version.range>
+        <slf4j.version>1.7.5</slf4j.version>
+        <slf4j.version.range>[1.7,2)</slf4j.version.range>
+        <slf4j.log4j.version>1.6.0</slf4j.log4j.version>
+        <jetty.server.version>9.4.7.v20170914</jetty.server.version>
     </properties>
 
     <dependencyManagement>
@@ -63,9 +80,14 @@
                 <version>${siddhi.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.apache.log4j.wso2</groupId>
-                <artifactId>log4j</artifactId>
-                <version>${log4j.version}</version>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-log4j12</artifactId>
+                <version>${slf4j.log4j.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.jacoco</groupId>
@@ -88,35 +110,35 @@
             <dependency>
                 <groupId>org.testng</groupId>
                 <artifactId>testng</artifactId>
-                <version>${testing.version}</version>
+                <version>${testng.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon.transport</groupId>
-                <artifactId>org.wso2.carbon.transport.http.netty</artifactId>
-                <version>${carbon.transport.version}</version>
+                <groupId>org.wso2.transport.http</groupId>
+                <artifactId>org.wso2.transport.http.netty</artifactId>
+                <version>${transport.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon.transport</groupId>
-                <artifactId>org.wso2.carbon.transport.http.netty.feature</artifactId>
-                <version>${carbon.transport.version}</version>
-                <type>zip</type>
+                <groupId>org.eclipse.jetty.websocket</groupId>
+                <artifactId>javax-websocket-server-impl</artifactId>
+                <version>${jetty.server.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-server</artifactId>
+                <version>${jetty.server.version}</version>
+                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
-    <build>
 
-        <!--suppress MavenDuplicatePluginInspection -->
+    <build>
         <plugins>
             <plugin>
                 <groupId>org.wso2.carbon.maven</groupId>
                 <artifactId>carbon-feature-plugin</artifactId>
                 <version>${carbon.feature.plugin.version}</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>${maven.surefire.plugin.version}</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

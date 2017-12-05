@@ -17,21 +17,27 @@
  *
  */
 
-package org.wso2.extension.siddhi.io.websocket.sink;
+package org.wso2.extension.siddhi.io.websocket.util;
 
-import javax.websocket.ClientEndpoint;
+import java.nio.ByteBuffer;
 import javax.websocket.OnMessage;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
-@ClientEndpoint
-@ServerEndpoint(value = "/abc")
-public class WebsocketEndpoint {
+@ServerEndpoint(value = "/abc", subprotocols = {"chat", "superchat"})
+public class WebSocketEndpoint {
 
     @OnMessage
-    public void onMessage(Session session, String message) {
+    public void onTextMessage(Session session, String message) {
         for (Session s : session.getOpenSessions()) {
             s.getAsyncRemote().sendText(message);
+        }
+    }
+
+    @OnMessage
+    public void onBinaryMessage(Session session, byte[] message) {
+        for (Session s : session.getOpenSessions()) {
+            s.getAsyncRemote().sendBinary(ByteBuffer.wrap(message));
         }
     }
 }
