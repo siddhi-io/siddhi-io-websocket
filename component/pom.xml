@@ -162,4 +162,5 @@
             org.wso2.extension.siddhi.io.websocket.*;version="${project.version}"
         </export.package>
     </properties>
+
 </project>
