@@ -50,15 +50,15 @@ public class WebSocketSinkTest {
     }
 
     @Test
-    public void websocketSinkXmlMapTestCase() throws InterruptedException {
+    public void testWebSocketSinkXmlMapTestCase() throws InterruptedException {
         SiddhiManager siddhiManager = new SiddhiManager();
         ResultContainer resultContainer = new ResultContainer(2);
-        new WebSocketReceiver("ws://localhost:8025/abc", resultContainer);
+        new WebSocketReceiver("ws://localhost:8080/chat/wso2", resultContainer);
         SiddhiAppRuntime executionPlanRuntime = siddhiManager.createSiddhiAppRuntime(
                 "@App:name('TestExecutionPlan') " +
                         "define stream FooStream1 (symbol string, age int, country string); " +
                         "@info(name = 'query1') " +
-                        "@sink(type='websocket', url = 'ws://localhost:8025/abc', " +
+                        "@sink(type='websocket', url = 'ws://localhost:8080/chat/wso2', " +
                         "@map(type='xml'))" +
                         "Define stream BarStream1 (symbol string, age int, country string);" +
                         "from FooStream1 select symbol, age, country insert into BarStream1;");
@@ -70,8 +70,8 @@ public class WebSocketSinkTest {
         Assert.assertTrue(resultContainer.assertMessageContent("MIKE"));
     }
 
-    @Test (expectedExceptions = SiddhiAppValidationException.class)
-    public void testWebsocketSinkWithoutUri() {
+    @Test(expectedExceptions = SiddhiAppValidationException.class)
+    public void testWebSocketSinkWithoutUri() {
         SiddhiManager siddhiManager = new SiddhiManager();
         siddhiManager.createSiddhiAppRuntime(
                 "@App:name('TestExecutionPlan') " +
@@ -83,8 +83,8 @@ public class WebSocketSinkTest {
                         "from FooStream1 select symbol, price, volume insert into BarStream1;");
     }
 
-    @Test (expectedExceptions = SiddhiAppRuntimeException.class)
-    public void testWebsocketSinkInvalidUri() throws InterruptedException {
+    @Test(expectedExceptions = SiddhiAppRuntimeException.class)
+    public void testWebSocketSinkInvalidUri() throws InterruptedException {
         SiddhiManager siddhiManager = new SiddhiManager();
         SiddhiAppRuntime executionPlanRuntime = siddhiManager.createSiddhiAppRuntime(
                 "@App:name('TestExecutionPlan') " +
@@ -100,14 +100,14 @@ public class WebSocketSinkTest {
         executionPlanRuntime.shutdown();
     }
 
-    @Test (expectedExceptions = SiddhiAppRuntimeException.class)
-    public void testWebsocketSinkInvalidHeaderFormat() throws InterruptedException {
+    @Test(expectedExceptions = SiddhiAppRuntimeException.class)
+    public void testWebSocketSinkInvalidHeaderFormat() throws InterruptedException {
         SiddhiManager siddhiManager = new SiddhiManager();
         SiddhiAppRuntime executionPlanRuntime = siddhiManager.createSiddhiAppRuntime(
                 "@App:name('TestExecutionPlan') " +
                         "define stream FooStream1 (symbol string, price float, volume long); " +
                         "@info(name = 'query1') " +
-                        "@sink(type='websocket', url = 'ws://localhost:8025/abc'," +
+                        "@sink(type='websocket', url = 'ws://localhost:8080/chat/abc'," +
                         "headers=\"'message-type-websocket','message-sender:wso2'\", @map(type='xml'))" +
                         "Define stream BarStream1 (symbol string, price float, volume long);" +
                         "from FooStream1 select symbol, price, volume insert into BarStream1;");
@@ -117,14 +117,27 @@ public class WebSocketSinkTest {
         executionPlanRuntime.shutdown();
     }
 
-    @Test (expectedExceptions = SiddhiAppCreationException.class)
-    public void testWebsocketSinkInvalidUrlScheme() throws InterruptedException {
+    @Test(expectedExceptions = SiddhiAppCreationException.class)
+    public void testWebSocketSinkInvalidUrlScheme() throws InterruptedException {
         SiddhiManager siddhiManager = new SiddhiManager();
         siddhiManager.createSiddhiAppRuntime(
                 "@App:name('TestExecutionPlan') " +
                         "define stream FooStream1 (symbol string, price float, volume long); " +
                         "@info(name = 'query1') " +
                         "@sink(type='websocket', url = 'tcp://localhost:8025/abc'," +
+                        "@map(type='xml'))" +
+                        "Define stream BarStream1 (symbol string, price float, volume long);" +
+                        "from FooStream1 select symbol, price, volume insert into BarStream1;");
+    }
+
+    @Test(expectedExceptions = SiddhiAppCreationException.class)
+    public void testWebSocketSinkInvalidIdleTimeout() throws InterruptedException {
+        SiddhiManager siddhiManager = new SiddhiManager();
+        siddhiManager.createSiddhiAppRuntime(
+                "@App:name('TestExecutionPlan') " +
+                        "define stream FooStream1 (symbol string, price float, volume long); " +
+                        "@info(name = 'query1') " +
+                        "@sink(type='websocket', url = 'ws://localhost:8080/chat/abc', idle.timeout = '-10'," +
                         "@map(type='xml'))" +
                         "Define stream BarStream1 (symbol string, price float, volume long);" +
                         "from FooStream1 select symbol, price, volume insert into BarStream1;");

@@ -19,64 +19,28 @@
 
 package org.wso2.extension.siddhi.io.websocket.util;
 
-import org.eclipse.jetty.server.HttpConfiguration;
-import org.eclipse.jetty.server.HttpConnectionFactory;
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.ServerConnector;
-import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.util.ssl.SslContextFactory;
-import org.eclipse.jetty.websocket.jsr356.server.deploy.WebSocketServerContainerInitializer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.wso2.msf4j.MicroservicesRunner;
 
 import java.io.File;
-import javax.websocket.server.ServerContainer;
 
 public class WebSocketServer {
-    private static final Logger log = LoggerFactory.getLogger(WebSocketServer.class);
-   private static Server server = null;
-   private static  File file = new File("src/test/resources/client-truststore.jks");
-   private static  String truststorePath = file.getAbsolutePath();
-   private static  File file1 = new File("src/test/resources/keycert.p12");
-   private static String keystorePath = file1.getAbsolutePath();
+    private static File transportNettyFilePath = new File("src/test/resources/conf/transports/"
+                                                                  + "netty-transports.yml");
+    private static String transportNettyFile = transportNettyFilePath.getAbsolutePath();
+    private static File keyStoreFilePath = new File("src/test");
+    private static String keyStorePath = keyStoreFilePath.getAbsolutePath();
+    private static MicroservicesRunner microservicesRunner = null;
 
     public static void start() {
-        server = new Server();
-        //For the normal connection (ws)
-        ServerConnector connector = new ServerConnector(server);
-        connector.setHost("localhost");
-        connector.setPort(8025);
-        server.addConnector(connector);
-
-        //For the secure connection (wss)
-        SslContextFactory sslContextFactory = new SslContextFactory(keystorePath);
-        sslContextFactory.setTrustStorePath(truststorePath);
-        sslContextFactory.setKeyStorePassword("MySecretPassword");
-        sslContextFactory.setNeedClientAuth(false);
-        sslContextFactory.setKeyStoreType("PKCS12");
-        sslContextFactory.setTrustStorePassword("wso2carbon");
-        sslContextFactory.setTrustStoreType("JKS");
-        HttpConfiguration httpConfiguration = new HttpConfiguration();
-        httpConfiguration.setSecureScheme("https");
-        httpConfiguration.setSecurePort(5050);
-        HttpConnectionFactory httpConnectionFactory = new HttpConnectionFactory(httpConfiguration);
-        ServerConnector sslConnector = new ServerConnector(server, sslContextFactory, httpConnectionFactory);
-        sslConnector.setHost("localhost");
-        sslConnector.setPort(5050);
-        server.addConnector(sslConnector);
-        ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        context.setContextPath("/");
-        server.setHandler(context);
-        try {
-            ServerContainer wscontainer = WebSocketServerContainerInitializer.configureContext(context);
-            wscontainer.addEndpoint(WebSocketEndpoint.class);
-            server.start();
-        } catch (Exception e) {
-            log.error("Error while starting the WebSocket server.", e);
-        }
+        System.setProperty("carbon.home", keyStorePath);
+        System.setProperty("transports.netty.conf", transportNettyFile);
+        microservicesRunner = new MicroservicesRunner();
+        microservicesRunner.deployWebSocketEndpoint(new WebSocketEndpoint()).start();
     }
 
     public static void stop() throws Exception {
-        server.stop();
+        if (microservicesRunner != null) {
+            microservicesRunner.stop();
+        }
     }
 }

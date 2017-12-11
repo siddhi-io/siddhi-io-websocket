@@ -60,7 +60,7 @@
         <slf4j.version>1.7.5</slf4j.version>
         <slf4j.version.range>[1.7,2)</slf4j.version.range>
         <slf4j.log4j.version>1.6.0</slf4j.log4j.version>
-        <jetty.server.version>9.4.7.v20170914</jetty.server.version>
+        <msf4j.version>2.4.3</msf4j.version>
     </properties>
 
     <dependencyManagement>
@@ -112,7 +112,12 @@
                 <groupId>org.testng</groupId>
                 <artifactId>testng</artifactId>
                 <version>${testng.version}</version>
-                <scope>test</scope>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>snakeyaml</artifactId>
+                        <groupId>org.yaml</groupId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.wso2.transport.http</groupId>
@@ -120,15 +125,9 @@
                 <version>${transport.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.eclipse.jetty.websocket</groupId>
-                <artifactId>javax-websocket-server-impl</artifactId>
-                <version>${jetty.server.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-server</artifactId>
-                <version>${jetty.server.version}</version>
+                <groupId>org.wso2.msf4j</groupId>
+                <artifactId>msf4j-all</artifactId>
+                <version>${msf4j.version}</version>
                 <scope>test</scope>
             </dependency>
         </dependencies>
