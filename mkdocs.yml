@@ -12,7 +12,6 @@ extra:
 pages:
 - Welcome to WSO2 Siddhi IO Websocket: index.md
 - API Docs:
-  - 1.0.0-SNAPSHOT: api/1.0.0-SNAPSHOT.md
   - latest: api/latest.md
 - License: license.md
 theme: material
