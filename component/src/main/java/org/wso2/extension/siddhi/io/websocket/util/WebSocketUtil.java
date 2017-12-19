@@ -28,10 +28,13 @@ import java.util.Map;
  * {@code WebSocketUtil } responsible for input formatting of WebSocket.
  */
 public class WebSocketUtil {
+    private static final String SUB_PROTOCOL_SPLITTER = ",";
+    private static final String HEADER_NAME_VALUE_SPLITTER = ":";
+    private static final String HEADER_SPLITTER = "','";
 
     public static String[] getSubProtocol(String subProtocol) {
         subProtocol = subProtocol.trim();
-        return subProtocol.split(WebSocketConstants.SUB_PROTOCOL_SPLITTER);
+        return subProtocol.split(SUB_PROTOCOL_SPLITTER);
     }
 
     public static Map<String, String> getHeaders(String headers) {
@@ -39,14 +42,14 @@ public class WebSocketUtil {
         headers = headers.substring(1, headers.length() - 1);
         Map<String, String> header = new HashMap<>();
         if (!headers.isEmpty()) {
-            String[] headerData = headers.split(WebSocketConstants.HEADER_SPLITTER);
+            String[] headerData = headers.split(HEADER_SPLITTER);
             for (String aHeaderData : headerData) {
-                String[] values = aHeaderData.split(WebSocketConstants.HEADER_NAME_VALUE_SPLITTER, 2);
+                String[] values = aHeaderData.split(HEADER_NAME_VALUE_SPLITTER, 2);
                 if (values.length > 1) {
                     header.put(values[0], values[1]);
                 } else {
                     throw new SiddhiAppRuntimeException(
-                            "Invalid " + WebSocketConstants.HEADERS + " format. Please include as 'key1:value1',"
+                            "Invalid " + WebSocketProperties.HEADERS + " format. Please include as 'key1:value1',"
                                     + "'key2:value2',..");
                 }
             }

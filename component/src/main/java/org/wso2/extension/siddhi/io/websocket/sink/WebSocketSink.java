@@ -20,7 +20,7 @@
 package org.wso2.extension.siddhi.io.websocket.sink;
 
 import org.wso2.extension.siddhi.io.websocket.util.WebSocketClientConnectorListener;
-import org.wso2.extension.siddhi.io.websocket.util.WebSocketConstants;
+import org.wso2.extension.siddhi.io.websocket.util.WebSocketProperties;
 import org.wso2.extension.siddhi.io.websocket.util.WebSocketUtil;
 import org.wso2.siddhi.annotation.Example;
 import org.wso2.siddhi.annotation.Extension;
@@ -42,6 +42,7 @@ import org.wso2.transport.http.netty.contractimpl.HttpWsConnectorFactoryImpl;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
 
@@ -107,28 +108,30 @@ public class WebSocketSink extends Sink {
     private int idleTimeout;
     private WebSocketClientConnectorListener connectorListener;
     private HandshakeFuture handshakeFuture = null;
+    private static final Class[] SUPPORTED_INPUT_EVENT_CLASSES = new Class[]{String.class, ByteBuffer.class};
+    private static final String[] SUPPORTED_DYNAMIC_OPTIONS = new String[0];
 
     @Override
     public Class[] getSupportedInputEventClasses() {
-        return new Class[]{String.class, ByteBuffer.class};
+        return SUPPORTED_INPUT_EVENT_CLASSES.clone();
     }
 
     @Override
     public String[] getSupportedDynamicOptions() {
-        return new String[0];
+        return SUPPORTED_DYNAMIC_OPTIONS;
     }
 
     @Override
     protected void init(StreamDefinition streamDefinition, OptionHolder optionHolder,
                         ConfigReader configReader, SiddhiAppContext siddhiAppContext) {
         this.streamDefinition = streamDefinition;
-        this.url = optionHolder.validateAndGetStaticValue(WebSocketConstants.URL);
+        this.url = optionHolder.validateAndGetStaticValue(WebSocketProperties.URL);
         this.subProtocol = optionHolder.validateAndGetStaticValue
-                (WebSocketConstants.SUB_PROTOCOL, null);
+                (WebSocketProperties.SUB_PROTOCOL, null);
         this.headers = optionHolder.validateAndGetStaticValue
-                (WebSocketConstants.HEADERS, null);
+                (WebSocketProperties.HEADERS, null);
         this.idleTimeoutString = optionHolder.validateAndGetStaticValue
-                (WebSocketConstants.IDLE_TIMEOUT, null);
+                (WebSocketProperties.IDLE_TIMEOUT, null);
         if (idleTimeoutString != null) {
             try {
                 idleTimeout = Integer.parseInt(idleTimeoutString);
@@ -145,8 +148,8 @@ public class WebSocketSink extends Sink {
         try {
             String scheme = (new URI(url)).getScheme();
             if (!Objects.equals("ws", scheme) && !Objects.equals("wss", scheme)) {
-                throw new SiddhiAppCreationException("Invalid scheme in " + WebSocketConstants.URL + " = " +
-                                                             url + ". The scheme of the " + WebSocketConstants.URL +
+                throw new SiddhiAppCreationException("Invalid scheme in " + WebSocketProperties.URL + " = " +
+                                                             url + ". The scheme of the " + WebSocketProperties.URL +
                                                              " for the websocket server should be either `ws` or "
                                                              + "`wss`.");
             }
@@ -192,7 +195,7 @@ public class WebSocketSink extends Sink {
 
     @Override
     public Map<String, Object> currentState() {
-        return null;
+        return Collections.emptyMap();
     }
 
     @Override

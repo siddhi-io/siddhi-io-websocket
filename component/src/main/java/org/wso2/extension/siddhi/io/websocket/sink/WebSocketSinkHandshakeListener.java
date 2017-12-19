@@ -19,7 +19,7 @@
 
 package org.wso2.extension.siddhi.io.websocket.sink;
 
-import org.wso2.extension.siddhi.io.websocket.util.WebSocketConstants;
+import org.wso2.extension.siddhi.io.websocket.util.WebSocketProperties;
 import org.wso2.siddhi.core.exception.SiddhiAppRuntimeException;
 import org.wso2.siddhi.query.api.definition.StreamDefinition;
 import org.wso2.transport.http.netty.contract.websocket.HandshakeListener;
@@ -53,7 +53,7 @@ public class WebSocketSinkHandshakeListener implements HandshakeListener {
             }
         } catch (IOException e) {
             throw new SiddhiAppRuntimeException(
-                    "Error while sending events to the '" + WebSocketConstants.URL + "' of the WebSocket "
+                    "Error while sending events to the '" + WebSocketProperties.URL + "' of the WebSocket "
                             + "server defined in '" + streamDefinition + "'.", e);
         }
     }

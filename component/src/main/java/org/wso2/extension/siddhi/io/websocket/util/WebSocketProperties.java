@@ -21,15 +21,12 @@ package org.wso2.extension.siddhi.io.websocket.util;
 /**
  * This class represents WebSocket specific Constants.
  */
-public class WebSocketConstants {
-    private WebSocketConstants() {
+public class WebSocketProperties {
+    private WebSocketProperties() {
     }
 
     public static final String URL = "url";
     public static final String HEADERS = "headers";
     public static final String SUB_PROTOCOL = "sub.protocol";
     public static final String IDLE_TIMEOUT = "idle.timeout";
-    public static final String SUB_PROTOCOL_SPLITTER = ",";
-    public static final String HEADER_NAME_VALUE_SPLITTER = ":";
-    public static final String HEADER_SPLITTER = "','";
 }

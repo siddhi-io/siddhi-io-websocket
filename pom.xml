@@ -45,8 +45,8 @@
     </scm>
 
     <properties>
-        <siddhi.version>4.0.0-beta2</siddhi.version>
-        <siddhi.version.range>[4.0.0-M13, 4.0.0-beta2)</siddhi.version.range>
+        <siddhi.version>4.0.3</siddhi.version>
+        <siddhi.version.range>[4.0,5)</siddhi.version.range>
         <log4j.version>1.2.17.wso2v1</log4j.version>
         <carbon.feature.plugin.version>3.1.1</carbon.feature.plugin.version>
         <maven.surefire.plugin.version>2.12.4</maven.surefire.plugin.version>
@@ -55,12 +55,12 @@
         <siddhi.map.binary.version>1.0.6</siddhi.map.binary.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jacoco.version>0.7.9</jacoco.version>
-        <transport.version>6.0.52</transport.version>
-        <transport.version.range>[6.0.50, 6.0.52)</transport.version.range>
+        <transport.version>6.0.64</transport.version>
+        <transport.version.range>[6.0,7)</transport.version.range>
         <slf4j.version>1.7.5</slf4j.version>
         <slf4j.version.range>[1.7,2)</slf4j.version.range>
         <slf4j.log4j.version>1.6.0</slf4j.log4j.version>
-        <msf4j.version>2.4.3</msf4j.version>
+        <msf4j.version>2.5.1</msf4j.version>
     </properties>
 
     <dependencyManagement>

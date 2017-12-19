@@ -20,7 +20,7 @@
 package org.wso2.extension.siddhi.io.websocket.source;
 
 import org.wso2.extension.siddhi.io.websocket.util.WebSocketClientConnectorListener;
-import org.wso2.extension.siddhi.io.websocket.util.WebSocketConstants;
+import org.wso2.extension.siddhi.io.websocket.util.WebSocketProperties;
 import org.wso2.extension.siddhi.io.websocket.util.WebSocketUtil;
 import org.wso2.siddhi.annotation.Example;
 import org.wso2.siddhi.annotation.Extension;
@@ -41,6 +41,7 @@ import org.wso2.transport.http.netty.contractimpl.HttpWsConnectorFactoryImpl;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
 
@@ -106,17 +107,18 @@ public class WebSocketSource extends Source {
     private int idleTimeout;
     private SourceEventListener sourceEventListener;
     private WebSocketClientConnectorListener connectorListener;
+    private static final Class[] OUTPUT_EVENT_CLASSES = new Class[]{String.class, ByteBuffer.class};
 
     @Override
     public void init(SourceEventListener sourceEventListener, OptionHolder optionHolder, String[] strings,
                      ConfigReader configReader, SiddhiAppContext siddhiAppContext) {
-        this.url = optionHolder.validateAndGetStaticValue(WebSocketConstants.URL);
+        this.url = optionHolder.validateAndGetStaticValue(WebSocketProperties.URL);
         this.subProtocol = optionHolder.validateAndGetStaticValue
-                (WebSocketConstants.SUB_PROTOCOL, null);
+                (WebSocketProperties.SUB_PROTOCOL, null);
         this.headers = optionHolder.validateAndGetStaticValue
-                (WebSocketConstants.HEADERS, null);
+                (WebSocketProperties.HEADERS, null);
         this.idleTimeoutString = optionHolder.validateAndGetStaticValue
-                (WebSocketConstants.IDLE_TIMEOUT, null);
+                (WebSocketProperties.IDLE_TIMEOUT, null);
         this.sourceEventListener = sourceEventListener;
         if (idleTimeoutString != null) {
             try {
@@ -133,13 +135,13 @@ public class WebSocketSource extends Source {
         try {
             String scheme = (new URI(url)).getScheme();
             if (!Objects.equals("ws", scheme) && !Objects.equals("wss", scheme)) {
-                throw new SiddhiAppCreationException("Invalid scheme in " + WebSocketConstants.URL + " = " +
-                                                             url + ". The scheme of the " + WebSocketConstants.URL +
+                throw new SiddhiAppCreationException("Invalid scheme in " + WebSocketProperties.URL + " = " +
+                                                             url + ". The scheme of the " + WebSocketProperties.URL +
                                                              " for the websocket server should be either `ws` or "
                                                              + "`wss`.");
             }
         } catch (URISyntaxException e) {
-            throw new SiddhiAppCreationException("There is an syntax error in the '" + WebSocketConstants.URL +
+            throw new SiddhiAppCreationException("There is an syntax error in the '" + WebSocketProperties.URL +
                                                          "' of the websocket server.", e);
         }
         connectorListener = new WebSocketClientConnectorListener();
@@ -147,7 +149,7 @@ public class WebSocketSource extends Source {
 
     @Override
     public Class[] getOutputEventClasses() {
-        return new Class[]{String.class, ByteBuffer.class};
+        return OUTPUT_EVENT_CLASSES.clone();
     }
 
     @Override
@@ -178,26 +180,22 @@ public class WebSocketSource extends Source {
 
     @Override
     public void destroy() {
-
     }
 
     @Override
     public void pause() {
-
     }
 
     @Override
     public void resume() {
-
     }
 
     @Override
     public Map<String, Object> currentState() {
-        return null;
+        return Collections.emptyMap();
     }
 
     @Override
     public void restoreState(Map<String, Object> map) {
-
     }
 }

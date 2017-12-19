@@ -155,13 +155,19 @@
 
     <properties>
         <import.package>
-            org.wso2.siddhi.*; version="${siddhi.version.range}",
-            org.wso2.carbon.transport.http.netty; version="${transport.version.range}",
-            org.slf4j.*; version="${slf4j.version.range}"
+            org.slf4j;version="${slf4j.log4j.version}",
+            org.wso2.extension.siddhi.io.websocket.util,
+            org.wso2.siddhi.annotation.*;version="${siddhi.version.range}",
+            org.wso2.siddhi.core.*;version="${siddhi.version.range}",
+            org.wso2.siddhi.query.api.definition;version="${siddhi.version.range}",
+            org.wso2.transport.http.netty.*;version="${transport.version.range}",
         </import.package>
         <export.package>
             org.wso2.extension.siddhi.io.websocket.*;version="${project.version}"
         </export.package>
+        <Include-Resource>
+            META-INF=target/classes/META-INF
+        </Include-Resource>
     </properties>
 
 </project>
