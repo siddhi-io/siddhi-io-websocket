@@ -54,7 +54,7 @@ import java.util.Objects;
         name = "websocket",
         namespace = "sink",
         description = "A Siddhi application can be configured to publish events via the Websocket transport by " +
-                "adding the @Sink(type = ‘Websocket’) annotation at the top of an event stream definition.",
+                "adding the @Sink(type = ‘websocket’) annotation at the top of an event stream definition.",
         parameters = {
                 @Parameter(
                         name = "url",
