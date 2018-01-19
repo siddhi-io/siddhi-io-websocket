@@ -99,7 +99,7 @@ public class WebSocketSourceTest {
         expected.add("IBM");
         expected.add("WSO2");
         SiddhiTestHelper.waitForEvents(waitTime, 3, eventCount, timeout);
-        Assert.assertEquals(expected, receivedEventNameList);
+        Assert.assertEquals(receivedEventNameList, expected);
         Assert.assertEquals(eventCount.get(), 3);
         executionPlanRuntime.shutdown();
         siddhiAppRuntime.shutdown();
@@ -149,8 +149,9 @@ public class WebSocketSourceTest {
         expected.add("IBM");
         expected.add("WSO2");
         SiddhiTestHelper.waitForEvents(waitTime, 3, eventCount, timeout);
-        Assert.assertEquals(expected, receivedEventNameList);
+        Assert.assertEquals(receivedEventNameList, expected);
         Assert.assertEquals(eventCount.get(), 3);
+        executionPlanRuntime.shutdown();
         siddhiAppRuntime.shutdown();
     }
 
@@ -234,7 +235,7 @@ public class WebSocketSourceTest {
         siddhiAppRuntime.addCallback("BarStream", new StreamCallback() {
             @Override
             public void receive(Event[] events) {
-                for (Event event : events) {
+                for (Event ignored : events) {
                     eventCount.incrementAndGet();
                 }
             }
@@ -243,7 +244,7 @@ public class WebSocketSourceTest {
         siddhiAppRuntime.addCallback("BarStream2", new StreamCallback() {
             @Override
             public void receive(Event[] events) {
-                for (Event event : events) {
+                for (Event ignored : events) {
                     eventCount1.incrementAndGet();
                 }
             }

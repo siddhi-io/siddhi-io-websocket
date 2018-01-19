@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *  Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  *  WSO2 Inc. licenses this file to you under the Apache License,
  *  Version 2.0 (the "License"); you may not use this file except
@@ -17,37 +17,33 @@
  *
  */
 
-package org.wso2.extension.siddhi.io.websocket.sink;
+package org.wso2.extension.siddhi.io.websocket.sink.websocketserver;
 
 import org.wso2.siddhi.core.exception.SiddhiAppRuntimeException;
-import org.wso2.siddhi.query.api.definition.StreamDefinition;
 import org.wso2.transport.http.netty.contract.websocket.HandshakeListener;
 
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import javax.websocket.Session;
 
 /**
  * Future listener for WebSocket handshake.
  */
 
-public class WebSocketSinkHandshakeListener implements HandshakeListener {
-    private StreamDefinition streamDefinition;
-    private Session session = null;
+public class WebSocketServerHandshakeListener implements HandshakeListener {
+    private List<Session> sessionList = new CopyOnWriteArrayList<>();
 
-    public WebSocketSinkHandshakeListener(StreamDefinition streamDefinition) {
-        this.streamDefinition = streamDefinition;
+    WebSocketServerHandshakeListener(List<Session> sessionList) {
+        this.sessionList = sessionList;
     }
 
     @Override
     public void onSuccess(Session session) {
-        this.session = session;
+        sessionList.add(session);
     }
 
-    @Override public void onError(Throwable throwable) {
-        throw new SiddhiAppRuntimeException("Error while connecting with the websocket server defined in '"
-                                                    + streamDefinition + "'.", throwable);
-    }
-
-    public Session getSession() {
-        return session;
+    @Override
+    public void onError(Throwable throwable) {
+        throw new SiddhiAppRuntimeException("Error occurred while starting the connection ", throwable);
     }
 }

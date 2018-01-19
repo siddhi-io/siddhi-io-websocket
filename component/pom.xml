@@ -155,6 +155,7 @@
 
     <properties>
         <import.package>
+            javax.websocket;version="${websocket.version.range}",
             org.slf4j;version="${slf4j.log4j.version}",
             org.wso2.extension.siddhi.io.websocket.util,
             org.wso2.siddhi.annotation.*;version="${siddhi.version.range}",
