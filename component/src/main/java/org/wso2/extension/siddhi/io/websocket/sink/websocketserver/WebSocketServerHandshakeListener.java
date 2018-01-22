@@ -23,7 +23,6 @@ import org.wso2.siddhi.core.exception.SiddhiAppRuntimeException;
 import org.wso2.transport.http.netty.contract.websocket.HandshakeListener;
 
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 import javax.websocket.Session;
 
 /**
@@ -31,7 +30,7 @@ import javax.websocket.Session;
  */
 
 public class WebSocketServerHandshakeListener implements HandshakeListener {
-    private List<Session> sessionList = new CopyOnWriteArrayList<>();
+    private List<Session> sessionList;
 
     WebSocketServerHandshakeListener(List<Session> sessionList) {
         this.sessionList = sessionList;

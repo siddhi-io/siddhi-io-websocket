@@ -79,14 +79,16 @@ import java.util.Map;
                                 "this parameter is set to `true`, the `keystore.path` and the `keystore.password` " +
                                 "parameters are initialized.",
                         type = {DataType.BOOL},
-                        optional = true, defaultValue = "false"),
+                        optional = true,
+                        defaultValue = "false"),
                 @Parameter(
                         name = "keystore.path",
                         description = "The file path to the location of the keystore. If a custom keystore is not " +
                                 "specified, then the system uses the default keystore file - wso2carbon.jks in the " +
                                 "`${carbon.home}/resources/security` directory.",
                         type = {DataType.STRING},
-                        optional = true, defaultValue = "${carbon.home}/resources/security/wso2carbon.jks"
+                        optional = true,
+                        defaultValue = "${carbon.home}/resources/security/wso2carbon.jks"
                 ),
                 @Parameter(
                         name = "keystore.password",
@@ -94,7 +96,8 @@ import java.util.Map;
                                 "if required. If no custom password is specified, then the system uses " +
                                 "`wso2carbon` as the default password.",
                         type = {DataType.STRING},
-                        optional = true, defaultValue = "wso2carbon"
+                        optional = true,
+                        defaultValue = "wso2carbon"
                 )
         },
         examples = {
@@ -149,8 +152,7 @@ public class WebSocketServerSink extends Sink {
                         ConfigReader configReader, SiddhiAppContext siddhiAppContext) {
         this.host = optionHolder.validateAndGetStaticValue(WebSocketProperties.HOST);
         this.port = Integer.parseInt(optionHolder.validateAndGetStaticValue(WebSocketProperties.PORT));
-        String subProtocolString = optionHolder.validateAndGetStaticValue(WebSocketProperties.SUB_PROTOCOL,
-                                                                          null);
+        String subProtocolString = optionHolder.validateAndGetStaticValue(WebSocketProperties.SUB_PROTOCOL, null);
         if (subProtocolString != null) {
             subProtocols = WebSocketUtil.getSubProtocol(subProtocolString);
         }
