@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *  Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  *  WSO2 Inc. licenses this file to you under the Apache License,
  *  Version 2.0 (the "License"); you may not use this file except
@@ -17,7 +17,7 @@
  *
  */
 
-package org.wso2.extension.siddhi.io.websocket.util;
+package org.wso2.extension.siddhi.io.websocket.source.websocketserver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,28 +29,39 @@ import org.wso2.transport.http.netty.contract.websocket.WebSocketControlMessage;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketInitMessage;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketTextMessage;
 
-/**
- * {@code WebSocketClientConnectorListener } Handle the websocket connector listener tasks.
- */
-public class WebSocketClientConnectorListener implements WebSocketConnectorListener {
-    private static final Logger log = LoggerFactory.getLogger(WebSocketConnectorListener.class);
+import java.io.IOException;
+import javax.websocket.CloseReason;
+import javax.websocket.Session;
 
+/**
+ * {@code WebSocketServerSourceConnectorListener } Handle the websocket connector listener tasks..
+ */
+
+public class WebSocketServerSourceConnectorListener implements WebSocketConnectorListener {
+
+    private static final Logger log = LoggerFactory.getLogger(WebSocketServerSourceConnectorListener.class);
+
+    private String[] subProtocols = null;
+    private int idleTimeout;
     private SourceEventListener sourceEventListener = null;
 
-    public void setSourceEventListener(SourceEventListener eventListener) {
-        sourceEventListener = eventListener;
+    WebSocketServerSourceConnectorListener(String[] subProtocols, int idleTimeout,
+                                           SourceEventListener sourceEventListener) {
+        this.subProtocols = subProtocols;
+        this.idleTimeout = idleTimeout;
+        this.sourceEventListener = sourceEventListener;
     }
 
     @Override
     public void onMessage(WebSocketInitMessage initMessage) {
-        //Not Applicable
+        initMessage.handshake(subProtocols, true, idleTimeout);
     }
 
     @Override
     public void onMessage(WebSocketTextMessage textMessage) {
-        String receivedTextMessage = textMessage.getText();
+        String receivedTextToClient = textMessage.getText();
         if (sourceEventListener != null) {
-            sourceEventListener.onEvent(receivedTextMessage, null);
+            sourceEventListener.onEvent(receivedTextToClient, null);
         }
     }
 
@@ -64,21 +75,26 @@ public class WebSocketClientConnectorListener implements WebSocketConnectorListe
 
     @Override
     public void onMessage(WebSocketControlMessage controlMessage) {
-        //Not Applicable
+        //Not applicable
     }
 
     @Override
     public void onMessage(WebSocketCloseMessage closeMessage) {
-        //Not Applicable
+        //Not applicable
     }
 
     @Override
     public void onError(Throwable throwable) {
-        log.error("There is an error in the message format.", throwable);
+        //Not applicable
     }
 
     @Override
-    public void onIdleTimeout(WebSocketControlMessage webSocketControlMessage) {
-        //Not Applicable
+    public void onIdleTimeout(WebSocketControlMessage controlMessage) {
+        try {
+            Session session = controlMessage.getChannelSession();
+            session.close(new CloseReason(() -> 1001, "Connection timeout"));
+        } catch (IOException e) {
+            log.error("Error occurred while closing the connection: " + e.getMessage());
+        }
     }
 }

@@ -19,6 +19,8 @@
 
 package org.wso2.extension.siddhi.io.websocket.sink;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.wso2.extension.siddhi.io.websocket.util.WebSocketClientConnectorListener;
 import org.wso2.extension.siddhi.io.websocket.util.WebSocketProperties;
 import org.wso2.extension.siddhi.io.websocket.util.WebSocketUtil;
@@ -29,6 +31,7 @@ import org.wso2.siddhi.annotation.util.DataType;
 import org.wso2.siddhi.core.config.SiddhiAppContext;
 import org.wso2.siddhi.core.exception.ConnectionUnavailableException;
 import org.wso2.siddhi.core.exception.SiddhiAppCreationException;
+import org.wso2.siddhi.core.exception.SiddhiAppRuntimeException;
 import org.wso2.siddhi.core.stream.output.sink.Sink;
 import org.wso2.siddhi.core.util.config.ConfigReader;
 import org.wso2.siddhi.core.util.transport.DynamicOptions;
@@ -39,12 +42,14 @@ import org.wso2.transport.http.netty.contract.websocket.WebSocketClientConnector
 import org.wso2.transport.http.netty.contract.websocket.WsClientConnectorConfig;
 import org.wso2.transport.http.netty.contractimpl.HttpWsConnectorFactoryImpl;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
+import javax.websocket.Session;
 
 /**
  * {@code WebsocketSink } Publishing the siddhi events to the WebSocket server.
@@ -100,6 +105,8 @@ import java.util.Objects;
 )
 
 public class WebSocketSink extends Sink {
+    private static final Logger log = LoggerFactory.getLogger(WebSocketSink.class);
+    private static final String[] SUPPORTED_DYNAMIC_OPTIONS = new String[0];
     private StreamDefinition streamDefinition;
     private String url;
     private String subProtocol;
@@ -107,13 +114,11 @@ public class WebSocketSink extends Sink {
     private String idleTimeoutString;
     private int idleTimeout;
     private WebSocketClientConnectorListener connectorListener;
-    private HandshakeFuture handshakeFuture = null;
-    private static final Class[] SUPPORTED_INPUT_EVENT_CLASSES = new Class[]{String.class, ByteBuffer.class};
-    private static final String[] SUPPORTED_DYNAMIC_OPTIONS = new String[0];
+    private Session session = null;
 
     @Override
     public Class[] getSupportedInputEventClasses() {
-        return SUPPORTED_INPUT_EVENT_CLASSES.clone();
+        return new Class[]{String.class, ByteBuffer.class};
     }
 
     @Override
@@ -175,22 +180,48 @@ public class WebSocketSink extends Sink {
             configuration.setIdleTimeoutInMillis(idleTimeout);
         }
         WebSocketClientConnector clientConnector = httpConnectorFactory.createWsClientConnector(configuration);
-        handshakeFuture = clientConnector.connect(connectorListener);
+        HandshakeFuture handshakeFuture = clientConnector.connect(connectorListener);
+        WebSocketSinkHandshakeListener handshakeListener = new WebSocketSinkHandshakeListener
+                (streamDefinition);
+        handshakeFuture.setHandshakeListener(handshakeListener);
+        session = handshakeListener.getSession();
     }
 
     @Override
     public void publish(Object payload, DynamicOptions dynamicOptions) throws ConnectionUnavailableException {
-        WebSocketSinkHandshakeListener handshakeListener = new WebSocketSinkHandshakeListener
-                (payload, streamDefinition);
-        handshakeFuture.setHandshakeListener(handshakeListener);
+        try {
+            if (session != null) {
+                if (payload instanceof ByteBuffer) {
+                    byte[] byteMessage = ((ByteBuffer) payload).array();
+                    ByteBuffer binaryMessage = ByteBuffer.wrap(byteMessage);
+                    session.getBasicRemote().sendBinary(binaryMessage);
+                } else {
+                    session.getBasicRemote().sendText(payload.toString());
+                }
+            }
+        } catch (IOException e) {
+            throw new SiddhiAppRuntimeException(
+                    "Error while sending events to the '" + WebSocketProperties.URL + "' of the WebSocket "
+                            + "server defined in '" + streamDefinition + "'.", e);
+        }
     }
+
 
     @Override
     public void disconnect() {
+        if (session != null) {
+            try {
+                session.close();
+            } catch (IOException e) {
+                log.error("Error while closing the WebSocket connection." + e);
+            }
+        }
     }
+
 
     @Override
     public void destroy() {
+        //Not applicable
     }
 
     @Override
@@ -200,5 +231,6 @@ public class WebSocketSink extends Sink {
 
     @Override
     public void restoreState(Map<String, Object> map) {
+        //Not applicable
     }
 }

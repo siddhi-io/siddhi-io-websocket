@@ -107,7 +107,6 @@ public class WebSocketSource extends Source {
     private int idleTimeout;
     private SourceEventListener sourceEventListener;
     private WebSocketClientConnectorListener connectorListener;
-    private static final Class[] OUTPUT_EVENT_CLASSES = new Class[]{String.class, ByteBuffer.class};
 
     @Override
     public void init(SourceEventListener sourceEventListener, OptionHolder optionHolder, String[] strings,
@@ -149,7 +148,7 @@ public class WebSocketSource extends Source {
 
     @Override
     public Class[] getOutputEventClasses() {
-        return OUTPUT_EVENT_CLASSES.clone();
+        return new Class[]{String.class, ByteBuffer.class};
     }
 
     @Override
@@ -176,18 +175,22 @@ public class WebSocketSource extends Source {
 
     @Override
     public void disconnect() {
+        //Not applicable
     }
 
     @Override
     public void destroy() {
+        //Not applicable
     }
 
     @Override
     public void pause() {
+        //Not applicable
     }
 
     @Override
     public void resume() {
+        //Not applicable
     }
 
     @Override
@@ -197,5 +200,6 @@ public class WebSocketSource extends Source {
 
     @Override
     public void restoreState(Map<String, Object> map) {
+        //Not applicable
     }
 }

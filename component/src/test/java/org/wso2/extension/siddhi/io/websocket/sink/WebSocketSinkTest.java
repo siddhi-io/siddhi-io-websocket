@@ -68,6 +68,7 @@ public class WebSocketSinkTest {
         fooStream.send(new Object[]{"MIKE", 23, "Germany"});
         Assert.assertTrue(resultContainer.assertMessageContent("JAMES"));
         Assert.assertTrue(resultContainer.assertMessageContent("MIKE"));
+        executionPlanRuntime.shutdown();
     }
 
     @Test(expectedExceptions = SiddhiAppValidationException.class)
