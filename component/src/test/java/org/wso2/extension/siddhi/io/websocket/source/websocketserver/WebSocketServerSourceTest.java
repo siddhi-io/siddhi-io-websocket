@@ -106,7 +106,7 @@ public class WebSocketServerSourceTest {
                         "@App:name('TestExecutionPlan') " +
                                 "define stream FooStream1 (symbol string); " +
                                 "@info(name = 'query1') " +
-                                "@source(type='websocket-server', host='localhost', port='8025', " +
+                                "@source(type='websocket-server', host='localhost', port='9027', " +
                                 "sub.protocol='chat', idle.timeout = '10'," +
                                 "@map(type='xml'))" +
                                 "Define stream BarStream1 (symbol string);" +
@@ -125,7 +125,7 @@ public class WebSocketServerSourceTest {
                 "@App:name('TestExecutionPlan') " +
                         "define stream FooStream1 (symbol string); " +
                         "@info(name = 'query1') " +
-                        "@sink(type='websocket', url = 'ws://localhost:8025/wso2', sub.protocol='chat'," +
+                        "@sink(type='websocket', url = 'ws://localhost:9027/wso2', sub.protocol='chat'," +
                         "@map(type='xml'))" +
                         "Define stream BarStream1 (symbol string);" +
                         "from FooStream1 select symbol insert into BarStream1;");
@@ -259,7 +259,7 @@ public class WebSocketServerSourceTest {
                         "@App:name('TestExecutionPlan') " +
                                 "define stream BarStream1 (symbol string, price float, volume long); " +
                                 "@info(name = 'query1') " +
-                                "@source(type='websocket-server', host='localhost', port='9025'," +
+                                "@source(type='websocket-server', host='localhost', port='9027'," +
                                 "@map(type='xml'))" +
                                 "Define stream FooStream2 (symbol string, price float, volume long); " +
                                 "from FooStream2 select symbol, price, volume insert into BarStream1; ");
@@ -281,12 +281,12 @@ public class WebSocketServerSourceTest {
                                 "define stream BarStream2 (symbol string, price float, volume long); " +
 
                                 "@info(name = 'query1') " +
-                                "@sink(type='websocket', url = 'ws://localhost:9025/wso2', " +
+                                "@sink(type='websocket', url = 'ws://localhost:9027/wso2', " +
                                 "@map(type='xml'))" +
                                 "Define stream FooStream (symbol string, price float, volume long); " +
 
                                 "@info(name = 'query2') " +
-                                "@sink(type='websocket', url = 'ws://localhost:9025/wso2', " +
+                                "@sink(type='websocket', url = 'ws://localhost:9027/wso2', " +
                                 "@map(type='xml'))" +
                                 "Define stream FooStream2 (symbol string, price float, volume long); " +
 

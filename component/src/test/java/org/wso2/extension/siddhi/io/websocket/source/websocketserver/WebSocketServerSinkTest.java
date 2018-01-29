@@ -112,7 +112,7 @@ public class WebSocketServerSinkTest {
                         "@App:name('TestExecutionPlan') " +
                                 "define stream FooStream1 (symbol string); " +
                                 "@info(name = 'query1') " +
-                                "@sink(type='websocket-server', host='localhost', port='4025', " +
+                                "@sink(type='websocket-server', host='localhost', port='9026', " +
                                 "tls.enabled = 'true', keystore.path ='${carbon.home}/resources/conf/transports" +
                                 "/wso2carbon.jks' , keystore.password='wso2carbon'," +
                                 "@map(type='xml'))" +
@@ -125,7 +125,7 @@ public class WebSocketServerSinkTest {
                 "@App:name('TestExecutionPlan') " +
                         "define stream FooStream1 (symbol string); " +
                         "@info(name = 'query1') " +
-                        "@source(type='websocket', url = 'wss://localhost:4025/wso2', " +
+                        "@source(type='websocket', url = 'wss://localhost:9026/wso2', " +
                         "@map(type='xml'))" +
                         "Define stream BarStream1 (symbol string);" +
                         "from FooStream1 select symbol insert into BarStream1;");
