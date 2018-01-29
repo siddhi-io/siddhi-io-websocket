@@ -105,7 +105,7 @@ public class WebSocketSourceTest {
         siddhiAppRuntime.shutdown();
     }
 
-    @Test
+    @Test(dependsOnMethods = "testWebSocketSinkAndSourceBinaryMap")
     public void testWebSocketSinkAndSourceXmlMap() throws InterruptedException {
         receivedEventNameList = new ArrayList<>(3);
         SiddhiManager siddhiManager = new SiddhiManager();
@@ -155,7 +155,8 @@ public class WebSocketSourceTest {
         siddhiAppRuntime.shutdown();
     }
 
-    @Test(expectedExceptions = SiddhiAppValidationException.class)
+    @Test(expectedExceptions = SiddhiAppValidationException.class,
+          dependsOnMethods = "testWebSocketSinkAndSourceXmlMap")
     public void testWebSocketSourceWithoutUri() {
         SiddhiManager siddhiManager = new SiddhiManager();
         siddhiManager.createSiddhiAppRuntime(
@@ -168,7 +169,7 @@ public class WebSocketSourceTest {
                         "from FooStream1 select symbol, price, volume insert into BarStream1;");
     }
 
-    @Test(expectedExceptions = SiddhiAppRuntimeException.class)
+    @Test(expectedExceptions = SiddhiAppRuntimeException.class, dependsOnMethods = "testWebSocketSourceWithoutUri")
     public void testWebSocketSourceInvalidUri() throws InterruptedException {
         SiddhiManager siddhiManager = new SiddhiManager();
         SiddhiAppRuntime executionPlanRuntime = siddhiManager.createSiddhiAppRuntime(
@@ -185,7 +186,7 @@ public class WebSocketSourceTest {
         executionPlanRuntime.shutdown();
     }
 
-    @Test(expectedExceptions = SiddhiAppCreationException.class)
+    @Test(expectedExceptions = SiddhiAppCreationException.class, dependsOnMethods = "testWebSocketSourceInvalidUri")
     public void testWebSocketSourceInvalidIdleTimeout() throws InterruptedException {
         SiddhiManager siddhiManager = new SiddhiManager();
         siddhiManager.createSiddhiAppRuntime(
@@ -198,7 +199,8 @@ public class WebSocketSourceTest {
                         "from FooStream1 select symbol, price, volume insert into BarStream1;");
     }
 
-    @Test(expectedExceptions = SiddhiAppCreationException.class)
+    @Test(expectedExceptions = SiddhiAppCreationException.class,
+          dependsOnMethods = "testWebSocketSourceInvalidIdleTimeout")
     public void testWebSocketSourceInvalidUrlScheme() throws InterruptedException {
         SiddhiManager siddhiManager = new SiddhiManager();
         siddhiManager.createSiddhiAppRuntime(
@@ -211,7 +213,7 @@ public class WebSocketSourceTest {
                         "from FooStream1 select symbol, price, volume insert into BarStream1;");
     }
 
-    @Test
+    @Test(dependsOnMethods = "testWebSocketSourceInvalidUrlScheme")
     public void testWebSocketMultipleConsumer() throws InterruptedException {
         SiddhiManager siddhiManager = new SiddhiManager();
         SiddhiAppRuntime siddhiAppRuntime = siddhiManager

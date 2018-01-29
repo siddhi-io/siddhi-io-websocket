@@ -97,7 +97,7 @@ public class WebSocketServerSourceTest {
         siddhiAppRuntime.shutdown();
     }
 
-    @Test
+    @Test(dependsOnMethods = "testWebSocketServerSource")
     public void testWebSocketServerSourceOptional() throws InterruptedException {
         receivedEventNameList = new ArrayList<>(3);
         SiddhiManager siddhiManager = new SiddhiManager();
@@ -147,7 +147,7 @@ public class WebSocketServerSourceTest {
         siddhiAppRuntime.shutdown();
     }
 
-    @Test
+    @Test(dependsOnMethods = "testWebSocketServerSourceOptional")
     public void testWebSocketServerSecureSource() throws InterruptedException {
         receivedEventNameList = new ArrayList<>(3);
         File keyStoreFilePath = new File("src/test");
@@ -202,7 +202,7 @@ public class WebSocketServerSourceTest {
     }
 
 
-    @Test
+    @Test(dependsOnMethods = "testWebSocketServerSecureSource")
     public void testWebSocketServerSourceBinaryMap() throws InterruptedException {
         receivedEventNameList = new ArrayList<>(3);
         SiddhiManager siddhiManager = new SiddhiManager();
@@ -251,7 +251,7 @@ public class WebSocketServerSourceTest {
         siddhiAppRuntime.shutdown();
     }
 
-    @Test
+    @Test(dependsOnMethods = "testWebSocketServerSourceBinaryMap")
     public void testWebSocketServerSourceWithMultipleSink() throws InterruptedException {
         SiddhiManager siddhiManager = new SiddhiManager();
         SiddhiAppRuntime siddhiAppRuntime = siddhiManager
@@ -306,7 +306,7 @@ public class WebSocketServerSourceTest {
         siddhiAppRuntime.shutdown();
     }
 
-    @Test
+    @Test(dependsOnMethods = "testWebSocketServerSourceWithMultipleSink")
     public void testWebSocketServerSourceWithMultipleServer() throws InterruptedException {
         SiddhiManager siddhiManager = new SiddhiManager();
         File keyStoreFilePath = new File("src/test");

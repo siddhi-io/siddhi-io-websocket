@@ -100,7 +100,7 @@ public class WebSocketServerSinkTest {
         siddhiAppRuntime.shutdown();
     }
 
-    @Test
+    @Test(dependsOnMethods = "testWebSocketServerSink")
     public void testWebSocketServerSecureSink() throws InterruptedException {
         receivedEventNameList = new ArrayList<>(3);
         File keyStoreFilePath = new File("src/test");
@@ -157,7 +157,7 @@ public class WebSocketServerSinkTest {
         siddhiAppRuntime.shutdown();
     }
 
-    @Test
+    @Test(dependsOnMethods = "testWebSocketServerSecureSink")
     public void testWebSocketServerSinkWithOptional() throws InterruptedException {
         receivedEventNameList = new ArrayList<>(3);
         SiddhiManager siddhiManager = new SiddhiManager();
@@ -210,7 +210,7 @@ public class WebSocketServerSinkTest {
         siddhiAppRuntime.shutdown();
     }
 
-    @Test
+    @Test(dependsOnMethods = "testWebSocketServerSinkWithOptional")
     public void testWebSocketServerSinkBinaryMap() throws InterruptedException {
         receivedEventNameList = new ArrayList<>(3);
         SiddhiManager siddhiManager = new SiddhiManager();
@@ -263,7 +263,7 @@ public class WebSocketServerSinkTest {
     }
 
 
-    @Test
+    @Test(dependsOnMethods = "testWebSocketServerSinkBinaryMap")
     public void testWebSocketServerMultipleConsumer() throws InterruptedException {
         SiddhiManager siddhiManager = new SiddhiManager();
         SiddhiAppRuntime siddhiAppRuntime = siddhiManager
