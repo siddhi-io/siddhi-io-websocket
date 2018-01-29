@@ -53,12 +53,12 @@ public class WebSocketSinkTest {
     public void testWebSocketSinkXmlMapTestCase() throws InterruptedException {
         SiddhiManager siddhiManager = new SiddhiManager();
         ResultContainer resultContainer = new ResultContainer(2);
-        new WebSocketReceiver("ws://localhost:8080/chat/wso2", resultContainer);
+        new WebSocketReceiver("ws://localhost:7070/chat/wso2", resultContainer);
         SiddhiAppRuntime executionPlanRuntime = siddhiManager.createSiddhiAppRuntime(
                 "@App:name('TestExecutionPlan') " +
                         "define stream FooStream1 (symbol string, age int, country string); " +
                         "@info(name = 'query1') " +
-                        "@sink(type='websocket', url = 'ws://localhost:8080/chat/wso2', " +
+                        "@sink(type='websocket', url = 'ws://localhost:7070/chat/wso2', " +
                         "@map(type='xml'))" +
                         "Define stream BarStream1 (symbol string, age int, country string);" +
                         "from FooStream1 select symbol, age, country insert into BarStream1;");
@@ -92,7 +92,7 @@ public class WebSocketSinkTest {
                 "@App:name('TestExecutionPlan') " +
                         "define stream FooStream1 (symbol string, price float, volume long); " +
                         "@info(name = 'query1') " +
-                        "@sink(type='websocket', url = 'ws://localhost:7070/websockets/abc'," +
+                        "@sink(type='websocket', url = 'ws://localhost:6060/websockets/abc'," +
                         "@map(type='xml'))" +
                         "Define stream BarStream1 (symbol string, price float, volume long);" +
                         "from FooStream1 select symbol, price, volume insert into BarStream1;");
@@ -109,7 +109,7 @@ public class WebSocketSinkTest {
                 "@App:name('TestExecutionPlan') " +
                         "define stream FooStream1 (symbol string, price float, volume long); " +
                         "@info(name = 'query1') " +
-                        "@sink(type='websocket', url = 'ws://localhost:8080/chat/abc'," +
+                        "@sink(type='websocket', url = 'ws://localhost:7070/chat/abc'," +
                         "headers=\"'message-type-websocket','message-sender:wso2'\", @map(type='xml'))" +
                         "Define stream BarStream1 (symbol string, price float, volume long);" +
                         "from FooStream1 select symbol, price, volume insert into BarStream1;");
@@ -141,7 +141,7 @@ public class WebSocketSinkTest {
                 "@App:name('TestExecutionPlan') " +
                         "define stream FooStream1 (symbol string, price float, volume long); " +
                         "@info(name = 'query1') " +
-                        "@sink(type='websocket', url = 'ws://localhost:8080/chat/abc', idle.timeout = '-10'," +
+                        "@sink(type='websocket', url = 'ws://localhost:7070/chat/abc', idle.timeout = '-10'," +
                         "@map(type='xml'))" +
                         "Define stream BarStream1 (symbol string, price float, volume long);" +
                         "from FooStream1 select symbol, price, volume insert into BarStream1;");

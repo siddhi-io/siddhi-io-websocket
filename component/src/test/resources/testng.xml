@@ -23,8 +23,8 @@
 
     <test name="websocket testcases" parallel="false">
         <classes>
-            <!--<class name="org.wso2.extension.siddhi.io.websocket.sink.WebSocketSinkTest" />
-            <class name="org.wso2.extension.siddhi.io.websocket.source.WebSocketSourceTest" />-->
+            <class name="org.wso2.extension.siddhi.io.websocket.sink.WebSocketSinkTest" />
+            <class name="org.wso2.extension.siddhi.io.websocket.source.WebSocketSourceTest" />
             <class name="org.wso2.extension.siddhi.io.websocket.source.websocketserver.WebSocketServerSinkTest" />
             <class name="org.wso2.extension.siddhi.io.websocket.source.websocketserver.WebSocketServerSourceTest" />
         </classes>

@@ -271,7 +271,7 @@ public class WebSocketServerSinkTest {
                         "@App:name('TestExecutionPlan') " +
                                 "define stream BarStream1 (symbol string, price float, volume long); " +
                                 "@info(name = 'query1') " +
-                                "@sink(type='websocket-server', host='localhost', port='7070'," +
+                                "@sink(type='websocket-server', host='localhost', port='9090'," +
                                 "@map(type='xml'))" +
                                 "Define stream FooStream1 (symbol string, price float, volume long); " +
                                 "from FooStream1 select symbol, price, volume insert into BarStream1; ");
@@ -285,12 +285,12 @@ public class WebSocketServerSinkTest {
                                 "define stream BarStream2 (symbol string, price float, volume long); " +
 
                                 "@info(name = 'query1') " +
-                                "@source(type='websocket', url = 'ws://localhost:7070/wso2', " +
+                                "@source(type='websocket', url = 'ws://localhost:9090/wso2', " +
                                 "@map(type='xml'))" +
                                 "Define stream FooStream (symbol string, price float, volume long); " +
 
                                 "@info(name = 'query2') " +
-                                "@source(type='websocket', url = 'ws://localhost:7070/wso2', " +
+                                "@source(type='websocket', url = 'ws://localhost:9090/wso2', " +
                                 "@map(type='xml'))" +
                                 "Define stream FooStream2 (symbol string, price float, volume long); " +
 

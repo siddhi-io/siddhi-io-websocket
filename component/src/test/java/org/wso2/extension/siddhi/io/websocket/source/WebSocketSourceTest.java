@@ -66,7 +66,7 @@ public class WebSocketSourceTest {
                         "@App:name('TestExecutionPlan') " +
                                 "define stream FooStream1 (symbol string, price float, volume long); " +
                                 "@info(name = 'query1') " +
-                                "@source(type='websocket', url = 'ws://localhost:8080/chat/abc', " +
+                                "@source(type='websocket', url = 'ws://localhost:7070/chat/abc', " +
                                 "@map(type='binary'))" +
                                 "Define stream BarStream1 (symbol string, price float, volume long);" +
                                 "from FooStream1 select symbol, price, volume insert into BarStream1;");
@@ -84,7 +84,7 @@ public class WebSocketSourceTest {
                 "@App:name('TestExecutionPlan') " +
                         "define stream FooStream1 (symbol string, price float, volume long); " +
                         "@info(name = 'query1') " +
-                        "@sink(type='websocket', url = 'ws://localhost:8080/chat/abc', @map(type='binary'))" +
+                        "@sink(type='websocket', url = 'ws://localhost:7070/chat/abc', @map(type='binary'))" +
                         "Define stream BarStream1 (symbol string, price float, volume long);" +
                         "from FooStream1 select symbol, price, volume insert into BarStream1;");
         InputHandler fooStream = executionPlanRuntime.getInputHandler("FooStream1");
@@ -114,7 +114,7 @@ public class WebSocketSourceTest {
                         "@App:name('TestExecutionPlan') " +
                                 "define stream FooStream1 (symbol string, price float, volume long); " +
                                 "@info(name = 'query1') " +
-                                "@source(type='websocket', url = 'wss://localhost:8443/chat/abc', idle.timeout = "
+                                "@source(type='websocket', url = 'wss://localhost:7443/chat/abc', idle.timeout = "
                                 + "'1000', " +
                                 "@map(type='xml'))" +
                                 "Define stream BarStream1 (symbol string, price float, volume long);" +
@@ -133,7 +133,7 @@ public class WebSocketSourceTest {
                 "@App:name('TestExecutionPlan') " +
                         "define stream FooStream1 (symbol string, price float, volume long); " +
                         "@info(name = 'query1') " +
-                        "@sink(type='websocket', url = 'wss://localhost:8443/chat/abc', idle.timeout = '1000', " +
+                        "@sink(type='websocket', url = 'wss://localhost:7443/chat/abc', idle.timeout = '1000', " +
                         "@map(type='xml'))" +
                         "Define stream BarStream1 (symbol string, price float, volume long);" +
                         "from FooStream1 select symbol, price, volume insert into BarStream1;");
@@ -176,7 +176,7 @@ public class WebSocketSourceTest {
                 "@App:name('TestExecutionPlan') " +
                         "define stream FooStream1 (symbol string, price float, volume long); " +
                         "@info(name = 'query1') " +
-                        "@source(type='websocket', url = 'ws://localhost:7070/websockets/abc'," +
+                        "@source(type='websocket', url = 'ws://localhost:6060/websockets/abc'," +
                         "@map(type='xml'))" +
                         "Define stream BarStream1 (symbol string, price float, volume long);" +
                         "from FooStream1 select symbol, price, volume insert into BarStream1;");
@@ -193,7 +193,7 @@ public class WebSocketSourceTest {
                 "@App:name('TestExecutionPlan') " +
                         "define stream FooStream1 (symbol string, price float, volume long); " +
                         "@info(name = 'query1') " +
-                        "@source(type='websocket', url = 'ws://localhost:8080/chat/abc', idle.timeout = '-10'," +
+                        "@source(type='websocket', url = 'ws://localhost:7070/chat/abc', idle.timeout = '-10'," +
                         "@map(type='xml'))" +
                         "Define stream BarStream1 (symbol string, price float, volume long);" +
                         "from FooStream1 select symbol, price, volume insert into BarStream1;");
@@ -207,7 +207,7 @@ public class WebSocketSourceTest {
                 "@App:name('TestExecutionPlan') " +
                         "define stream FooStream1 (symbol string, price float, volume long); " +
                         "@info(name = 'query1') " +
-                        "@source(type='websocket', url = 'tcp://localhost:8025/abc'," +
+                        "@source(type='websocket', url = 'tcp://localhost:7070/abc'," +
                         "@map(type='xml'))" +
                         "Define stream BarStream1 (symbol string, price float, volume long);" +
                         "from FooStream1 select symbol, price, volume insert into BarStream1;");
@@ -223,12 +223,12 @@ public class WebSocketSourceTest {
                                 "define stream BarStream2 (symbol string, price float, volume long); " +
 
                                 "@info(name = 'query1') " +
-                                "@source(type='websocket', url = 'ws://localhost:8080/chat/abc', " +
+                                "@source(type='websocket', url = 'ws://localhost:7070/chat/abc', " +
                                 "@map(type='xml'))" +
                                 "Define stream FooStream (symbol string, price float, volume long); " +
 
                                 "@info(name = 'query2') " +
-                                "@source(type='websocket', url = 'ws://localhost:8080/chat/abc', " +
+                                "@source(type='websocket', url = 'ws://localhost:7070/chat/abc', " +
                                 "@map(type='xml'))" +
                                 "Define stream FooStream2 (symbol string, price float, volume long); " +
 
@@ -257,7 +257,7 @@ public class WebSocketSourceTest {
                 "@App:name('TestExecutionPlan') " +
                         "define stream FooStream1 (symbol string, price float, volume long); " +
                         "@info(name = 'query1') " +
-                        "@sink(type ='websocket', url = 'ws://localhost:8080/chat/abc', " +
+                        "@sink(type ='websocket', url = 'ws://localhost:7070/chat/abc', " +
                         "@map(type='xml'))" +
                         "Define stream BarStream1 (symbol string, price float, volume long);" +
                         "from FooStream1 select symbol, price, volume insert into BarStream1;");
