@@ -98,56 +98,6 @@ public class WebSocketServerSourceTest {
     }
 
     @Test(dependsOnMethods = "testWebSocketServerSource")
-    public void testWebSocketServerSourceOptional() throws InterruptedException {
-        receivedEventNameList = new ArrayList<>(3);
-        SiddhiManager siddhiManager = new SiddhiManager();
-        SiddhiAppRuntime siddhiAppRuntime = siddhiManager
-                .createSiddhiAppRuntime(
-                        "@App:name('TestExecutionPlan') " +
-                                "define stream FooStream1 (symbol string); " +
-                                "@info(name = 'query1') " +
-                                "@source(type='websocket-server', host='localhost', port='9027', " +
-                                "sub.protocol='chat', idle.timeout = '10'," +
-                                "@map(type='xml'))" +
-                                "Define stream BarStream1 (symbol string);" +
-                                "from FooStream1 select symbol insert into BarStream1;");
-        siddhiAppRuntime.addCallback("BarStream1", new StreamCallback() {
-            @Override
-            public void receive(Event[] events) {
-                for (Event event : events) {
-                    eventCount.incrementAndGet();
-                    receivedEventNameList.add(event.getData(0).toString());
-                }
-            }
-        });
-        siddhiAppRuntime.start();
-        SiddhiAppRuntime executionPlanRuntime = siddhiManager.createSiddhiAppRuntime(
-                "@App:name('TestExecutionPlan') " +
-                        "define stream FooStream1 (symbol string); " +
-                        "@info(name = 'query1') " +
-                        "@sink(type='websocket', url = 'ws://localhost:9027/wso2', sub.protocol='chat'," +
-                        "@map(type='xml'))" +
-                        "Define stream BarStream1 (symbol string);" +
-                        "from FooStream1 select symbol insert into BarStream1;");
-        InputHandler fooStream = executionPlanRuntime.getInputHandler("FooStream1");
-        executionPlanRuntime.start();
-        ArrayList<Event> arrayList = new ArrayList<>();
-        arrayList.add(new Event(System.currentTimeMillis(), new Object[]{"WSO2"}));
-        arrayList.add(new Event(System.currentTimeMillis(), new Object[]{"IBM"}));
-        arrayList.add(new Event(System.currentTimeMillis(), new Object[]{"WSO2"}));
-        fooStream.send(arrayList.toArray(new Event[3]));
-        List<String> expected = new ArrayList<>(2);
-        expected.add("WSO2");
-        expected.add("IBM");
-        expected.add("WSO2");
-        SiddhiTestHelper.waitForEvents(waitTime, 3, eventCount, timeout);
-        Assert.assertEquals(receivedEventNameList, expected);
-        Assert.assertEquals(eventCount.get(), 3);
-        executionPlanRuntime.shutdown();
-        siddhiAppRuntime.shutdown();
-    }
-
-    @Test(dependsOnMethods = "testWebSocketServerSourceOptional")
     public void testWebSocketServerSecureSource() throws InterruptedException {
         receivedEventNameList = new ArrayList<>(3);
         File keyStoreFilePath = new File("src/test");
@@ -159,7 +109,7 @@ public class WebSocketServerSourceTest {
                         "@App:name('TestExecutionPlan') " +
                                 "define stream FooStream (symbol string); " +
                                 "@info(name = 'query1') " +
-                                "@source(type='websocket-server', host='localhost', port='7020', " +
+                                "@source(type='websocket-server', host='localhost', port='7443', " +
                                 "tls.enabled = 'true', keystore.path ='${carbon.home}/resources/conf/transports" +
                                 "/wso2carbon.jks' , keystore.password='wso2carbon'," +
                                 "@map(type='xml'))" +
@@ -179,7 +129,7 @@ public class WebSocketServerSourceTest {
                 "@App:name('TestExecutionPlan') " +
                         "define stream FooStream (symbol string); " +
                         "@info(name = 'query1') " +
-                        "@sink(type='websocket', url = 'wss://localhost:7020/wso2', " +
+                        "@sink(type='websocket', url = 'wss://localhost:7443/wso2', " +
                         "@map(type='xml'))" +
                         "Define stream BarStream (symbol string);" +
                         "from FooStream select symbol insert into BarStream;");

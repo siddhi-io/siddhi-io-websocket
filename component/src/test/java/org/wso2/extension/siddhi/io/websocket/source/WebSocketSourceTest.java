@@ -114,8 +114,7 @@ public class WebSocketSourceTest {
                         "@App:name('TestExecutionPlan') " +
                                 "define stream FooStream1 (symbol string, price float, volume long); " +
                                 "@info(name = 'query1') " +
-                                "@source(type='websocket', url = 'wss://localhost:7443/chat/abc', idle.timeout = "
-                                + "'1000', " +
+                                "@source(type='websocket', url = 'wss://localhost:7443/chat/abc', " +
                                 "@map(type='xml'))" +
                                 "Define stream BarStream1 (symbol string, price float, volume long);" +
                                 "from FooStream1 select symbol, price, volume insert into BarStream1;");
@@ -133,7 +132,7 @@ public class WebSocketSourceTest {
                 "@App:name('TestExecutionPlan') " +
                         "define stream FooStream1 (symbol string, price float, volume long); " +
                         "@info(name = 'query1') " +
-                        "@sink(type='websocket', url = 'wss://localhost:7443/chat/abc', idle.timeout = '1000', " +
+                        "@sink(type='websocket', url = 'wss://localhost:7443/chat/abc', " +
                         "@map(type='xml'))" +
                         "Define stream BarStream1 (symbol string, price float, volume long);" +
                         "from FooStream1 select symbol, price, volume insert into BarStream1;");
