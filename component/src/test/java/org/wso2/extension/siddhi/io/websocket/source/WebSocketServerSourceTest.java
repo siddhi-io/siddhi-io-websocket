@@ -17,7 +17,7 @@
  *
  */
 
-package org.wso2.extension.siddhi.io.websocket.source.websocketserver;
+package org.wso2.extension.siddhi.io.websocket.source;
 
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
@@ -96,6 +96,57 @@ public class WebSocketServerSourceTest {
         executionPlanRuntime.shutdown();
         siddhiAppRuntime.shutdown();
     }
+
+//    @Test
+//    public void testWebSocketServerSourceOptional() throws InterruptedException {
+//        receivedEventNameList = new ArrayList<>(3);
+//        SiddhiManager siddhiManager = new SiddhiManager();
+//        SiddhiAppRuntime siddhiAppRuntime = siddhiManager
+//                .createSiddhiAppRuntime(
+//                        "@App:name('TestExecutionPlan') " +
+//                                "define stream FooStream1 (symbol string); " +
+//                                "@info(name = 'query1') " +
+//                                "@source(type='websocket-server', host='localhost', port='8025', " +
+//                                "sub.protocol='chat', idle.timeout = '10'," +
+//                                "@map(type='xml'))" +
+//                                "Define stream BarStream1 (symbol string);" +
+//                                "from FooStream1 select symbol insert into BarStream1;");
+//        siddhiAppRuntime.addCallback("BarStream1", new StreamCallback() {
+//            @Override
+//            public void receive(Event[] events) {
+//                for (Event event : events) {
+//                    eventCount.incrementAndGet();
+//                    receivedEventNameList.add(event.getData(0).toString());
+//                }
+//            }
+//        });
+//        siddhiAppRuntime.start();
+//        SiddhiAppRuntime executionPlanRuntime = siddhiManager.createSiddhiAppRuntime(
+//                "@App:name('TestExecutionPlan') " +
+//                        "define stream FooStream1 (symbol string); " +
+//                        "@info(name = 'query1') " +
+//                        "@sink(type='websocket', url = 'ws://localhost:8025/wso2', sub.protocol='chat'," +
+//                        "@map(type='xml'))" +
+//                        "Define stream BarStream1 (symbol string);" +
+//                        "from FooStream1 select symbol insert into BarStream1;");
+//        InputHandler fooStream = executionPlanRuntime.getInputHandler("FooStream1");
+//        executionPlanRuntime.start();
+//        Thread.sleep(2000);
+//        ArrayList<Event> arrayList = new ArrayList<>();
+//        arrayList.add(new Event(System.currentTimeMillis(), new Object[]{"WSO2"}));
+//        arrayList.add(new Event(System.currentTimeMillis(), new Object[]{"IBM"}));
+//        arrayList.add(new Event(System.currentTimeMillis(), new Object[]{"WSO2"}));
+//        fooStream.send(arrayList.toArray(new Event[3]));
+//        List<String> expected = new ArrayList<>(3);
+//        expected.add("WSO2");
+//        expected.add("IBM");
+//        expected.add("WSO2");
+//        SiddhiTestHelper.waitForEvents(waitTime, 3, eventCount, timeout);
+//        Assert.assertEquals(receivedEventNameList, expected);
+//        Assert.assertEquals(eventCount.get(), 3);
+//        executionPlanRuntime.shutdown();
+//        siddhiAppRuntime.shutdown();
+//    }
 
     @Test(dependsOnMethods = "testWebSocketServerSource")
     public void testWebSocketServerSecureSource() throws InterruptedException {
@@ -252,6 +303,89 @@ public class WebSocketServerSourceTest {
         fooStream2.send(new Object[]{"IBM", 75.6f, 100L});
         SiddhiTestHelper.waitForEvents(waitTime, 4, eventCount, timeout);
         Assert.assertEquals(eventCount.get(), 4);
+        executionPlanRuntime.shutdown();
+        siddhiAppRuntime.shutdown();
+    }
+
+
+    @Test(dependsOnMethods = "testWebSocketServerSourceWithMultipleSink")
+    public void testWebSocketServerSourceWithMultipleServer() throws InterruptedException {
+        SiddhiManager siddhiManager = new SiddhiManager();
+        File keyStoreFilePath = new File("src/test");
+        String keyStorePath = keyStoreFilePath.getAbsolutePath();
+        System.setProperty("carbon.home", keyStorePath);
+        SiddhiAppRuntime siddhiAppRuntime = siddhiManager
+                .createSiddhiAppRuntime(
+                        "@App:name('TestExecutionPlan') " +
+                                "define stream BarStream (symbol string, price float, volume long); " +
+                                "define stream BarStream2 (symbol string, price float, volume long); " +
+
+                                "@info(name = 'query1') " +
+                                "@source(type='websocket-server', host='localhost', port='7050', " +
+                                "tls.enabled = 'true', keystore.path ='${carbon.home}/resources/conf/transports" +
+                                "/wso2carbon.jks' , keystore.password='wso2carbon'," +
+                                "@map(type='xml'))" +
+                                "Define stream FooStream (symbol string, price float, volume long); " +
+
+                                "@info(name = 'query2') " +
+                                "@source(type='websocket-server',  host='localhost', port='7060', " +
+                                "tls.enabled = 'true', keystore.path ='${carbon.home}/resources/conf/transports" +
+                                "/wso2carbon.jks' , keystore.password='wso2carbon'," +
+                                "@map(type='xml'))" +
+                                "Define stream FooStream2 (symbol string, price float, volume long); " +
+
+                                "from FooStream select symbol, price, volume insert into BarStream; " +
+                                "from FooStream2 select symbol, price, volume insert into BarStream2; ");
+        siddhiAppRuntime.addCallback("BarStream", new StreamCallback() {
+            @Override
+            public void receive(Event[] events) {
+                for (Event ignored : events) {
+                    eventCount.incrementAndGet();
+                }
+            }
+        });
+
+        siddhiAppRuntime.addCallback("BarStream2", new StreamCallback() {
+            @Override
+            public void receive(Event[] events) {
+                for (Event ignored : events) {
+                    eventCount1.incrementAndGet();
+                }
+            }
+        });
+
+        siddhiAppRuntime.start();
+        SiddhiAppRuntime executionPlanRuntime = siddhiManager
+                .createSiddhiAppRuntime(
+                        "@App:name('TestExecutionPlan') " +
+                                "define stream BarStream (symbol string, price float, volume long); " +
+                                "define stream BarStream2 (symbol string, price float, volume long); " +
+
+                                "@info(name = 'query1') " +
+                                "@sink(type='websocket', url = 'wss://localhost:7050/wso2', " +
+                                "@map(type='xml'))" +
+                                "Define stream FooStream (symbol string, price float, volume long); " +
+
+                                "@info(name = 'query2') " +
+                                "@sink(type='websocket', url = 'wss://localhost:7060/wso2', " +
+                                "@map(type='xml'))" +
+                                "Define stream FooStream2 (symbol string, price float, volume long); " +
+
+                                "from FooStream select symbol, price, volume insert into BarStream; " +
+                                "from FooStream2 select symbol, price, volume insert into BarStream2; ");
+        InputHandler fooStream = executionPlanRuntime.getInputHandler("FooStream");
+        InputHandler fooStream2 = executionPlanRuntime.getInputHandler("FooStream2");
+
+        executionPlanRuntime.start();
+        Thread.sleep(2000);
+        fooStream.send(new Object[]{"WSO2", 55.6f, 100L});
+        fooStream.send(new Object[]{"IBM", 75.6f, 100L});
+        fooStream2.send(new Object[]{"WSO2", 55.6f, 100L});
+        fooStream2.send(new Object[]{"IBM", 75.6f, 100L});
+        SiddhiTestHelper.waitForEvents(waitTime, 2, eventCount, timeout);
+        Assert.assertEquals(eventCount.get(), 2);
+        SiddhiTestHelper.waitForEvents(waitTime, 2, eventCount1, timeout);
+        Assert.assertEquals(eventCount1.get(), 2);
         executionPlanRuntime.shutdown();
         siddhiAppRuntime.shutdown();
     }
