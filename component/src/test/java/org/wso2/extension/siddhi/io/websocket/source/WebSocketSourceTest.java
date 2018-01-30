@@ -66,7 +66,7 @@ public class WebSocketSourceTest {
                         "@App:name('TestExecutionPlan') " +
                                 "define stream FooStream1 (symbol string, price float, volume long); " +
                                 "@info(name = 'query1') " +
-                                "@source(type='websocket', url = 'ws://localhost:8080/chat/abc', " +
+                                "@source(type='websocket', url = 'ws://localhost:7070/chat/abc', " +
                                 "@map(type='binary'))" +
                                 "Define stream BarStream1 (symbol string, price float, volume long);" +
                                 "from FooStream1 select symbol, price, volume insert into BarStream1;");
@@ -84,7 +84,7 @@ public class WebSocketSourceTest {
                 "@App:name('TestExecutionPlan') " +
                         "define stream FooStream1 (symbol string, price float, volume long); " +
                         "@info(name = 'query1') " +
-                        "@sink(type='websocket', url = 'ws://localhost:8080/chat/abc', @map(type='binary'))" +
+                        "@sink(type='websocket', url = 'ws://localhost:7070/chat/abc', @map(type='binary'))" +
                         "Define stream BarStream1 (symbol string, price float, volume long);" +
                         "from FooStream1 select symbol, price, volume insert into BarStream1;");
         InputHandler fooStream = executionPlanRuntime.getInputHandler("FooStream1");
@@ -105,7 +105,7 @@ public class WebSocketSourceTest {
         siddhiAppRuntime.shutdown();
     }
 
-    @Test
+    @Test(dependsOnMethods = "testWebSocketSinkAndSourceBinaryMap")
     public void testWebSocketSinkAndSourceXmlMap() throws InterruptedException {
         receivedEventNameList = new ArrayList<>(3);
         SiddhiManager siddhiManager = new SiddhiManager();
@@ -114,8 +114,7 @@ public class WebSocketSourceTest {
                         "@App:name('TestExecutionPlan') " +
                                 "define stream FooStream1 (symbol string, price float, volume long); " +
                                 "@info(name = 'query1') " +
-                                "@source(type='websocket', url = 'wss://localhost:8443/chat/abc', idle.timeout = "
-                                + "'1000', " +
+                                "@source(type='websocket', url = 'wss://localhost:7443/chat/abc', " +
                                 "@map(type='xml'))" +
                                 "Define stream BarStream1 (symbol string, price float, volume long);" +
                                 "from FooStream1 select symbol, price, volume insert into BarStream1;");
@@ -133,7 +132,7 @@ public class WebSocketSourceTest {
                 "@App:name('TestExecutionPlan') " +
                         "define stream FooStream1 (symbol string, price float, volume long); " +
                         "@info(name = 'query1') " +
-                        "@sink(type='websocket', url = 'wss://localhost:8443/chat/abc', idle.timeout = '1000', " +
+                        "@sink(type='websocket', url = 'wss://localhost:7443/chat/abc', " +
                         "@map(type='xml'))" +
                         "Define stream BarStream1 (symbol string, price float, volume long);" +
                         "from FooStream1 select symbol, price, volume insert into BarStream1;");
@@ -155,7 +154,8 @@ public class WebSocketSourceTest {
         siddhiAppRuntime.shutdown();
     }
 
-    @Test(expectedExceptions = SiddhiAppValidationException.class)
+    @Test(expectedExceptions = SiddhiAppValidationException.class,
+          dependsOnMethods = "testWebSocketSinkAndSourceXmlMap")
     public void testWebSocketSourceWithoutUri() {
         SiddhiManager siddhiManager = new SiddhiManager();
         siddhiManager.createSiddhiAppRuntime(
@@ -168,14 +168,14 @@ public class WebSocketSourceTest {
                         "from FooStream1 select symbol, price, volume insert into BarStream1;");
     }
 
-    @Test(expectedExceptions = SiddhiAppRuntimeException.class)
+    @Test(expectedExceptions = SiddhiAppRuntimeException.class, dependsOnMethods = "testWebSocketSourceWithoutUri")
     public void testWebSocketSourceInvalidUri() throws InterruptedException {
         SiddhiManager siddhiManager = new SiddhiManager();
         SiddhiAppRuntime executionPlanRuntime = siddhiManager.createSiddhiAppRuntime(
                 "@App:name('TestExecutionPlan') " +
                         "define stream FooStream1 (symbol string, price float, volume long); " +
                         "@info(name = 'query1') " +
-                        "@source(type='websocket', url = 'ws://localhost:7070/websockets/abc'," +
+                        "@source(type='websocket', url = 'ws://localhost:6060/websockets/abc'," +
                         "@map(type='xml'))" +
                         "Define stream BarStream1 (symbol string, price float, volume long);" +
                         "from FooStream1 select symbol, price, volume insert into BarStream1;");
@@ -185,33 +185,34 @@ public class WebSocketSourceTest {
         executionPlanRuntime.shutdown();
     }
 
-    @Test(expectedExceptions = SiddhiAppCreationException.class)
+    @Test(expectedExceptions = SiddhiAppCreationException.class, dependsOnMethods = "testWebSocketSourceInvalidUri")
     public void testWebSocketSourceInvalidIdleTimeout() throws InterruptedException {
         SiddhiManager siddhiManager = new SiddhiManager();
         siddhiManager.createSiddhiAppRuntime(
                 "@App:name('TestExecutionPlan') " +
                         "define stream FooStream1 (symbol string, price float, volume long); " +
                         "@info(name = 'query1') " +
-                        "@source(type='websocket', url = 'ws://localhost:8080/chat/abc', idle.timeout = '-10'," +
+                        "@source(type='websocket', url = 'ws://localhost:7070/chat/abc', idle.timeout = '-10'," +
                         "@map(type='xml'))" +
                         "Define stream BarStream1 (symbol string, price float, volume long);" +
                         "from FooStream1 select symbol, price, volume insert into BarStream1;");
     }
 
-    @Test(expectedExceptions = SiddhiAppCreationException.class)
+    @Test(expectedExceptions = SiddhiAppCreationException.class,
+          dependsOnMethods = "testWebSocketSourceInvalidIdleTimeout")
     public void testWebSocketSourceInvalidUrlScheme() throws InterruptedException {
         SiddhiManager siddhiManager = new SiddhiManager();
         siddhiManager.createSiddhiAppRuntime(
                 "@App:name('TestExecutionPlan') " +
                         "define stream FooStream1 (symbol string, price float, volume long); " +
                         "@info(name = 'query1') " +
-                        "@source(type='websocket', url = 'tcp://localhost:8025/abc'," +
+                        "@source(type='websocket', url = 'tcp://localhost:7070/abc'," +
                         "@map(type='xml'))" +
                         "Define stream BarStream1 (symbol string, price float, volume long);" +
                         "from FooStream1 select symbol, price, volume insert into BarStream1;");
     }
 
-    @Test
+    @Test(dependsOnMethods = "testWebSocketSourceInvalidUrlScheme")
     public void testWebSocketMultipleConsumer() throws InterruptedException {
         SiddhiManager siddhiManager = new SiddhiManager();
         SiddhiAppRuntime siddhiAppRuntime = siddhiManager
@@ -221,12 +222,12 @@ public class WebSocketSourceTest {
                                 "define stream BarStream2 (symbol string, price float, volume long); " +
 
                                 "@info(name = 'query1') " +
-                                "@source(type='websocket', url = 'ws://localhost:8080/chat/abc', " +
+                                "@source(type='websocket', url = 'ws://localhost:7070/chat/abc', " +
                                 "@map(type='xml'))" +
                                 "Define stream FooStream (symbol string, price float, volume long); " +
 
                                 "@info(name = 'query2') " +
-                                "@source(type='websocket', url = 'ws://localhost:8080/chat/abc', " +
+                                "@source(type='websocket', url = 'ws://localhost:7070/chat/abc', " +
                                 "@map(type='xml'))" +
                                 "Define stream FooStream2 (symbol string, price float, volume long); " +
 
@@ -255,7 +256,7 @@ public class WebSocketSourceTest {
                 "@App:name('TestExecutionPlan') " +
                         "define stream FooStream1 (symbol string, price float, volume long); " +
                         "@info(name = 'query1') " +
-                        "@sink(type ='websocket', url = 'ws://localhost:8080/chat/abc', " +
+                        "@sink(type ='websocket', url = 'ws://localhost:7070/chat/abc', " +
                         "@map(type='xml'))" +
                         "Define stream BarStream1 (symbol string, price float, volume long);" +
                         "from FooStream1 select symbol, price, volume insert into BarStream1;");

@@ -184,7 +184,15 @@ public class WebSocketSink extends Sink {
         WebSocketSinkHandshakeListener handshakeListener = new WebSocketSinkHandshakeListener
                 (streamDefinition);
         handshakeFuture.setHandshakeListener(handshakeListener);
-        session = handshakeListener.getSession();
+        // Temp fix to wait until handshakeListener returns a valid session.
+        while (session == null) {
+            session = handshakeListener.getSession();
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                // Do nothing
+            }
+        }
     }
 
     @Override

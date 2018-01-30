@@ -27,11 +27,11 @@ listenerConfigurations:
 -
   id: "msf4j-http"
   host: "0.0.0.0"
-  port: 8080
+  port: 7070
 -
   id: "msf4j-https"
   host: "0.0.0.0"
-  port: 8443
+  port: 7443
   scheme: https
   keyStoreFile: "${carbon.home}/resources/conf/transports/wso2carbon.jks"
   keyStorePassword: wso2carbon
