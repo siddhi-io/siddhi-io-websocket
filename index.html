@@ -12,7 +12,7 @@
       
         <link rel="shortcut icon" href="./images/favicon.ico">
       
-      <meta name="generator" content="mkdocs-0.16.3, mkdocs-material-1.8.1">
+      <meta name="generator" content="mkdocs-0.16.3, mkdocs-material-1.10.3">
     
     
       
@@ -20,12 +20,12 @@
       
     
     
-      <script src="./assets/javascripts/modernizr-1df76c4e58.js"></script>
+      <script src="./assets/javascripts/modernizr-e826f8942a.js"></script>
     
     
-      <link rel="stylesheet" href="./assets/stylesheets/application-bfecc7305d.css">
+      <link rel="stylesheet" href="./assets/stylesheets/application-9011e2d3f8.css">
       
-        <link rel="stylesheet" href="./assets/stylesheets/application-02c2a4388f.palette.css">
+        <link rel="stylesheet" href="./assets/stylesheets/application-23f75ab9c7.palette.css">
       
     
     
@@ -63,11 +63,13 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        
-          <a href="." title="Siddhi-IO-Websocket" class="md-logo md-header-nav__button">
-            <img src="./images/siddhi-logo-w.svg" width="24" height="24">
-          </a>
-        
+        <a href="." title="Siddhi-IO-Websocket" class="md-header-nav__button md-logo">
+          
+            
+              <img src="./images/siddhi-logo-w.svg" width="24" height="24">
+            
+          
+        </a>
       </div>
       <div class="md-flex__cell md-flex__cell--shrink">
         <label class="md-icon md-icon--menu md-header-nav__button" for="drawer"></label>
@@ -92,7 +94,7 @@
     <form class="md-search__form" name="search">
       <input type="text" class="md-search__input" name="query" required placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query">
       <label class="md-icon md-search__icon" for="search"></label>
-      <button type="reset" class="md-icon md-search__icon" data-md-component="reset">close</button>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset">&#xE5CD;</button>
     </form>
     <div class="md-search__output">
       <div class="md-search__scrollwrap" data-md-scrollfix>
@@ -116,6 +118,7 @@
     <div class="md-container">
       
       
+      
       <main class="md-main">
         <div class="md-main__inner md-grid" data-md-component="container">
           
@@ -125,11 +128,13 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="drawer">
-    
-      <i class="md-logo md-nav__button">
-        <img src="./images/siddhi-logo-w.svg">
-      </i>
-    
+    <div class="md-nav__button md-logo">
+      
+        
+          <img src="./images/siddhi-logo-w.svg">
+        
+      
+    </div>
     Siddhi-IO-Websocket
   </label>
   
@@ -243,6 +248,18 @@
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
         
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="api/1.0.3/" title="1.0.3" class="md-nav__link">
+      1.0.3
+    </a>
+  </li>
+
         
           
           
@@ -367,7 +384,7 @@
 <li><a target="_blank" href="https://github.com/wso2-extensions/siddhi-io-websocket/issues">Issue tracker</a></li>
 </ul>
 <h2 id="latest-api-docs">Latest API Docs</h2>
-<p>Latest API Docs is <a target="_blank" href="https://wso2-extensions.github.io/siddhi-io-websocket/api/1.0.1-SNAPSHOT">1.0.1-SNAPSHOT</a>.</p>
+<p>Latest API Docs is <a target="_blank" href="https://wso2-extensions.github.io/siddhi-io-websocket/api/1.0.3">1.0.3</a>.</p>
 <h2 id="how-to-use">How to use</h2>
 <p><strong>Using the extension in <a target="_blank" href="https://github.com/wso2/product-sp">WSO2 Stream Processor</a></strong></p>
 <ul>
@@ -408,10 +425,10 @@
 <hr />
 <h2 id="features">Features</h2>
 <ul>
-<li><a target="_blank" href="https://wso2-extensions.github.io/siddhi-io-websocket/api/1.0.1-SNAPSHOT/#websocket-sink">websocket</a> <em>(<a target="_blank" href="https://wso2.github.io/siddhi/documentation/siddhi-4.0/#sink">(Sink)</a>)</em><br><div style="padding-left: 1em;"><p>A Siddhi application can be configured to publish events via the Websocket transport by adding the @Sink(type = ‘websocket’) annotation at the top of an event stream definition.</p></div></li>
-<li><a target="_blank" href="https://wso2-extensions.github.io/siddhi-io-websocket/api/1.0.1-SNAPSHOT/#websocket-server-sink">websocket-server</a> <em>(<a target="_blank" href="https://wso2.github.io/siddhi/documentation/siddhi-4.0/#sink">(Sink)</a>)</em><br><div style="padding-left: 1em;"><p>A Siddhi application can be configured to publish events via the WebSocket transport by adding the @Sink(type = ‘websocket-server’) annotation at the top of an event stream definition.</p></div></li>
-<li><a target="_blank" href="https://wso2-extensions.github.io/siddhi-io-websocket/api/1.0.1-SNAPSHOT/#websocket-source">websocket</a> <em>(<a target="_blank" href="https://wso2.github.io/siddhi/documentation/siddhi-4.0/#source">(Source)</a>)</em><br><div style="padding-left: 1em;"><p>A Siddhi application can be configured to receive events via the WebSocket by adding the @Source(type = ‘websocket’) annotation at the top of an event stream definition.<br>When this is defined the associated stream will receive events from the WebSocket server on the url defined in the system.</p></div></li>
-<li><a target="_blank" href="https://wso2-extensions.github.io/siddhi-io-websocket/api/1.0.1-SNAPSHOT/#websocket-server-source">websocket-server</a> <em>(<a target="_blank" href="https://wso2.github.io/siddhi/documentation/siddhi-4.0/#source">(Source)</a>)</em><br><div style="padding-left: 1em;"><p>A Siddhi application can be configured to receive events via the WebSocket by adding the @Source(type = ‘websocket-server’) annotation at the top of an event stream definition.</p></div></li>
+<li><a target="_blank" href="https://wso2-extensions.github.io/siddhi-io-websocket/api/1.0.3/#websocket-sink">websocket</a> <em>(<a target="_blank" href="https://wso2.github.io/siddhi/documentation/siddhi-4.0/#sink">(Sink)</a>)</em><br><div style="padding-left: 1em;"><p>A Siddhi application can be configured to publish events via the Websocket transport by adding the @Sink(type = ?websocket?) annotation at the top of an event stream definition.</p></div></li>
+<li><a target="_blank" href="https://wso2-extensions.github.io/siddhi-io-websocket/api/1.0.3/#websocket-server-sink">websocket-server</a> <em>(<a target="_blank" href="https://wso2.github.io/siddhi/documentation/siddhi-4.0/#sink">(Sink)</a>)</em><br><div style="padding-left: 1em;"><p>A Siddhi application can be configured to publish events via the WebSocket transport by adding the @Sink(type = ?websocket-server?) annotation at the top of an event stream definition.</p></div></li>
+<li><a target="_blank" href="https://wso2-extensions.github.io/siddhi-io-websocket/api/1.0.3/#websocket-source">websocket</a> <em>(<a target="_blank" href="https://wso2.github.io/siddhi/documentation/siddhi-4.0/#source">(Source)</a>)</em><br><div style="padding-left: 1em;"><p>A Siddhi application can be configured to receive events via the WebSocket by adding the @Source(type = ?websocket?) annotation at the top of an event stream definition.<br>When this is defined the associated stream will receive events from the WebSocket server on the url defined in the system.</p></div></li>
+<li><a target="_blank" href="https://wso2-extensions.github.io/siddhi-io-websocket/api/1.0.3/#websocket-server-source">websocket-server</a> <em>(<a target="_blank" href="https://wso2.github.io/siddhi/documentation/siddhi-4.0/#source">(Source)</a>)</em><br><div style="padding-left: 1em;"><p>A Siddhi application can be configured to receive events via the WebSocket by adding the @Source(type = ?websocket-server?) annotation at the top of an event stream definition.</p></div></li>
 </ul>
 <h2 id="how-to-contribute">How to Contribute</h2>
 <ul>
@@ -461,13 +478,13 @@
       <nav class="md-footer-nav__inner md-grid">
         
         
-          <a href="api/latest/" title="latest" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="api/1.0.3/" title="1.0.3" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
               <span class="md-flex__ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                latest
+                1.0.3
               </span>
             </div>
             <div class="md-flex__cell md-flex__cell--shrink">
@@ -497,7 +514,7 @@
       
     </div>
     
-      <script src="./assets/javascripts/application-6940329b9f.js"></script>
+      <script src="./assets/javascripts/application-f3ab9e5ff8.js"></script>
       
       
       <script>app.initialize({url:{base:"."}})</script>
