@@ -23,6 +23,8 @@ import org.wso2.siddhi.core.exception.SiddhiAppRuntimeException;
 import org.wso2.siddhi.query.api.definition.StreamDefinition;
 import org.wso2.transport.http.netty.contract.websocket.HandshakeListener;
 
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.atomic.AtomicReference;
 import javax.websocket.Session;
 
 /**
@@ -31,23 +33,27 @@ import javax.websocket.Session;
 
 public class WebSocketSinkHandshakeListener implements HandshakeListener {
     private StreamDefinition streamDefinition;
-    private Session session = null;
+    private AtomicReference<Session> sessionAtomicReference = new AtomicReference<>();
+    private Semaphore semaphore;
 
-    public WebSocketSinkHandshakeListener(StreamDefinition streamDefinition) {
+    public WebSocketSinkHandshakeListener(StreamDefinition streamDefinition, Semaphore semaphore) {
         this.streamDefinition = streamDefinition;
+        this.semaphore = semaphore;
     }
 
     @Override
     public void onSuccess(Session session) {
-        this.session = session;
+        sessionAtomicReference.set(session);
+        semaphore.release();
     }
 
     @Override public void onError(Throwable throwable) {
+        semaphore.release();
         throw new SiddhiAppRuntimeException("Error while connecting with the websocket server defined in '"
                                                     + streamDefinition + "'.", throwable);
     }
 
-    public Session getSession() {
-        return session;
+    public AtomicReference<Session> getSessionAtomicReference() {
+        return sessionAtomicReference;
     }
 }

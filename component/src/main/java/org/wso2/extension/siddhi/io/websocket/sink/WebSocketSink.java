@@ -49,6 +49,8 @@ import java.nio.ByteBuffer;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.atomic.AtomicReference;
 import javax.websocket.Session;
 
 /**
@@ -115,6 +117,7 @@ public class WebSocketSink extends Sink {
     private int idleTimeout;
     private WebSocketClientConnectorListener connectorListener;
     private Session session = null;
+    private Semaphore semaphore = new Semaphore(0);
 
     @Override
     public Class[] getSupportedInputEventClasses() {
@@ -182,17 +185,15 @@ public class WebSocketSink extends Sink {
         WebSocketClientConnector clientConnector = httpConnectorFactory.createWsClientConnector(configuration);
         HandshakeFuture handshakeFuture = clientConnector.connect(connectorListener);
         WebSocketSinkHandshakeListener handshakeListener = new WebSocketSinkHandshakeListener
-                (streamDefinition);
-        handshakeFuture.setHandshakeListener(handshakeListener);
-        // Temp fix to wait until handshakeListener returns a valid session.
-        while (session == null) {
-            session = handshakeListener.getSession();
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                // Do nothing
-            }
+                (streamDefinition, semaphore);
+        try {
+            handshakeFuture.setHandshakeListener(handshakeListener);
+            semaphore.acquire();
+        } catch (InterruptedException e) {
+            log.error("Error occurs while connecting with the server defined in " + streamDefinition, e);
         }
+        AtomicReference<Session> sessionAtomicReference = handshakeListener.getSessionAtomicReference();
+        session = sessionAtomicReference.get();
     }
 
     @Override
