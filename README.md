@@ -12,7 +12,7 @@ Find some useful links below:
 
 ## Latest API Docs 
 
-Latest API Docs is <a target="_blank" href="https://wso2-extensions.github.io/siddhi-io-websocket/api/1.0.3">1.0.3</a>.
+Latest API Docs is <a target="_blank" href="https://wso2-extensions.github.io/siddhi-io-websocket/api/1.0.4">1.0.4</a>.
 
 ## How to use 
 
@@ -46,10 +46,10 @@ Latest API Docs is <a target="_blank" href="https://wso2-extensions.github.io/si
 
 ## Features
 
-* <a target="_blank" href="https://wso2-extensions.github.io/siddhi-io-websocket/api/1.0.3/#websocket-sink">websocket</a> *(<a target="_blank" href="https://wso2.github.io/siddhi/documentation/siddhi-4.0/#sink">(Sink)</a>)*<br><div style="padding-left: 1em;"><p>A Siddhi application can be configured to publish events via the Websocket transport by adding the @Sink(type = ?websocket?) annotation at the top of an event stream definition.</p></div>
-* <a target="_blank" href="https://wso2-extensions.github.io/siddhi-io-websocket/api/1.0.3/#websocket-server-sink">websocket-server</a> *(<a target="_blank" href="https://wso2.github.io/siddhi/documentation/siddhi-4.0/#sink">(Sink)</a>)*<br><div style="padding-left: 1em;"><p>A Siddhi application can be configured to publish events via the WebSocket transport by adding the @Sink(type = ?websocket-server?) annotation at the top of an event stream definition.</p></div>
-* <a target="_blank" href="https://wso2-extensions.github.io/siddhi-io-websocket/api/1.0.3/#websocket-source">websocket</a> *(<a target="_blank" href="https://wso2.github.io/siddhi/documentation/siddhi-4.0/#source">(Source)</a>)*<br><div style="padding-left: 1em;"><p>A Siddhi application can be configured to receive events via the WebSocket by adding the @Source(type = ?websocket?) annotation at the top of an event stream definition.<br>When this is defined the associated stream will receive events from the WebSocket server on the url defined in the system.</p></div>
-* <a target="_blank" href="https://wso2-extensions.github.io/siddhi-io-websocket/api/1.0.3/#websocket-server-source">websocket-server</a> *(<a target="_blank" href="https://wso2.github.io/siddhi/documentation/siddhi-4.0/#source">(Source)</a>)*<br><div style="padding-left: 1em;"><p>A Siddhi application can be configured to receive events via the WebSocket by adding the @Source(type = ?websocket-server?) annotation at the top of an event stream definition.</p></div>
+* <a target="_blank" href="https://wso2-extensions.github.io/siddhi-io-websocket/api/1.0.4/#websocket-sink">websocket</a> *(<a target="_blank" href="https://wso2.github.io/siddhi/documentation/siddhi-4.0/#sink">(Sink)</a>)*<br><div style="padding-left: 1em;"><p>A Siddhi application can be configured to publish events via the Websocket transport by adding the @Sink(type = ?websocket?) annotation at the top of an event stream definition.</p></div>
+* <a target="_blank" href="https://wso2-extensions.github.io/siddhi-io-websocket/api/1.0.4/#websocket-server-sink">websocket-server</a> *(<a target="_blank" href="https://wso2.github.io/siddhi/documentation/siddhi-4.0/#sink">(Sink)</a>)*<br><div style="padding-left: 1em;"><p>A Siddhi application can be configured to publish events via the WebSocket transport by adding the @Sink(type = ?websocket-server?) annotation at the top of an event stream definition.</p></div>
+* <a target="_blank" href="https://wso2-extensions.github.io/siddhi-io-websocket/api/1.0.4/#websocket-source">websocket</a> *(<a target="_blank" href="https://wso2.github.io/siddhi/documentation/siddhi-4.0/#source">(Source)</a>)*<br><div style="padding-left: 1em;"><p>A Siddhi application can be configured to receive events via the WebSocket by adding the @Source(type = ?websocket?) annotation at the top of an event stream definition.<br>When this is defined the associated stream will receive events from the WebSocket server on the url defined in the system.</p></div>
+* <a target="_blank" href="https://wso2-extensions.github.io/siddhi-io-websocket/api/1.0.4/#websocket-server-source">websocket-server</a> *(<a target="_blank" href="https://wso2.github.io/siddhi/documentation/siddhi-4.0/#source">(Source)</a>)*<br><div style="padding-left: 1em;"><p>A Siddhi application can be configured to receive events via the WebSocket by adding the @Source(type = ?websocket-server?) annotation at the top of an event stream definition.</p></div>
 
 ## How to Contribute
  

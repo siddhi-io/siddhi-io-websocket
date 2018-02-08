@@ -1,10 +1,10 @@
-# API Docs - v1.0.4-SNAPSHOT
+# API Docs - v1.0.4
 
 ## Sink
 
 ### websocket *<a target="_blank" href="https://wso2.github.io/siddhi/documentation/siddhi-4.0/#sink">(Sink)</a>*
 
-<p style="word-wrap: break-word">A Siddhi application can be configured to publish events via the Websocket transport by adding the @Sink(type = ‘websocket’) annotation at the top of an event stream definition.</p>
+<p style="word-wrap: break-word">A Siddhi application can be configured to publish events via the Websocket transport by adding the @Sink(type = ?websocket?) annotation at the top of an event stream definition.</p>
 
 <span id="syntax" class="md-typeset" style="display: block; font-weight: bold;">Syntax</span>
 ```
@@ -23,7 +23,7 @@
     </tr>
     <tr>
         <td style="vertical-align: top">url</td>
-        <td style="vertical-align: top; word-wrap: break-word">The URL of the remote endpoint.<br>The url scheme should be either ‘ws’ or ‘wss’.</td>
+        <td style="vertical-align: top; word-wrap: break-word">The URL of the remote endpoint.<br>The url scheme should be either ?ws? or ?wss?.</td>
         <td style="vertical-align: top"></td>
         <td style="vertical-align: top">STRING</td>
         <td style="vertical-align: top">No</td>
@@ -58,7 +58,7 @@
 <span id="examples" class="md-typeset" style="display: block; font-weight: bold;">Examples</span>
 <span id="example-1" class="md-typeset" style="display: block; color: rgba(0, 0, 0, 0.54); font-size: 12.8px; font-weight: bold;">EXAMPLE 1</span>
 ```
-@Sink(type = ‘websocket’, url = 'ws://localhost:8025/abc', 
+@Sink(type = ?websocket?, url = 'ws://localhost:8025/abc', 
    @map(type='xml'))
 define stream Foo (attribute1 string, attribute2 int);
 ```
@@ -66,7 +66,7 @@ define stream Foo (attribute1 string, attribute2 int);
 
 ### websocket-server *<a target="_blank" href="https://wso2.github.io/siddhi/documentation/siddhi-4.0/#sink">(Sink)</a>*
 
-<p style="word-wrap: break-word">A Siddhi application can be configured to publish events via the WebSocket transport by adding the @Sink(type = ‘websocket-server’) annotation at the top of an event stream definition.</p>
+<p style="word-wrap: break-word">A Siddhi application can be configured to publish events via the WebSocket transport by adding the @Sink(type = ?websocket-server?) annotation at the top of an event stream definition.</p>
 
 <span id="syntax" class="md-typeset" style="display: block; font-weight: bold;">Syntax</span>
 ```
@@ -144,7 +144,7 @@ define stream Foo (attribute1 string, attribute2 int);
 <span id="examples" class="md-typeset" style="display: block; font-weight: bold;">Examples</span>
 <span id="example-1" class="md-typeset" style="display: block; color: rgba(0, 0, 0, 0.54); font-size: 12.8px; font-weight: bold;">EXAMPLE 1</span>
 ```
-@Sink(type = ‘websocket-server’, host='localhost', port='9025', 
+@Sink(type = ?websocket-server?, host='localhost', port='9025', 
    @map(type='xml'))
 define stream Foo (attribute1 string, attribute2 int);
 ```
@@ -154,7 +154,7 @@ define stream Foo (attribute1 string, attribute2 int);
 
 ### websocket *<a target="_blank" href="https://wso2.github.io/siddhi/documentation/siddhi-4.0/#source">(Source)</a>*
 
-<p style="word-wrap: break-word">A Siddhi application can be configured to receive events via the WebSocket by adding the @Source(type = ‘websocket’) annotation at the top of an event stream definition.<br>When this is defined the associated stream will receive events from the WebSocket server on the url defined in the system.</p>
+<p style="word-wrap: break-word">A Siddhi application can be configured to receive events via the WebSocket by adding the @Source(type = ?websocket?) annotation at the top of an event stream definition.<br>When this is defined the associated stream will receive events from the WebSocket server on the url defined in the system.</p>
 
 <span id="syntax" class="md-typeset" style="display: block; font-weight: bold;">Syntax</span>
 ```
@@ -173,7 +173,7 @@ define stream Foo (attribute1 string, attribute2 int);
     </tr>
     <tr>
         <td style="vertical-align: top">url</td>
-        <td style="vertical-align: top; word-wrap: break-word">The URL of the remote endpoint.<br>The url scheme should be either ‘ws’ or ‘wss’.</td>
+        <td style="vertical-align: top; word-wrap: break-word">The URL of the remote endpoint.<br>The url scheme should be either ?ws? or ?wss?.</td>
         <td style="vertical-align: top"></td>
         <td style="vertical-align: top">STRING</td>
         <td style="vertical-align: top">No</td>
@@ -208,7 +208,7 @@ define stream Foo (attribute1 string, attribute2 int);
 <span id="examples" class="md-typeset" style="display: block; font-weight: bold;">Examples</span>
 <span id="example-1" class="md-typeset" style="display: block; color: rgba(0, 0, 0, 0.54); font-size: 12.8px; font-weight: bold;">EXAMPLE 1</span>
 ```
-@Source(type = ‘websocket’, url = 'ws://localhost:8025/websockets/abc', 
+@Source(type = ?websocket?, url = 'ws://localhost:8025/websockets/abc', 
    @map(type='xml'))
 define stream Foo (attribute1 string, attribute2 int);
 ```
@@ -216,7 +216,7 @@ define stream Foo (attribute1 string, attribute2 int);
 
 ### websocket-server *<a target="_blank" href="https://wso2.github.io/siddhi/documentation/siddhi-4.0/#source">(Source)</a>*
 
-<p style="word-wrap: break-word">A Siddhi application can be configured to receive events via the WebSocket by adding the @Source(type = ‘websocket-server’) annotation at the top of an event stream definition.</p>
+<p style="word-wrap: break-word">A Siddhi application can be configured to receive events via the WebSocket by adding the @Source(type = ?websocket-server?) annotation at the top of an event stream definition.</p>
 
 <span id="syntax" class="md-typeset" style="display: block; font-weight: bold;">Syntax</span>
 ```
@@ -294,7 +294,7 @@ define stream Foo (attribute1 string, attribute2 int);
 <span id="examples" class="md-typeset" style="display: block; font-weight: bold;">Examples</span>
 <span id="example-1" class="md-typeset" style="display: block; color: rgba(0, 0, 0, 0.54); font-size: 12.8px; font-weight: bold;">EXAMPLE 1</span>
 ```
-@Source(type = ‘websocket-server’, host='localhost', port='8025', 
+@Source(type = ?websocket-server?, host='localhost', port='8025', 
    @map(type='xml'))
 define stream Foo (attribute1 string, attribute2 int);
 ```
