@@ -26,8 +26,6 @@ import org.wso2.transport.http.netty.contract.ServerConnectorFuture;
 import org.wso2.transport.http.netty.contractimpl.HttpWsConnectorFactoryImpl;
 import org.wso2.transport.http.netty.listener.ServerBootstrapConfiguration;
 
-import java.util.HashMap;
-
 /**
  * {@code WebSocketServer } Handle the WebSocket server.
  */
@@ -76,9 +74,9 @@ class WebSocketServer {
         }
         listenerConfiguration.setHost(host);
         listenerConfiguration.setPort(webSocketPort);
-        ServerBootstrapConfiguration bootstrapConfiguration = new ServerBootstrapConfiguration(new HashMap<>());
         HttpWsConnectorFactoryImpl httpConnectorFactory = new HttpWsConnectorFactoryImpl();
-        serverConnector = httpConnectorFactory.createServerConnector(bootstrapConfiguration, listenerConfiguration);
+        serverConnector = httpConnectorFactory.createServerConnector(ServerBootstrapConfiguration.getInstance(),
+                                                                     listenerConfiguration);
         ServerConnectorFuture connectorFuture = serverConnector.start();
         connectorFuture.setWSConnectorListener(serverSinkConnectorListener);
         connectorFuture.sync();
