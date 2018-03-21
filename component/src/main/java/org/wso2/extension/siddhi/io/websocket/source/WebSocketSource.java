@@ -53,14 +53,14 @@ import java.util.Objects;
         name = "websocket",
         namespace = "source",
         description = "A Siddhi application can be configured to receive events via the WebSocket by adding " +
-                "the @Source(type = ‘websocket’) annotation at the top of an event stream definition.\n" +
+                "the @Source(type = 'websocket') annotation at the top of an event stream definition.\n" +
                 "When this is defined the associated stream will receive events from the WebSocket server on " +
                 "the url defined in the system.",
         parameters = {
                 @Parameter(
                         name = "url",
                         description = "The URL of the remote endpoint.\n" +
-                                "The url scheme should be either ‘ws’ or ‘wss’.",
+                                "The url scheme should be either 'ws' or 'wss'.",
                         type = DataType.STRING
                 ),
                 @Parameter(
@@ -89,7 +89,7 @@ import java.util.Objects;
         },
         examples = {
                 @Example(
-                        syntax = "@Source(type = ‘websocket’, url = 'ws://localhost:8025/websockets/abc', \n" +
+                        syntax = "@Source(type = 'websocket', url = 'ws://localhost:8025/websockets/abc', \n" +
                                 "   @map(type='xml'))\n" +
                                 "define stream Foo (attribute1 string, attribute2 int);",
                         description = "" +

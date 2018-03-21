@@ -61,12 +61,12 @@ import javax.websocket.Session;
         name = "websocket",
         namespace = "sink",
         description = "A Siddhi application can be configured to publish events via the Websocket transport by " +
-                "adding the @Sink(type = ‘websocket’) annotation at the top of an event stream definition.",
+                "adding the @Sink(type = 'websocket') annotation at the top of an event stream definition.",
         parameters = {
                 @Parameter(
                         name = "url",
                         description = "The URL of the remote endpoint.\n" +
-                                "The url scheme should be either ‘ws’ or ‘wss’.",
+                                "The url scheme should be either 'ws' or 'wss'.",
                         type = DataType.STRING
                 ),
                 @Parameter(
@@ -95,7 +95,7 @@ import javax.websocket.Session;
         },
         examples = {
                 @Example(
-                        syntax = "@Sink(type = ‘websocket’, url = 'ws://localhost:8025/abc', \n" +
+                        syntax = "@Sink(type = 'websocket', url = 'ws://localhost:8025/abc', \n" +
                                 "   @map(type='xml'))\n" +
                                 "define stream Foo (attribute1 string, attribute2 int);",
                         description = "" +
