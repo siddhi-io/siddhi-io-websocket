@@ -44,7 +44,7 @@ import java.util.Map;
         name = "websocket-server",
         namespace = "source",
         description = "A Siddhi application can be configured to receive events via the WebSocket by adding " +
-                "the @Source(type = ‘websocket-server’) annotation at the top of an event stream definition.",
+                "the @Source(type = 'websocket-server') annotation at the top of an event stream definition.",
         parameters = {
                 @Parameter(
                         name = "host",
@@ -100,7 +100,7 @@ import java.util.Map;
         },
         examples = {
                 @Example(
-                        syntax = "@Source(type = ‘websocket-server’, host='localhost', port='8025', \n" +
+                        syntax = "@Source(type = 'websocket-server', host='localhost', port='8025', \n" +
                                 "   @map(type='xml'))\n" +
                                 "define stream Foo (attribute1 string, attribute2 int);",
                         description = "" +

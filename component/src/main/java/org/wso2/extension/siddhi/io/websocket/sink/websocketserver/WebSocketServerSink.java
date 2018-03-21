@@ -45,7 +45,7 @@ import java.util.Map;
         name = "websocket-server",
         namespace = "sink",
         description = "A Siddhi application can be configured to publish events via the WebSocket transport by " +
-                "adding the @Sink(type = ‘websocket-server’) annotation at the top of an event stream definition.",
+                "adding the @Sink(type = 'websocket-server') annotation at the top of an event stream definition.",
         parameters = {
                 @Parameter(
                         name = "host",
@@ -102,7 +102,7 @@ import java.util.Map;
         },
         examples = {
                 @Example(
-                        syntax = "@Sink(type = ‘websocket-server’, host='localhost', port='9025', \n" +
+                        syntax = "@Sink(type = 'websocket-server', host='localhost', port='9025', \n" +
                                 "   @map(type='xml'))\n" +
                                 "define stream Foo (attribute1 string, attribute2 int);",
                         description = "" +
