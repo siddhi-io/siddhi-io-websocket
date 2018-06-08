@@ -19,15 +19,16 @@
 
 package org.wso2.extension.siddhi.io.websocket.sink.util;
 
+import org.wso2.transport.http.netty.contract.HttpWsConnectorFactory;
 import org.wso2.transport.http.netty.contract.websocket.HandshakeFuture;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketClientConnector;
 import org.wso2.transport.http.netty.contract.websocket.WsClientConnectorConfig;
-import org.wso2.transport.http.netty.contractimpl.HttpWsConnectorFactoryImpl;
+import org.wso2.transport.http.netty.contractimpl.DefaultHttpWsConnectorFactory;
 
 public class WebSocketReceiver {
 
     public WebSocketReceiver(String url, ResultContainer resultContainer) {
-        HttpWsConnectorFactoryImpl httpConnectorFactory = new HttpWsConnectorFactoryImpl();
+        HttpWsConnectorFactory httpConnectorFactory = new DefaultHttpWsConnectorFactory();
         WsClientConnectorConfig configuration = new WsClientConnectorConfig(url);
         WebSocketClientConnector clientConnector = httpConnectorFactory.createWsClientConnector(configuration);
         WebSocketClientConnectorListener connectorListener = new WebSocketClientConnectorListener();

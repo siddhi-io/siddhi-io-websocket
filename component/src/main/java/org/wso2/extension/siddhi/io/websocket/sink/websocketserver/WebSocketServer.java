@@ -21,9 +21,10 @@ package org.wso2.extension.siddhi.io.websocket.sink.websocketserver;
 
 import org.wso2.siddhi.query.api.definition.StreamDefinition;
 import org.wso2.transport.http.netty.config.ListenerConfiguration;
+import org.wso2.transport.http.netty.contract.HttpWsConnectorFactory;
 import org.wso2.transport.http.netty.contract.ServerConnector;
 import org.wso2.transport.http.netty.contract.ServerConnectorFuture;
-import org.wso2.transport.http.netty.contractimpl.HttpWsConnectorFactoryImpl;
+import org.wso2.transport.http.netty.contractimpl.DefaultHttpWsConnectorFactory;
 import org.wso2.transport.http.netty.listener.ServerBootstrapConfiguration;
 
 /**
@@ -74,9 +75,9 @@ class WebSocketServer {
         }
         listenerConfiguration.setHost(host);
         listenerConfiguration.setPort(webSocketPort);
-        HttpWsConnectorFactoryImpl httpConnectorFactory = new HttpWsConnectorFactoryImpl();
-        serverConnector = httpConnectorFactory.createServerConnector(ServerBootstrapConfiguration.getInstance(),
-                                                                     listenerConfiguration);
+        HttpWsConnectorFactory httpConnectorFactory = new DefaultHttpWsConnectorFactory();
+        serverConnector = httpConnectorFactory.createServerConnector(new ServerBootstrapConfiguration(null),
+                listenerConfiguration);
         ServerConnectorFuture connectorFuture = serverConnector.start();
         connectorFuture.setWSConnectorListener(serverSinkConnectorListener);
         connectorFuture.sync();

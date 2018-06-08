@@ -23,8 +23,7 @@ import org.wso2.extension.siddhi.io.websocket.util.WebSocketClientConnectorListe
 import org.wso2.siddhi.core.exception.SiddhiAppRuntimeException;
 import org.wso2.siddhi.core.stream.input.source.SourceEventListener;
 import org.wso2.transport.http.netty.contract.websocket.HandshakeListener;
-
-import javax.websocket.Session;
+import org.wso2.transport.http.netty.contract.websocket.WebSocketConnection;
 
 /**
  * Future listener for WebSocket handshake.
@@ -40,7 +39,7 @@ public class WebSocketSourceHandshakeListener implements HandshakeListener {
         this.sourceEventListener = sourceEventListener;
     }
 
-    @Override public void onSuccess(Session session) {
+    @Override public void onSuccess(WebSocketConnection webSocketConnection) {
         connectorListener.setSourceEventListener(sourceEventListener);
     }
 

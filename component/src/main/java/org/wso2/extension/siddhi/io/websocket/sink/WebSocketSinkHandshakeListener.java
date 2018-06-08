@@ -22,6 +22,7 @@ package org.wso2.extension.siddhi.io.websocket.sink;
 import org.wso2.siddhi.core.exception.SiddhiAppRuntimeException;
 import org.wso2.siddhi.query.api.definition.StreamDefinition;
 import org.wso2.transport.http.netty.contract.websocket.HandshakeListener;
+import org.wso2.transport.http.netty.contract.websocket.WebSocketConnection;
 
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicReference;
@@ -42,8 +43,8 @@ public class WebSocketSinkHandshakeListener implements HandshakeListener {
     }
 
     @Override
-    public void onSuccess(Session session) {
-        sessionAtomicReference.set(session);
+    public void onSuccess(WebSocketConnection webSocketConnection) {
+        sessionAtomicReference.set(webSocketConnection.getSession());
         semaphore.release();
     }
 
