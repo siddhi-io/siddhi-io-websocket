@@ -46,7 +46,7 @@ public class WebSocketServerSourceConnectorListener implements WebSocketConnecto
     private String[] subProtocols = null;
     private int idleTimeout;
     private SourceEventListener sourceEventListener = null;
-    private static final WebSocketSourceHandShakeListener webSocketSourceHandShakeListener = new
+    private static WebSocketSourceHandShakeListener webSocketSourceHandShakeListener = new
             WebSocketSourceHandShakeListener();
 
     WebSocketServerSourceConnectorListener(String[] subProtocols, int idleTimeout,
