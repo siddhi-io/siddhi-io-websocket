@@ -22,8 +22,7 @@ package org.wso2.extension.siddhi.io.websocket.sink.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.transport.http.netty.contract.websocket.HandshakeListener;
-
-import javax.websocket.Session;
+import org.wso2.transport.http.netty.contract.websocket.WebSocketConnection;
 
 public class WebSocketHandshakeListener implements HandshakeListener {
     private static Logger log = LoggerFactory.getLogger(WebSocketHandshakeListener.class);
@@ -38,7 +37,7 @@ public class WebSocketHandshakeListener implements HandshakeListener {
     }
 
     @Override
-    public void onSuccess(Session session) {
+    public void onSuccess(WebSocketConnection webSocketConnection) {
         connectorListener.setResultContainer(resultContainer);
     }
 

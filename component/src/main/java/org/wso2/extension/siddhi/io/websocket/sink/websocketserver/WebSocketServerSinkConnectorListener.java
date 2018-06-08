@@ -115,7 +115,7 @@ public class WebSocketServerSinkConnectorListener implements WebSocketConnectorL
     @Override
     public void onIdleTimeout(WebSocketControlMessage controlMessage) {
         try {
-            Session session = controlMessage.getChannelSession();
+            Session session = controlMessage.getWebSocketConnection().getSession();
             session.close(new CloseReason(() -> 1001, "Connection timeout"));
         } catch (IOException e) {
             log.error("Error occurred while closing the connection: ", e);

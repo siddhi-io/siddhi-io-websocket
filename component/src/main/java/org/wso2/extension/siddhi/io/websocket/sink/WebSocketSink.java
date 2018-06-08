@@ -37,10 +37,11 @@ import org.wso2.siddhi.core.util.config.ConfigReader;
 import org.wso2.siddhi.core.util.transport.DynamicOptions;
 import org.wso2.siddhi.core.util.transport.OptionHolder;
 import org.wso2.siddhi.query.api.definition.StreamDefinition;
+import org.wso2.transport.http.netty.contract.HttpWsConnectorFactory;
 import org.wso2.transport.http.netty.contract.websocket.HandshakeFuture;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketClientConnector;
 import org.wso2.transport.http.netty.contract.websocket.WsClientConnectorConfig;
-import org.wso2.transport.http.netty.contractimpl.HttpWsConnectorFactoryImpl;
+import org.wso2.transport.http.netty.contractimpl.DefaultHttpWsConnectorFactory;
 
 import java.io.IOException;
 import java.net.URI;
@@ -169,7 +170,7 @@ public class WebSocketSink extends Sink {
 
     @Override
     public void connect() throws ConnectionUnavailableException {
-        HttpWsConnectorFactoryImpl httpConnectorFactory = new HttpWsConnectorFactoryImpl();
+        HttpWsConnectorFactory httpConnectorFactory = new DefaultHttpWsConnectorFactory();
         WsClientConnectorConfig configuration = new WsClientConnectorConfig(url);
         if (subProtocol != null) {
             String[] subProtocol1 = WebSocketUtil.getSubProtocol(subProtocol);
