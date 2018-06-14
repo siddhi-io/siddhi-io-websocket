@@ -23,12 +23,13 @@ import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import org.wso2.extension.siddhi.io.websocket.util.LoggerAppender;
+import org.wso2.extension.siddhi.io.websocket.util.LoggerCallback;
 import org.wso2.extension.siddhi.io.websocket.util.WebSocketServer;
 import org.wso2.siddhi.core.SiddhiAppRuntime;
 import org.wso2.siddhi.core.SiddhiManager;
 import org.wso2.siddhi.core.event.Event;
 import org.wso2.siddhi.core.exception.SiddhiAppCreationException;
-import org.wso2.siddhi.core.exception.SiddhiAppRuntimeException;
 import org.wso2.siddhi.core.stream.input.InputHandler;
 import org.wso2.siddhi.core.stream.output.StreamCallback;
 import org.wso2.siddhi.core.util.SiddhiTestHelper;
@@ -44,6 +45,7 @@ public class WebSocketSourceTest {
     private List<String> receivedEventNameList;
     private int waitTime = 50;
     private int timeout = 30000;
+    private boolean isLogEventArrived = false;
 
     @BeforeMethod
     public void init() {
@@ -168,8 +170,9 @@ public class WebSocketSourceTest {
                         "from FooStream1 select symbol, price, volume insert into BarStream1;");
     }
 
-    @Test(expectedExceptions = SiddhiAppRuntimeException.class, dependsOnMethods = "testWebSocketSourceWithoutUri")
+    @Test(dependsOnMethods = "testWebSocketSourceWithoutUri")
     public void testWebSocketSourceInvalidUri() throws InterruptedException {
+        String regexPattern = "Error starting Siddhi App 'TestExecutionPlan'";
         SiddhiManager siddhiManager = new SiddhiManager();
         SiddhiAppRuntime executionPlanRuntime = siddhiManager.createSiddhiAppRuntime(
                 "@App:name('TestExecutionPlan') " +
@@ -179,9 +182,17 @@ public class WebSocketSourceTest {
                         "@map(type='xml'))" +
                         "Define stream BarStream1 (symbol string, price float, volume long);" +
                         "from FooStream1 select symbol, price, volume insert into BarStream1;");
-        InputHandler fooStream = executionPlanRuntime.getInputHandler("FooStream1");
+        LoggerCallback loggerCallback = new LoggerCallback(regexPattern) {
+            @Override
+            public void receive(String logEventMessage) {
+                isLogEventArrived = true;
+            }
+        };
+        LoggerAppender.setLoggerCallback(loggerCallback);
         executionPlanRuntime.start();
-        fooStream.send(new Object[]{"WSO2", 55.6f, 100L});
+        Thread.sleep(1000);
+        Assert.assertEquals(isLogEventArrived, true,
+                            "Matching log event not found for pattern: '" + regexPattern + "'");
         executionPlanRuntime.shutdown();
     }
 
