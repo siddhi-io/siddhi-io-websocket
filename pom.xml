@@ -48,8 +48,8 @@
         <carbon.feature.plugin.version>3.1.1</carbon.feature.plugin.version>
         <maven.surefire.plugin.version>2.12.4</maven.surefire.plugin.version>
         <testng.version>6.8</testng.version>
-        <siddhi.map.xml.version>4.0.16</siddhi.map.xml.version>
-        <siddhi.map.binary.version>1.0.13</siddhi.map.binary.version>
+        <siddhi.map.xml.version>4.0.18</siddhi.map.xml.version>
+        <siddhi.map.binary.version>1.0.15</siddhi.map.binary.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jacoco.version>0.7.9</jacoco.version>
         <transport.version>6.0.163</transport.version>
