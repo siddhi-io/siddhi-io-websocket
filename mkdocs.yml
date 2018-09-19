@@ -1,7 +1,7 @@
 site_name: Siddhi IO Websocket
 site_description: Siddhi IO Websocket Extension
 site_author: WSO2
-site_url: https://github.com/wso2-extensions/siddhi-io-websocket/
+site_url: https://wso2-extensions.github.io/siddhi-io-websocket/
 extra_css:
 - stylesheets/extra.css
 extra_javascript:
