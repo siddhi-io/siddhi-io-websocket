@@ -34,9 +34,9 @@ import org.wso2.siddhi.core.stream.input.source.SourceEventListener;
 import org.wso2.siddhi.core.util.config.ConfigReader;
 import org.wso2.siddhi.core.util.transport.OptionHolder;
 import org.wso2.transport.http.netty.contract.HttpWsConnectorFactory;
-import org.wso2.transport.http.netty.contract.websocket.HandshakeFuture;
+import org.wso2.transport.http.netty.contract.websocket.ClientHandshakeFuture;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketClientConnector;
-import org.wso2.transport.http.netty.contract.websocket.WsClientConnectorConfig;
+import org.wso2.transport.http.netty.contract.websocket.WebSocketClientConnectorConfig;
 import org.wso2.transport.http.netty.contractimpl.DefaultHttpWsConnectorFactory;
 
 import java.net.URI;
@@ -86,6 +86,24 @@ import java.util.Objects;
                         type = DataType.INT,
                         optional = true,
                         defaultValue = "-1"
+                ),
+                @Parameter(
+                        name = "truststore.path",
+                        description = "The file path to the location of the truststore. If a custom truststore is" +
+                                " not specified, then the system uses the default truststore file - wso2carbon.jks " +
+                                "in the `${carbon.home}/resources/security` directory.",
+                        type = {DataType.STRING},
+                        optional = true,
+                        defaultValue = "${carbon.home}/resources/security/client-truststore.jks"
+                ),
+                @Parameter(
+                        name = "truststore.password",
+                        description = "The password for the truststore. A custom password can be specified " +
+                                "if required. If no custom password is specified, then the system uses " +
+                                "`wso2carbon` as the default password.",
+                        type = {DataType.STRING},
+                        optional = true,
+                        defaultValue = "wso2carbon"
                 )
         },
         examples = {
@@ -108,6 +126,9 @@ public class WebSocketSource extends Source {
     private int idleTimeout;
     private SourceEventListener sourceEventListener;
     private WebSocketClientConnectorListener connectorListener;
+    private boolean sslEnabled = false;
+    private String tlsstruststorePath;
+    private String tlsstruststorePass;
 
     @Override
     public void init(SourceEventListener sourceEventListener, OptionHolder optionHolder, String[] strings,
@@ -140,6 +161,19 @@ public class WebSocketSource extends Source {
                                                              " for the websocket server should be either `ws` or "
                                                              + "`wss`.");
             }
+            if (Objects.equals("wss", scheme)) {
+                this.sslEnabled = true;
+                this.tlsstruststorePath = optionHolder.validateAndGetStaticValue(
+                        WebSocketProperties.TLS_TRUSTSTORE_PATH, configReader.readConfig
+                                (WebSocketProperties.TLS_TRUSTSTORE_PATH,
+                                        WebSocketProperties
+                                                .DEFAULT_TRUSTSTORE_FILE_PATH));
+                this.tlsstruststorePass = optionHolder.validateAndGetStaticValue(
+                        WebSocketProperties.TLS_TRUSTSTORE_PASS, configReader.readConfig(
+                                WebSocketProperties.TLS_TRUSTSTORE_PASS,
+                                WebSocketProperties.
+                                        DEFAULT_TRUSTSTORE_PASS));
+            }
         } catch (URISyntaxException e) {
             throw new SiddhiAppCreationException("There is an syntax error in the '" + WebSocketProperties.URL +
                                                          "' of the websocket server.", e);
@@ -155,7 +189,7 @@ public class WebSocketSource extends Source {
     @Override
     public void connect(ConnectionCallback connectionCallback) throws ConnectionUnavailableException {
         HttpWsConnectorFactory httpConnectorFactory = new DefaultHttpWsConnectorFactory();
-        WsClientConnectorConfig configuration = new WsClientConnectorConfig(url);
+        WebSocketClientConnectorConfig configuration = new WebSocketClientConnectorConfig(url);
         if (subProtocol != null) {
             String[] subProtocol1 = WebSocketUtil.getSubProtocol(subProtocol);
             configuration.setSubProtocols(subProtocol1);
@@ -167,11 +201,17 @@ public class WebSocketSource extends Source {
         if (idleTimeoutString != null) {
             configuration.setIdleTimeoutInMillis(idleTimeout);
         }
+        if (sslEnabled) {
+            configuration.setTrustStoreFile(this.tlsstruststorePath);
+            configuration.setTrustStorePass(this.tlsstruststorePass);
+        }
+        configuration.setAutoRead(true);
         WebSocketClientConnector clientConnector = httpConnectorFactory.createWsClientConnector(configuration);
-        HandshakeFuture handshakeFuture = clientConnector.connect(connectorListener);
+        ClientHandshakeFuture handshakeFuture = clientConnector.connect();
+        handshakeFuture.setWebSocketConnectorListener(connectorListener);
         WebSocketSourceHandshakeListener handshakeListener = new WebSocketSourceHandshakeListener
                 (connectorListener, sourceEventListener);
-        handshakeFuture.setHandshakeListener(handshakeListener);
+        handshakeFuture.setClientHandshakeListener(handshakeListener);
     }
 
     @Override

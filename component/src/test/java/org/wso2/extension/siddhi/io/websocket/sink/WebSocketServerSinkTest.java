@@ -127,6 +127,8 @@ public class WebSocketServerSinkTest {
                         "define stream FooStream1 (symbol string); " +
                         "@info(name = 'query1') " +
                         "@source(type='websocket', url = 'wss://localhost:9026/wso2', " +
+                        "truststore.path ='${carbon.home}/resources/conf/transports/client-truststore.jks' , " +
+                        "truststore.password='wso2carbon', " +
                         "@map(type='xml'))" +
                         "Define stream BarStream1 (symbol string);" +
                         "from FooStream1 select symbol insert into BarStream1;");

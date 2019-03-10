@@ -1,4 +1,4 @@
-# API Docs - v1.0.11
+# API Docs - v1.0.12-SNAPSHOT
 
 ## Sink
 
@@ -8,7 +8,7 @@
 
 <span id="syntax" class="md-typeset" style="display: block; font-weight: bold;">Syntax</span>
 ```
-@sink(type="websocket", url="<STRING>", sub.protocol="<STRING>", headers="<STRING>", idle.timeout="<INT>", @map(...)))
+@sink(type="websocket", url="<STRING>", sub.protocol="<STRING>", headers="<STRING>", idle.timeout="<INT>", truststore.path="<STRING>", truststore.password="<STRING>", @map(...)))
 ```
 
 <span id="query-parameters" class="md-typeset" style="display: block; color: rgba(0, 0, 0, 0.54); font-size: 12.8px; font-weight: bold;">QUERY PARAMETERS</span>
@@ -50,6 +50,22 @@
         <td style="vertical-align: top; word-wrap: break-word">Idle timeout of the connection</td>
         <td style="vertical-align: top">-1</td>
         <td style="vertical-align: top">INT</td>
+        <td style="vertical-align: top">Yes</td>
+        <td style="vertical-align: top">No</td>
+    </tr>
+    <tr>
+        <td style="vertical-align: top">truststore.path</td>
+        <td style="vertical-align: top; word-wrap: break-word">The file path to the location of the truststore. If a custom truststore is not specified, then the system uses the default truststore file - wso2carbon.jks in the <code>${carbon.home}/resources/security</code> directory.</td>
+        <td style="vertical-align: top">${carbon.home}/resources/security/client-truststore.jks</td>
+        <td style="vertical-align: top">STRING</td>
+        <td style="vertical-align: top">Yes</td>
+        <td style="vertical-align: top">No</td>
+    </tr>
+    <tr>
+        <td style="vertical-align: top">truststore.password</td>
+        <td style="vertical-align: top; word-wrap: break-word">The password for the truststore. A custom password can be specified if required. If no custom password is specified, then the system uses <code>wso2carbon</code> as the default password.</td>
+        <td style="vertical-align: top">wso2carbon</td>
+        <td style="vertical-align: top">STRING</td>
         <td style="vertical-align: top">Yes</td>
         <td style="vertical-align: top">No</td>
     </tr>
@@ -158,7 +174,7 @@ define stream Foo (attribute1 string, attribute2 int);
 
 <span id="syntax" class="md-typeset" style="display: block; font-weight: bold;">Syntax</span>
 ```
-@source(type="websocket", url="<STRING>", sub.protocol="<STRING>", headers="<STRING>", idle.timeout="<INT>", @map(...)))
+@source(type="websocket", url="<STRING>", sub.protocol="<STRING>", headers="<STRING>", idle.timeout="<INT>", truststore.path="<STRING>", truststore.password="<STRING>", @map(...)))
 ```
 
 <span id="query-parameters" class="md-typeset" style="display: block; color: rgba(0, 0, 0, 0.54); font-size: 12.8px; font-weight: bold;">QUERY PARAMETERS</span>
@@ -200,6 +216,22 @@ define stream Foo (attribute1 string, attribute2 int);
         <td style="vertical-align: top; word-wrap: break-word">Idle timeout of the connection</td>
         <td style="vertical-align: top">-1</td>
         <td style="vertical-align: top">INT</td>
+        <td style="vertical-align: top">Yes</td>
+        <td style="vertical-align: top">No</td>
+    </tr>
+    <tr>
+        <td style="vertical-align: top">truststore.path</td>
+        <td style="vertical-align: top; word-wrap: break-word">The file path to the location of the truststore. If a custom truststore is not specified, then the system uses the default truststore file - wso2carbon.jks in the <code>${carbon.home}/resources/security</code> directory.</td>
+        <td style="vertical-align: top">${carbon.home}/resources/security/client-truststore.jks</td>
+        <td style="vertical-align: top">STRING</td>
+        <td style="vertical-align: top">Yes</td>
+        <td style="vertical-align: top">No</td>
+    </tr>
+    <tr>
+        <td style="vertical-align: top">truststore.password</td>
+        <td style="vertical-align: top; word-wrap: break-word">The password for the truststore. A custom password can be specified if required. If no custom password is specified, then the system uses <code>wso2carbon</code> as the default password.</td>
+        <td style="vertical-align: top">wso2carbon</td>
+        <td style="vertical-align: top">STRING</td>
         <td style="vertical-align: top">Yes</td>
         <td style="vertical-align: top">No</td>
     </tr>

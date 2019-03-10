@@ -34,6 +34,10 @@ public class WebSocketProperties {
     public static final String TLS_ENABLED = "tls.enabled";
     public static final String TLS_KEYSTORE_PATH = "keystore.path";
     public static final String TLS_KEYSTORE_PASS = "keystore.password";
+    public static final String TLS_TRUSTSTORE_PATH = "truststore.path";
+    public static final String TLS_TRUSTSTORE_PASS = "truststore.password";
     public static final String DEFAULT_KEYSTORE_FILE_PATH = "${carbon.home}/resources/security/wso2carbon.jks";
     public static final String DEFAULT_KEYSTORE_PASS = "wso2carbon";
+    public static final String DEFAULT_TRUSTSTORE_FILE_PATH = "${carbon.home}/resources/security/client-truststore.jks";
+    public static final String DEFAULT_TRUSTSTORE_PASS = "wso2carbon";
 }
