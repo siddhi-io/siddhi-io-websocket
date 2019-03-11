@@ -69,6 +69,7 @@ public class WebSocketEndpoint {
     @OnError
     public void onError(Throwable throwable, WebSocketConnection websocketConnection) {
         LOGGER.error("Error found in method : " + throwable.toString());
+        webSocketConnectionList.remove(websocketConnection);
     }
 
 }
