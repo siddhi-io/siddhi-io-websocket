@@ -170,9 +170,7 @@ public class WebSocketSource extends Source {
                                                 .DEFAULT_TRUSTSTORE_FILE_PATH));
                 this.tlsstruststorePass = optionHolder.validateAndGetStaticValue(
                         WebSocketProperties.TLS_TRUSTSTORE_PASS, configReader.readConfig(
-                                WebSocketProperties.TLS_TRUSTSTORE_PASS,
-                                WebSocketProperties.
-                                        DEFAULT_TRUSTSTORE_PASS));
+                                WebSocketProperties.TLS_TRUSTSTORE_PASS, WebSocketProperties.DEFAULT_TRUSTSTORE_PASS));
             }
         } catch (URISyntaxException e) {
             throw new SiddhiAppCreationException("There is an syntax error in the '" + WebSocketProperties.URL +

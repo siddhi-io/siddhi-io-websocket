@@ -48,7 +48,8 @@ public class WebSocketSinkHandshakeListener implements ClientHandshakeListener {
         semaphore.release();
     }
 
-    @Override public void onError(Throwable t, HttpCarbonResponse response) {
+    @Override
+    public void onError(Throwable t, HttpCarbonResponse response) {
         semaphore.release();
         throw new SiddhiAppRuntimeException("Error while connecting with the websocket server defined in '"
                 + streamDefinition + "'.", t);
