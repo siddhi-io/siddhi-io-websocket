@@ -64,16 +64,12 @@ public class WebSocketServerSinkConnectorListener implements WebSocketConnectorL
     void send(Object message) {
         webSocketConnectionList.forEach(
                 currentWebSocketConnection -> {
-                    if (currentWebSocketConnection.isOpen()) {
-                        if (message instanceof ByteBuffer) {
-                            byte[] byteMessage = ((ByteBuffer) message).array();
-                            ByteBuffer binaryMessage = ByteBuffer.wrap(byteMessage);
-                            currentWebSocketConnection.pushBinary(binaryMessage);
-                        } else {
-                            currentWebSocketConnection.pushText((String) message);
-                        }
+                    if (message instanceof ByteBuffer) {
+                        byte[] byteMessage = ((ByteBuffer) message).array();
+                        ByteBuffer binaryMessage = ByteBuffer.wrap(byteMessage);
+                        currentWebSocketConnection.pushBinary(binaryMessage);
                     } else {
-                        webSocketConnectionList.remove(currentWebSocketConnection);
+                        currentWebSocketConnection.pushText((String) message);
                     }
                 });
     }
@@ -100,12 +96,12 @@ public class WebSocketServerSinkConnectorListener implements WebSocketConnectorL
 
     @Override
     public void onError(WebSocketConnection webSocketConnection, Throwable throwable) {
-        //Not applicable
+        webSocketConnectionList.remove(webSocketConnection);
     }
 
     @Override
     public void onClose(WebSocketConnection webSocketConnection) {
-        //Not applicable
+        webSocketConnectionList.remove(webSocketConnection);
     }
 
     @Override
