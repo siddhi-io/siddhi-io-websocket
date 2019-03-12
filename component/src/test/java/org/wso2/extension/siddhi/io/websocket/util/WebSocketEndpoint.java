@@ -20,6 +20,7 @@ package org.wso2.extension.siddhi.io.websocket.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wso2.transport.http.netty.contract.websocket.WebSocketConnection;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -30,63 +31,45 @@ import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
-import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
 @ServerEndpoint(value = "/chat/{name}")
 public class WebSocketEndpoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(WebSocketEndpoint.class);
-    private List<Session> sessions = new LinkedList<Session>();
+    private List<WebSocketConnection> webSocketConnectionList = new LinkedList<>();
 
     @OnOpen
-    public void onOpen(@PathParam("name") String name, Session session) {
-        sessions.add(session);
+    public void onOpen(@PathParam("name") String name, WebSocketConnection websocketConnection) {
+        webSocketConnectionList.add(websocketConnection);
     }
 
     @OnMessage
-    public void onTextMessage(@PathParam("name") String name, String text, Session session) throws IOException {
-        sendMessageToAll(text);
-    }
-
-    @OnMessage
-    public void onBinaryMessage(@PathParam("name") String name, ByteBuffer message, Session session) {
-        sendBinaryMessageToAll(message);
-
-    }
-
-    @OnClose
-    public void onClose(@PathParam("name") String name, CloseReason closeReason, Session session) {
-        sessions.remove(session);
-    }
-
-    @OnError
-    public void onError(Throwable throwable, Session session) {
-        LOGGER.error("Error found in method : " + throwable.toString());
-    }
-
-
-    private void sendMessageToAll(String message) {
-        sessions.forEach(
-                session -> {
-                    try {
-                        session.getBasicRemote().sendText(message);
-                    } catch (IOException e) {
-                        LOGGER.error(e.toString());
-                    }
-                }
+    public void onTextMessage(@PathParam("name") String name, String text, WebSocketConnection websocketConnection)
+            throws IOException {
+        webSocketConnectionList.forEach(
+                webSocketConnection -> webSocketConnection.pushText(text)
         );
     }
 
-    private void sendBinaryMessageToAll(ByteBuffer message) {
-        sessions.forEach(
-                session -> {
-                    try {
-                        session.getBasicRemote().sendBinary(message);
-                    } catch (IOException e) {
-                        LOGGER.error(e.toString());
-                    }
-                }
-                        );
+    @OnMessage
+    public void onBinaryMessage(@PathParam("name") String name, ByteBuffer message,
+                                WebSocketConnection websocketConnection) {
+        webSocketConnectionList.forEach(
+                webSocketConnection -> webSocketConnection.pushBinary(message)
+        );
     }
+
+    @OnClose
+    public void onClose(@PathParam("name") String name, CloseReason closeReason,
+                        WebSocketConnection websocketConnection) {
+        webSocketConnectionList.remove(websocketConnection);
+    }
+
+    @OnError
+    public void onError(Throwable throwable, WebSocketConnection websocketConnection) {
+        LOGGER.error("Error found in method : " + throwable.toString());
+        webSocketConnectionList.remove(websocketConnection);
+    }
+
 }

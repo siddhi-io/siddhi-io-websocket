@@ -21,22 +21,19 @@ package org.wso2.extension.siddhi.io.websocket.sink.websocketserver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.siddhi.core.exception.SiddhiAppRuntimeException;
 import org.wso2.siddhi.query.api.definition.StreamDefinition;
-import org.wso2.transport.http.netty.contract.websocket.HandshakeFuture;
+import org.wso2.transport.http.netty.contract.websocket.ServerHandshakeFuture;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketBinaryMessage;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketCloseMessage;
+import org.wso2.transport.http.netty.contract.websocket.WebSocketConnection;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketConnectorListener;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketControlMessage;
-import org.wso2.transport.http.netty.contract.websocket.WebSocketInitMessage;
+import org.wso2.transport.http.netty.contract.websocket.WebSocketHandshaker;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketTextMessage;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import javax.websocket.CloseReason;
-import javax.websocket.Session;
 
 /**
  * {@code WebSocketServerSinkConnectorListener } Handle the WebSocket connector listener tasks..
@@ -47,42 +44,32 @@ public class WebSocketServerSinkConnectorListener implements WebSocketConnectorL
     private static final Logger log = LoggerFactory.getLogger(
             WebSocketServerSinkConnectorListener.class);
 
-    private List<Session> sessionList = new CopyOnWriteArrayList<>();
+    private List<WebSocketConnection> webSocketConnectionList = new CopyOnWriteArrayList<>();
     private String[] subProtocol = null;
     private int idleTimeout;
-    private StreamDefinition streamDefinition;
 
     WebSocketServerSinkConnectorListener(String[] subProtocol, int idleTimeout, StreamDefinition streamDefinition) {
         this.subProtocol = subProtocol;
         this.idleTimeout = idleTimeout;
-        this.streamDefinition = streamDefinition;
     }
 
     @Override
-    public void onMessage(WebSocketInitMessage initMessage) {
-        WebSocketServerHandshakeListener serverHandshakeListener = new WebSocketServerHandshakeListener(sessionList);
-        HandshakeFuture future = initMessage.handshake(subProtocol, true, idleTimeout);
-        future.setHandshakeListener(serverHandshakeListener);
+    public void onHandshake(WebSocketHandshaker webSocketHandshaker) {
+        WebSocketServerHandshakeListener serverHandshakeListener =
+                new WebSocketServerHandshakeListener(webSocketConnectionList);
+        ServerHandshakeFuture handshake = webSocketHandshaker.handshake(subProtocol, idleTimeout);
+        handshake.setHandshakeListener(serverHandshakeListener);
     }
 
     void send(Object message) {
-        sessionList.forEach(
-                currentSession -> {
-                    if (currentSession.isOpen()) {
-                        try {
-                            if (message instanceof ByteBuffer) {
-                                byte[] byteMessage = ((ByteBuffer) message).array();
-                                ByteBuffer binaryMessage = ByteBuffer.wrap(byteMessage);
-                                currentSession.getBasicRemote().sendBinary(binaryMessage);
-                            } else {
-                                currentSession.getBasicRemote().sendText((String) message);
-                            }
-                        } catch (IOException e) {
-                            throw new SiddhiAppRuntimeException("Error while sending the events defined in " +
-                                                                        streamDefinition + ".", e);
-                        }
+        webSocketConnectionList.forEach(
+                currentWebSocketConnection -> {
+                    if (message instanceof ByteBuffer) {
+                        byte[] byteMessage = ((ByteBuffer) message).array();
+                        ByteBuffer binaryMessage = ByteBuffer.wrap(byteMessage);
+                        currentWebSocketConnection.pushBinary(binaryMessage);
                     } else {
-                        sessionList.remove(currentSession);
+                        currentWebSocketConnection.pushText((String) message);
                     }
                 });
     }
@@ -108,17 +95,18 @@ public class WebSocketServerSinkConnectorListener implements WebSocketConnectorL
     }
 
     @Override
-    public void onError(Throwable throwable) {
-        //Not applicable
+    public void onError(WebSocketConnection webSocketConnection, Throwable throwable) {
+        webSocketConnectionList.remove(webSocketConnection);
+    }
+
+    @Override
+    public void onClose(WebSocketConnection webSocketConnection) {
+        webSocketConnectionList.remove(webSocketConnection);
     }
 
     @Override
     public void onIdleTimeout(WebSocketControlMessage controlMessage) {
-        try {
-            Session session = controlMessage.getWebSocketConnection().getSession();
-            session.close(new CloseReason(() -> 1001, "Connection timeout"));
-        } catch (IOException e) {
-            log.error("Error occurred while closing the connection: ", e);
-        }
+        WebSocketConnection webSocketConnection = controlMessage.getWebSocketConnection();
+        webSocketConnection.terminateConnection(1001, "Connection timeout");
     }
 }

@@ -25,7 +25,7 @@ import java.io.File;
 
 public class WebSocketServer {
     private static File transportNettyFilePath = new File("src/test/resources/conf/transports/"
-                                                                  + "netty-transports.yml");
+                                                                  + "netty-transports.yaml");
     private static String transportNettyFile = transportNettyFilePath.getAbsolutePath();
     private static File keyStoreFilePath = new File("src/test");
     private static String keyStorePath = keyStoreFilePath.getAbsolutePath();

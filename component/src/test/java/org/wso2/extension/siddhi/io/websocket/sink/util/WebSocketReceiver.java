@@ -20,22 +20,25 @@
 package org.wso2.extension.siddhi.io.websocket.sink.util;
 
 import org.wso2.transport.http.netty.contract.HttpWsConnectorFactory;
-import org.wso2.transport.http.netty.contract.websocket.HandshakeFuture;
+import org.wso2.transport.http.netty.contract.websocket.ClientHandshakeFuture;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketClientConnector;
-import org.wso2.transport.http.netty.contract.websocket.WsClientConnectorConfig;
+import org.wso2.transport.http.netty.contract.websocket.WebSocketClientConnectorConfig;
 import org.wso2.transport.http.netty.contractimpl.DefaultHttpWsConnectorFactory;
 
 public class WebSocketReceiver {
 
     public WebSocketReceiver(String url, ResultContainer resultContainer) {
         HttpWsConnectorFactory httpConnectorFactory = new DefaultHttpWsConnectorFactory();
-        WsClientConnectorConfig configuration = new WsClientConnectorConfig(url);
+        WebSocketClientConnectorConfig configuration = new WebSocketClientConnectorConfig(url);
+        configuration.setAutoRead(true);
         WebSocketClientConnector clientConnector = httpConnectorFactory.createWsClientConnector(configuration);
         WebSocketClientConnectorListener connectorListener = new WebSocketClientConnectorListener();
-        HandshakeFuture handshakeFuture = clientConnector.connect(connectorListener);
+        ClientHandshakeFuture clientHandshakeFuture = clientConnector.connect();
+        clientHandshakeFuture.setWebSocketConnectorListener(connectorListener);
+
         WebSocketHandshakeListener handshakeListener = new WebSocketHandshakeListener
                 (connectorListener, resultContainer);
-        handshakeFuture.setHandshakeListener(handshakeListener);
+        clientHandshakeFuture.setClientHandshakeListener(handshakeListener);
     }
 
 }

@@ -21,10 +21,11 @@ package org.wso2.extension.siddhi.io.websocket.sink.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.transport.http.netty.contract.websocket.HandshakeListener;
+import org.wso2.transport.http.netty.contract.websocket.ClientHandshakeListener;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketConnection;
+import org.wso2.transport.http.netty.message.HttpCarbonResponse;
 
-public class WebSocketHandshakeListener implements HandshakeListener {
+public class WebSocketHandshakeListener implements ClientHandshakeListener {
     private static Logger log = LoggerFactory.getLogger(WebSocketHandshakeListener.class);
 
     private WebSocketClientConnectorListener connectorListener;
@@ -37,12 +38,12 @@ public class WebSocketHandshakeListener implements HandshakeListener {
     }
 
     @Override
-    public void onSuccess(WebSocketConnection webSocketConnection) {
+    public void onSuccess(WebSocketConnection webSocketConnection, HttpCarbonResponse response) {
         connectorListener.setResultContainer(resultContainer);
     }
 
     @Override
-    public void onError(Throwable throwable) {
+    public void onError(Throwable t, HttpCarbonResponse response) {
         log.error("Error while connecting with the WebSocket server.");
     }
 }

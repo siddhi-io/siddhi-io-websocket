@@ -21,20 +21,20 @@ package org.wso2.extension.siddhi.io.websocket.sink;
 
 import org.wso2.siddhi.core.exception.SiddhiAppRuntimeException;
 import org.wso2.siddhi.query.api.definition.StreamDefinition;
-import org.wso2.transport.http.netty.contract.websocket.HandshakeListener;
+import org.wso2.transport.http.netty.contract.websocket.ClientHandshakeListener;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketConnection;
+import org.wso2.transport.http.netty.message.HttpCarbonResponse;
 
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicReference;
-import javax.websocket.Session;
 
 /**
  * Future listener for WebSocket handshake.
  */
 
-public class WebSocketSinkHandshakeListener implements HandshakeListener {
+public class WebSocketSinkHandshakeListener implements ClientHandshakeListener {
     private StreamDefinition streamDefinition;
-    private AtomicReference<Session> sessionAtomicReference = new AtomicReference<>();
+    private AtomicReference<WebSocketConnection> webSocketConnectionAtomicReference = new AtomicReference<>();
     private Semaphore semaphore;
 
     public WebSocketSinkHandshakeListener(StreamDefinition streamDefinition, Semaphore semaphore) {
@@ -43,18 +43,19 @@ public class WebSocketSinkHandshakeListener implements HandshakeListener {
     }
 
     @Override
-    public void onSuccess(WebSocketConnection webSocketConnection) {
-        sessionAtomicReference.set(webSocketConnection.getSession());
+    public void onSuccess(WebSocketConnection webSocketConnection, HttpCarbonResponse response) {
+        webSocketConnectionAtomicReference.set(webSocketConnection);
         semaphore.release();
     }
 
-    @Override public void onError(Throwable throwable) {
+    @Override
+    public void onError(Throwable t, HttpCarbonResponse response) {
         semaphore.release();
         throw new SiddhiAppRuntimeException("Error while connecting with the websocket server defined in '"
-                                                    + streamDefinition + "'.", throwable);
+                + streamDefinition + "'.", t);
     }
 
-    public AtomicReference<Session> getSessionAtomicReference() {
-        return sessionAtomicReference;
+    public AtomicReference<WebSocketConnection> getWebSocketConnectionAtomicReference() {
+        return webSocketConnectionAtomicReference;
     }
 }

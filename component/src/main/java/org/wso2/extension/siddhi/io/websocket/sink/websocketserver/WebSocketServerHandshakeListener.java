@@ -20,26 +20,25 @@
 package org.wso2.extension.siddhi.io.websocket.sink.websocketserver;
 
 import org.wso2.siddhi.core.exception.SiddhiAppRuntimeException;
-import org.wso2.transport.http.netty.contract.websocket.HandshakeListener;
+import org.wso2.transport.http.netty.contract.websocket.ServerHandshakeListener;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketConnection;
 
 import java.util.List;
-import javax.websocket.Session;
 
 /**
  * Future listener for WebSocket handshake.
  */
 
-public class WebSocketServerHandshakeListener implements HandshakeListener {
-    private List<Session> sessionList;
+public class WebSocketServerHandshakeListener implements ServerHandshakeListener {
+    private List<WebSocketConnection> webSocketConnectionList;
 
-    WebSocketServerHandshakeListener(List<Session> sessionList) {
-        this.sessionList = sessionList;
+    WebSocketServerHandshakeListener(List<WebSocketConnection> webSocketConnectionList) {
+        this.webSocketConnectionList = webSocketConnectionList;
     }
 
     @Override
     public void onSuccess(WebSocketConnection webSocketConnection) {
-        sessionList.add(webSocketConnection.getSession());
+        webSocketConnectionList.add(webSocketConnection);
         webSocketConnection.startReadingFrames();
     }
 

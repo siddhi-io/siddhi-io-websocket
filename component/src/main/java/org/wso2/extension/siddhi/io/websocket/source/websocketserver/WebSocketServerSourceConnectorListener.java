@@ -22,18 +22,14 @@ package org.wso2.extension.siddhi.io.websocket.source.websocketserver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.siddhi.core.stream.input.source.SourceEventListener;
-import org.wso2.transport.http.netty.contract.websocket.HandshakeListener;
+import org.wso2.transport.http.netty.contract.websocket.ServerHandshakeListener;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketBinaryMessage;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketCloseMessage;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketConnection;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketConnectorListener;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketControlMessage;
-import org.wso2.transport.http.netty.contract.websocket.WebSocketInitMessage;
+import org.wso2.transport.http.netty.contract.websocket.WebSocketHandshaker;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketTextMessage;
-
-import java.io.IOException;
-import javax.websocket.CloseReason;
-import javax.websocket.Session;
 
 /**
  * {@code WebSocketServerSourceConnectorListener } Handle the websocket connector listener tasks..
@@ -57,8 +53,8 @@ public class WebSocketServerSourceConnectorListener implements WebSocketConnecto
     }
 
     @Override
-    public void onMessage(WebSocketInitMessage initMessage) {
-        initMessage.handshake(subProtocols, true, idleTimeout).setHandshakeListener(webSocketSourceHandShakeListener);
+    public void onHandshake(WebSocketHandshaker webSocketHandshaker) {
+        webSocketHandshaker.handshake(subProtocols, idleTimeout).setHandshakeListener(webSocketSourceHandShakeListener);
     }
 
     @Override
@@ -88,21 +84,22 @@ public class WebSocketServerSourceConnectorListener implements WebSocketConnecto
     }
 
     @Override
-    public void onError(Throwable throwable) {
+    public void onClose(WebSocketConnection webSocketConnection) {
+
+    }
+
+    @Override
+    public void onError(WebSocketConnection webSocketConnection, Throwable throwable) {
         //Not applicable
     }
 
     @Override
     public void onIdleTimeout(WebSocketControlMessage controlMessage) {
-        try {
-            Session session = controlMessage.getWebSocketConnection().getSession();
-            session.close(new CloseReason(() -> 1001, "Connection timeout"));
-        } catch (IOException e) {
-            log.error("Error occurred while closing the connection: " + e.getMessage());
-        }
+        WebSocketConnection webSocketConnection = controlMessage.getWebSocketConnection();
+        webSocketConnection.terminateConnection(1001, "Connection timeout");
     }
 
-    private static class WebSocketSourceHandShakeListener implements HandshakeListener {
+    private static class WebSocketSourceHandShakeListener implements ServerHandshakeListener {
 
         @Override
         public void onSuccess(WebSocketConnection webSocketConnection) {

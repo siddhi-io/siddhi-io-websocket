@@ -181,6 +181,8 @@ public class WebSocketServerSourceTest {
                         "define stream FooStream (symbol string); " +
                         "@info(name = 'query1') " +
                         "@sink(type='websocket', url = 'wss://localhost:7443/wso2', " +
+                        "truststore.path ='${carbon.home}/resources/conf/transports/client-truststore.jks' , " +
+                        "truststore.password='wso2carbon', " +
                         "@map(type='xml'))" +
                         "Define stream BarStream (symbol string);" +
                         "from FooStream select symbol insert into BarStream;");
@@ -363,11 +365,15 @@ public class WebSocketServerSourceTest {
 
                                 "@info(name = 'query1') " +
                                 "@sink(type='websocket', url = 'wss://localhost:7050/wso2', " +
+                                "truststore.path ='${carbon.home}/resources/conf/transports/client-truststore.jks' , " +
+                                "truststore.password='wso2carbon', " +
                                 "@map(type='xml'))" +
                                 "Define stream FooStream (symbol string, price float, volume long); " +
 
                                 "@info(name = 'query2') " +
                                 "@sink(type='websocket', url = 'wss://localhost:7060/wso2', " +
+                                "truststore.path ='${carbon.home}/resources/conf/transports/client-truststore.jks' , " +
+                                "truststore.password='wso2carbon', " +
                                 "@map(type='xml'))" +
                                 "Define stream FooStream2 (symbol string, price float, volume long); " +
 
