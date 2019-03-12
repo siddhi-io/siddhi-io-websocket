@@ -217,6 +217,7 @@ public class WebSocketSink extends Sink {
             configuration.setTrustStoreFile(this.tlsstruststorePath);
             configuration.setTrustStorePass(this.tlsstruststorePass);
         }
+        configuration.setAutoRead(true);
         WebSocketClientConnector clientConnector = httpConnectorFactory.createWsClientConnector(configuration);
         ClientHandshakeFuture handshakeFuture = clientConnector.connect();
         handshakeFuture.setWebSocketConnectorListener(connectorListener);
