@@ -106,7 +106,7 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
     
-      <a href="#api-docs-v1011" tabindex="1" class="md-skip">
+      <a href="#api-docs-v110" tabindex="1" class="md-skip">
         Skip to content
       </a>
     
@@ -275,6 +275,18 @@
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
         
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../1.1.0/" title="1.1.0" class="md-nav__link">
+      1.1.0
+    </a>
+  </li>
+
         
           
           
@@ -591,13 +603,13 @@
                   <a href="https://github.com/wso2-extensions/siddhi-io-websocket/edit/master/docs/api/latest.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
                 
                 
-                <h1 id="api-docs-v1011">API Docs - v1.0.11<a class="headerlink" href="#api-docs-v1011" title="Permanent link">&para;</a></h1>
+                <h1 id="api-docs-v110">API Docs - v1.1.0<a class="headerlink" href="#api-docs-v110" title="Permanent link">&para;</a></h1>
 <h2 id="sink">Sink<a class="headerlink" href="#sink" title="Permanent link">&para;</a></h2>
 <h3 id="websocket-sink">websocket <em><a target="_blank" href="https://wso2.github.io/siddhi/documentation/siddhi-4.0/#sink">(Sink)</a></em><a class="headerlink" href="#websocket-sink" title="Permanent link">&para;</a></h3>
 <p style="word-wrap: break-word">A Siddhi application can be configured to publish events via the Websocket transport by adding the @Sink(type = 'websocket') annotation at the top of an event stream definition.</p>
 
 <p><span id="syntax" class="md-typeset" style="display: block; font-weight: bold;">Syntax</span></p>
-<div class="codehilite"><pre><span></span>@sink(type=&quot;websocket&quot;, url=&quot;&lt;STRING&gt;&quot;, sub.protocol=&quot;&lt;STRING&gt;&quot;, headers=&quot;&lt;STRING&gt;&quot;, idle.timeout=&quot;&lt;INT&gt;&quot;, @map(...)))
+<div class="codehilite"><pre><span></span>@sink(type=&quot;websocket&quot;, url=&quot;&lt;STRING&gt;&quot;, sub.protocol=&quot;&lt;STRING&gt;&quot;, headers=&quot;&lt;STRING&gt;&quot;, idle.timeout=&quot;&lt;INT&gt;&quot;, truststore.path=&quot;&lt;STRING&gt;&quot;, truststore.password=&quot;&lt;STRING&gt;&quot;, @map(...)))
 </pre></div>
 
 
@@ -640,6 +652,22 @@
         <td style="vertical-align: top; word-wrap: break-word">Idle timeout of the connection</td>
         <td style="vertical-align: top">-1</td>
         <td style="vertical-align: top">INT</td>
+        <td style="vertical-align: top">Yes</td>
+        <td style="vertical-align: top">No</td>
+    </tr>
+    <tr>
+        <td style="vertical-align: top">truststore.path</td>
+        <td style="vertical-align: top; word-wrap: break-word">The file path to the location of the truststore. If a custom truststore is not specified, then the system uses the default truststore file - wso2carbon.jks in the <code>${carbon.home}/resources/security</code> directory.</td>
+        <td style="vertical-align: top">${carbon.home}/resources/security/client-truststore.jks</td>
+        <td style="vertical-align: top">STRING</td>
+        <td style="vertical-align: top">Yes</td>
+        <td style="vertical-align: top">No</td>
+    </tr>
+    <tr>
+        <td style="vertical-align: top">truststore.password</td>
+        <td style="vertical-align: top; word-wrap: break-word">The password for the truststore. A custom password can be specified if required. If no custom password is specified, then the system uses <code>wso2carbon</code> as the default password.</td>
+        <td style="vertical-align: top">wso2carbon</td>
+        <td style="vertical-align: top">STRING</td>
         <td style="vertical-align: top">Yes</td>
         <td style="vertical-align: top">No</td>
     </tr>
@@ -744,7 +772,7 @@ define stream Foo (attribute1 string, attribute2 int);
 <p style="word-wrap: break-word">A Siddhi application can be configured to receive events via the WebSocket by adding the @Source(type = 'websocket') annotation at the top of an event stream definition.<br>When this is defined the associated stream will receive events from the WebSocket server on the url defined in the system.</p>
 
 <p><span id="syntax" class="md-typeset" style="display: block; font-weight: bold;">Syntax</span></p>
-<div class="codehilite"><pre><span></span>@source(type=&quot;websocket&quot;, url=&quot;&lt;STRING&gt;&quot;, sub.protocol=&quot;&lt;STRING&gt;&quot;, headers=&quot;&lt;STRING&gt;&quot;, idle.timeout=&quot;&lt;INT&gt;&quot;, @map(...)))
+<div class="codehilite"><pre><span></span>@source(type=&quot;websocket&quot;, url=&quot;&lt;STRING&gt;&quot;, sub.protocol=&quot;&lt;STRING&gt;&quot;, headers=&quot;&lt;STRING&gt;&quot;, idle.timeout=&quot;&lt;INT&gt;&quot;, truststore.path=&quot;&lt;STRING&gt;&quot;, truststore.password=&quot;&lt;STRING&gt;&quot;, @map(...)))
 </pre></div>
 
 
@@ -787,6 +815,22 @@ define stream Foo (attribute1 string, attribute2 int);
         <td style="vertical-align: top; word-wrap: break-word">Idle timeout of the connection</td>
         <td style="vertical-align: top">-1</td>
         <td style="vertical-align: top">INT</td>
+        <td style="vertical-align: top">Yes</td>
+        <td style="vertical-align: top">No</td>
+    </tr>
+    <tr>
+        <td style="vertical-align: top">truststore.path</td>
+        <td style="vertical-align: top; word-wrap: break-word">The file path to the location of the truststore. If a custom truststore is not specified, then the system uses the default truststore file - wso2carbon.jks in the <code>${carbon.home}/resources/security</code> directory.</td>
+        <td style="vertical-align: top">${carbon.home}/resources/security/client-truststore.jks</td>
+        <td style="vertical-align: top">STRING</td>
+        <td style="vertical-align: top">Yes</td>
+        <td style="vertical-align: top">No</td>
+    </tr>
+    <tr>
+        <td style="vertical-align: top">truststore.password</td>
+        <td style="vertical-align: top; word-wrap: break-word">The password for the truststore. A custom password can be specified if required. If no custom password is specified, then the system uses <code>wso2carbon</code> as the default password.</td>
+        <td style="vertical-align: top">wso2carbon</td>
+        <td style="vertical-align: top">STRING</td>
         <td style="vertical-align: top">Yes</td>
         <td style="vertical-align: top">No</td>
     </tr>
