@@ -19,7 +19,7 @@
 
 package org.wso2.extension.siddhi.io.websocket.sink.websocketserver;
 
-import org.wso2.siddhi.core.exception.SiddhiAppRuntimeException;
+import io.siddhi.core.exception.SiddhiAppRuntimeException;
 import org.wso2.transport.http.netty.contract.websocket.ServerHandshakeListener;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketConnection;
 

@@ -19,9 +19,9 @@
 
 package org.wso2.extension.siddhi.io.websocket.source;
 
+import io.siddhi.core.exception.SiddhiAppRuntimeException;
+import io.siddhi.core.stream.input.source.SourceEventListener;
 import org.wso2.extension.siddhi.io.websocket.util.WebSocketClientConnectorListener;
-import org.wso2.siddhi.core.exception.SiddhiAppRuntimeException;
-import org.wso2.siddhi.core.stream.input.source.SourceEventListener;
 import org.wso2.transport.http.netty.contract.websocket.ClientHandshakeListener;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketConnection;
 import org.wso2.transport.http.netty.message.HttpCarbonResponse;

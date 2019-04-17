@@ -19,20 +19,23 @@
 
 package org.wso2.extension.siddhi.io.websocket.source;
 
+import io.siddhi.annotation.Example;
+import io.siddhi.annotation.Extension;
+import io.siddhi.annotation.Parameter;
+import io.siddhi.annotation.util.DataType;
+import io.siddhi.core.config.SiddhiAppContext;
+import io.siddhi.core.exception.ConnectionUnavailableException;
+import io.siddhi.core.exception.SiddhiAppCreationException;
+import io.siddhi.core.stream.ServiceDeploymentInfo;
+import io.siddhi.core.stream.input.source.Source;
+import io.siddhi.core.stream.input.source.SourceEventListener;
+import io.siddhi.core.util.config.ConfigReader;
+import io.siddhi.core.util.snapshot.state.State;
+import io.siddhi.core.util.snapshot.state.StateFactory;
+import io.siddhi.core.util.transport.OptionHolder;
 import org.wso2.extension.siddhi.io.websocket.util.WebSocketClientConnectorListener;
 import org.wso2.extension.siddhi.io.websocket.util.WebSocketProperties;
 import org.wso2.extension.siddhi.io.websocket.util.WebSocketUtil;
-import org.wso2.siddhi.annotation.Example;
-import org.wso2.siddhi.annotation.Extension;
-import org.wso2.siddhi.annotation.Parameter;
-import org.wso2.siddhi.annotation.util.DataType;
-import org.wso2.siddhi.core.config.SiddhiAppContext;
-import org.wso2.siddhi.core.exception.ConnectionUnavailableException;
-import org.wso2.siddhi.core.exception.SiddhiAppCreationException;
-import org.wso2.siddhi.core.stream.input.source.Source;
-import org.wso2.siddhi.core.stream.input.source.SourceEventListener;
-import org.wso2.siddhi.core.util.config.ConfigReader;
-import org.wso2.siddhi.core.util.transport.OptionHolder;
 import org.wso2.transport.http.netty.contract.HttpWsConnectorFactory;
 import org.wso2.transport.http.netty.contract.websocket.ClientHandshakeFuture;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketClientConnector;
@@ -42,7 +45,6 @@ import org.wso2.transport.http.netty.contractimpl.DefaultHttpWsConnectorFactory;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
-import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
 
@@ -131,8 +133,8 @@ public class WebSocketSource extends Source {
     private String tlsstruststorePass;
 
     @Override
-    public void init(SourceEventListener sourceEventListener, OptionHolder optionHolder, String[] strings,
-                     ConfigReader configReader, SiddhiAppContext siddhiAppContext) {
+    public StateFactory init(SourceEventListener sourceEventListener, OptionHolder optionHolder, String[] strings,
+                             ConfigReader configReader, SiddhiAppContext siddhiAppContext) {
         this.url = optionHolder.validateAndGetStaticValue(WebSocketProperties.URL);
         this.subProtocol = optionHolder.validateAndGetStaticValue
                 (WebSocketProperties.SUB_PROTOCOL, null);
@@ -177,6 +179,13 @@ public class WebSocketSource extends Source {
                                                          "' of the websocket server.", e);
         }
         connectorListener = new WebSocketClientConnectorListener();
+
+        return null;
+    }
+
+    @Override
+    protected ServiceDeploymentInfo exposeServiceDeploymentInfo() {
+        return null;
     }
 
     @Override
@@ -185,7 +194,7 @@ public class WebSocketSource extends Source {
     }
 
     @Override
-    public void connect(ConnectionCallback connectionCallback) throws ConnectionUnavailableException {
+    public void connect(ConnectionCallback connectionCallback, State state) throws ConnectionUnavailableException {
         HttpWsConnectorFactory httpConnectorFactory = new DefaultHttpWsConnectorFactory();
         WebSocketClientConnectorConfig configuration = new WebSocketClientConnectorConfig(url);
         if (subProtocol != null) {
@@ -229,16 +238,6 @@ public class WebSocketSource extends Source {
 
     @Override
     public void resume() {
-        //Not applicable
-    }
-
-    @Override
-    public Map<String, Object> currentState() {
-        return Collections.emptyMap();
-    }
-
-    @Override
-    public void restoreState(Map<String, Object> map) {
         //Not applicable
     }
 }

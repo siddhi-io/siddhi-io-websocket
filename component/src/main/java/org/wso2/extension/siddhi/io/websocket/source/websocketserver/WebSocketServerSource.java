@@ -19,22 +19,23 @@
 
 package org.wso2.extension.siddhi.io.websocket.source.websocketserver;
 
+import io.siddhi.annotation.Example;
+import io.siddhi.annotation.Extension;
+import io.siddhi.annotation.Parameter;
+import io.siddhi.annotation.util.DataType;
+import io.siddhi.core.config.SiddhiAppContext;
+import io.siddhi.core.exception.ConnectionUnavailableException;
+import io.siddhi.core.stream.ServiceDeploymentInfo;
+import io.siddhi.core.stream.input.source.Source;
+import io.siddhi.core.stream.input.source.SourceEventListener;
+import io.siddhi.core.util.config.ConfigReader;
+import io.siddhi.core.util.snapshot.state.State;
+import io.siddhi.core.util.snapshot.state.StateFactory;
+import io.siddhi.core.util.transport.OptionHolder;
 import org.wso2.extension.siddhi.io.websocket.util.WebSocketProperties;
 import org.wso2.extension.siddhi.io.websocket.util.WebSocketUtil;
-import org.wso2.siddhi.annotation.Example;
-import org.wso2.siddhi.annotation.Extension;
-import org.wso2.siddhi.annotation.Parameter;
-import org.wso2.siddhi.annotation.util.DataType;
-import org.wso2.siddhi.core.config.SiddhiAppContext;
-import org.wso2.siddhi.core.exception.ConnectionUnavailableException;
-import org.wso2.siddhi.core.stream.input.source.Source;
-import org.wso2.siddhi.core.stream.input.source.SourceEventListener;
-import org.wso2.siddhi.core.util.config.ConfigReader;
-import org.wso2.siddhi.core.util.transport.OptionHolder;
 
 import java.nio.ByteBuffer;
-import java.util.Collections;
-import java.util.Map;
 
 /**
  * {@code WebSocketServerSource } Start the WebSocket server and receiving the siddhi events from the server.
@@ -129,15 +130,19 @@ public class WebSocketServerSource extends Source {
      *                            Listener will then pass on the events to the appropriate mappers for processing .
      * @param optionHolder        Option holder containing static configuration related to the {@link Source}
      * @param configReader        ConfigReader is used to read the {@link Source} related system configuration.
-     * @param siddhiAppContext    the context of the {@link org.wso2.siddhi.query.api.SiddhiApp} used to get Siddhi
+     * @param siddhiAppContext    the context of the {@link io.siddhi.query.api.SiddhiApp} used to get Siddhi
      *                            related utility functions.
      */
     @Override
-    public void init(SourceEventListener sourceEventListener, OptionHolder optionHolder, String[] transportProperties,
-                     ConfigReader configReader, SiddhiAppContext siddhiAppContext) {
+    public StateFactory init(SourceEventListener sourceEventListener,
+                             OptionHolder optionHolder,
+                             String[] transportProperties,
+                             ConfigReader configReader,
+                             SiddhiAppContext siddhiAppContext) {
         this.host = optionHolder.validateAndGetStaticValue(WebSocketProperties.HOST);
         this.port = Integer.parseInt(optionHolder.validateAndGetStaticValue(WebSocketProperties.PORT));
-        String subProtocolString = optionHolder.validateAndGetStaticValue(WebSocketProperties.SUB_PROTOCOL, null);
+        String subProtocolString = optionHolder.validateAndGetStaticValue(WebSocketProperties.SUB_PROTOCOL,
+                null);
         if (subProtocolString != null) {
             subProtocols = WebSocketUtil.getSubProtocol(subProtocolString);
         }
@@ -157,6 +162,12 @@ public class WebSocketServerSource extends Source {
                                                                                    WebSocketProperties
                                                                                            .DEFAULT_KEYSTORE_PASS));
         this.sourceEventListener = sourceEventListener;
+        return null;
+    }
+
+    @Override
+    protected ServiceDeploymentInfo exposeServiceDeploymentInfo() {
+        return new ServiceDeploymentInfo(port, isTlsEnabled);
     }
 
     @Override
@@ -165,14 +176,14 @@ public class WebSocketServerSource extends Source {
     }
 
     @Override
-    public void connect(ConnectionCallback connectionCallback) throws ConnectionUnavailableException {
+    public void connect(ConnectionCallback connectionCallback, State state) throws ConnectionUnavailableException {
         try {
             websocketServer = new WebSocketServer(host, port, subProtocols, idleTimeout, isTlsEnabled,
-                                                  tlsKeystorePath, tlsKeystorePassword, sourceEventListener);
+                    tlsKeystorePath, tlsKeystorePassword, sourceEventListener);
             websocketServer.start();
         } catch (InterruptedException e) {
             throw new ConnectionUnavailableException("Error while starting the WebSocket server defined in "
-                                                             + sourceEventListener.getStreamDefinition() + ".", e);
+                    + sourceEventListener.getStreamDefinition() + ".", e);
         }
     }
 
@@ -195,16 +206,6 @@ public class WebSocketServerSource extends Source {
 
     @Override
     public void resume() {
-        //Not applicable
-    }
-
-    @Override
-    public Map<String, Object> currentState() {
-        return Collections.emptyMap();
-    }
-
-    @Override
-    public void restoreState(Map<String, Object> map) {
         //Not applicable
     }
 }

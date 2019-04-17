@@ -19,23 +19,26 @@
 
 package org.wso2.extension.siddhi.io.websocket.sink;
 
+import io.siddhi.annotation.Example;
+import io.siddhi.annotation.Extension;
+import io.siddhi.annotation.Parameter;
+import io.siddhi.annotation.util.DataType;
+import io.siddhi.core.config.SiddhiAppContext;
+import io.siddhi.core.exception.ConnectionUnavailableException;
+import io.siddhi.core.exception.SiddhiAppCreationException;
+import io.siddhi.core.stream.ServiceDeploymentInfo;
+import io.siddhi.core.stream.output.sink.Sink;
+import io.siddhi.core.util.config.ConfigReader;
+import io.siddhi.core.util.snapshot.state.State;
+import io.siddhi.core.util.snapshot.state.StateFactory;
+import io.siddhi.core.util.transport.DynamicOptions;
+import io.siddhi.core.util.transport.OptionHolder;
+import io.siddhi.query.api.definition.StreamDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.extension.siddhi.io.websocket.util.WebSocketClientConnectorListener;
 import org.wso2.extension.siddhi.io.websocket.util.WebSocketProperties;
 import org.wso2.extension.siddhi.io.websocket.util.WebSocketUtil;
-import org.wso2.siddhi.annotation.Example;
-import org.wso2.siddhi.annotation.Extension;
-import org.wso2.siddhi.annotation.Parameter;
-import org.wso2.siddhi.annotation.util.DataType;
-import org.wso2.siddhi.core.config.SiddhiAppContext;
-import org.wso2.siddhi.core.exception.ConnectionUnavailableException;
-import org.wso2.siddhi.core.exception.SiddhiAppCreationException;
-import org.wso2.siddhi.core.stream.output.sink.Sink;
-import org.wso2.siddhi.core.util.config.ConfigReader;
-import org.wso2.siddhi.core.util.transport.DynamicOptions;
-import org.wso2.siddhi.core.util.transport.OptionHolder;
-import org.wso2.siddhi.query.api.definition.StreamDefinition;
 import org.wso2.transport.http.netty.contract.HttpWsConnectorFactory;
 import org.wso2.transport.http.netty.contract.websocket.ClientHandshakeFuture;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketClientConnector;
@@ -46,7 +49,6 @@ import org.wso2.transport.http.netty.contractimpl.DefaultHttpWsConnectorFactory;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
-import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.Semaphore;
@@ -150,8 +152,8 @@ public class WebSocketSink extends Sink {
     }
 
     @Override
-    protected void init(StreamDefinition streamDefinition, OptionHolder optionHolder,
-                        ConfigReader configReader, SiddhiAppContext siddhiAppContext) {
+    protected StateFactory init(StreamDefinition streamDefinition, OptionHolder optionHolder,
+                                ConfigReader configReader, SiddhiAppContext siddhiAppContext) {
         this.streamDefinition = streamDefinition;
         this.url = optionHolder.validateAndGetStaticValue(WebSocketProperties.URL);
         this.subProtocol = optionHolder.validateAndGetStaticValue
@@ -196,6 +198,27 @@ public class WebSocketSink extends Sink {
             throw new SiddhiAppCreationException("There is an syntax error in the '" + url + "' of the websocket "
                     + "server.", e);
         }
+        return null;
+    }
+
+    @Override
+    protected ServiceDeploymentInfo exposeServiceDeploymentInfo() {
+        return null;
+    }
+
+    @Override
+    public void publish(Object payload,
+                        DynamicOptions dynamicOptions,
+                        State state) throws ConnectionUnavailableException {
+        if (webSocketConnection != null) {
+            if (payload instanceof ByteBuffer) {
+                byte[] byteMessage = ((ByteBuffer) payload).array();
+                ByteBuffer binaryMessage = ByteBuffer.wrap(byteMessage);
+                webSocketConnection.pushBinary(binaryMessage);
+            } else {
+                webSocketConnection.pushText(payload.toString());
+            }
+        }
     }
 
     @Override
@@ -235,39 +258,14 @@ public class WebSocketSink extends Sink {
     }
 
     @Override
-    public void publish(Object payload, DynamicOptions dynamicOptions) throws ConnectionUnavailableException {
-        if (webSocketConnection != null) {
-            if (payload instanceof ByteBuffer) {
-                byte[] byteMessage = ((ByteBuffer) payload).array();
-                ByteBuffer binaryMessage = ByteBuffer.wrap(byteMessage);
-                webSocketConnection.pushBinary(binaryMessage);
-            } else {
-                webSocketConnection.pushText(payload.toString());
-            }
-        }
-    }
-
-
-    @Override
     public void disconnect() {
         if (webSocketConnection != null) {
             webSocketConnection.terminateConnection();
         }
     }
 
-
     @Override
     public void destroy() {
-        //Not applicable
-    }
-
-    @Override
-    public Map<String, Object> currentState() {
-        return Collections.emptyMap();
-    }
-
-    @Override
-    public void restoreState(Map<String, Object> map) {
         //Not applicable
     }
 }

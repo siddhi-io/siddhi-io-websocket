@@ -19,7 +19,7 @@
 
 package org.wso2.extension.siddhi.io.websocket.source.websocketserver;
 
-import org.wso2.siddhi.core.stream.input.source.SourceEventListener;
+import io.siddhi.core.stream.input.source.SourceEventListener;
 import org.wso2.transport.http.netty.contract.HttpWsConnectorFactory;
 import org.wso2.transport.http.netty.contract.ServerConnector;
 import org.wso2.transport.http.netty.contract.ServerConnectorFuture;
