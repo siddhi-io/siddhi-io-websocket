@@ -28,7 +28,7 @@
     <groupId>org.wso2.extension.siddhi.io.websocket</groupId>
     <artifactId>siddhi-io-websocket-parent</artifactId>
     <packaging>pom</packaging>
-    <version>2.0.0</version>
+    <version>2.0.1-SNAPSHOT</version>
 
     <modules>
         <module>component</module>
@@ -39,7 +39,7 @@
         <url>https://github.com/wso2-extensions/siddhi-io-websocket.git</url>
         <developerConnection>scm:git:https://github.com/wso2-extensions/siddhi-io-websocket.git
         </developerConnection>
-        <tag>v2.0.0</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <properties>
