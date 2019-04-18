@@ -19,7 +19,7 @@
 
 package org.wso2.extension.siddhi.io.websocket.sink.websocketserver;
 
-import org.wso2.siddhi.query.api.definition.StreamDefinition;
+import io.siddhi.query.api.definition.StreamDefinition;
 import org.wso2.transport.http.netty.contract.HttpWsConnectorFactory;
 import org.wso2.transport.http.netty.contract.ServerConnector;
 import org.wso2.transport.http.netty.contract.ServerConnectorFuture;

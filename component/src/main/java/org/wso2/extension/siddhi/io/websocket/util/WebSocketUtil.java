@@ -19,7 +19,7 @@
 
 package org.wso2.extension.siddhi.io.websocket.util;
 
-import org.wso2.siddhi.core.exception.SiddhiAppRuntimeException;
+import io.siddhi.core.exception.SiddhiAppRuntimeException;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -19,8 +19,8 @@
 
 package org.wso2.extension.siddhi.io.websocket.sink;
 
-import org.wso2.siddhi.core.exception.SiddhiAppRuntimeException;
-import org.wso2.siddhi.query.api.definition.StreamDefinition;
+import io.siddhi.core.exception.SiddhiAppRuntimeException;
+import io.siddhi.query.api.definition.StreamDefinition;
 import org.wso2.transport.http.netty.contract.websocket.ClientHandshakeListener;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketConnection;
 import org.wso2.transport.http.netty.message.HttpCarbonResponse;

@@ -21,7 +21,7 @@
     <parent>
         <artifactId>siddhi-io-websocket-parent</artifactId>
         <groupId>org.wso2.extension.siddhi.io.websocket</groupId>
-        <version>1.1.2-SNAPSHOT</version>
+        <version>2.0.0-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -30,15 +30,15 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.wso2.siddhi</groupId>
+            <groupId>io.siddhi</groupId>
             <artifactId>siddhi-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.siddhi</groupId>
+            <groupId>io.siddhi</groupId>
             <artifactId>siddhi-query-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.siddhi</groupId>
+            <groupId>io.siddhi</groupId>
             <artifactId>siddhi-annotations</artifactId>
         </dependency>
         <dependency>
@@ -92,7 +92,7 @@
             <build>
                 <plugins>
                     <plugin>
-                        <groupId>org.wso2.siddhi</groupId>
+                        <groupId>io.siddhi</groupId>
                         <artifactId>siddhi-doc-gen</artifactId>
                         <executions>
                             <execution>
@@ -156,9 +156,9 @@
             javax.websocket;version="${websocket.version.range}",
             org.slf4j;version="${slf4j.log4j.version}",
             org.wso2.extension.siddhi.io.websocket.util,
-            org.wso2.siddhi.annotation.*;version="${siddhi.version.range}",
-            org.wso2.siddhi.core.*;version="${siddhi.version.range}",
-            org.wso2.siddhi.query.api.definition;version="${siddhi.version.range}",
+            io.siddhi.annotation.*;version="${siddhi.version.range}",
+            io.siddhi.core.*;version="${siddhi.version.range}",
+            io.siddhi.query.api.definition;version="${siddhi.version.range}",
             org.wso2.transport.http.netty.*;version="${transport.version.range}",
         </import.package>
         <export.package>

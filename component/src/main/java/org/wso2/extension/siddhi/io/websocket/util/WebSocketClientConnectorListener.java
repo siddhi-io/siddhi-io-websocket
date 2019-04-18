@@ -19,9 +19,9 @@
 
 package org.wso2.extension.siddhi.io.websocket.util;
 
+import io.siddhi.core.stream.input.source.SourceEventListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.siddhi.core.stream.input.source.SourceEventListener;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketBinaryMessage;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketCloseMessage;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketConnection;

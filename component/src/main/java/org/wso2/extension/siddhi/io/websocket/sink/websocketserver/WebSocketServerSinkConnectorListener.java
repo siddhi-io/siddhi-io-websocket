@@ -19,9 +19,9 @@
 
 package org.wso2.extension.siddhi.io.websocket.sink.websocketserver;
 
+import io.siddhi.query.api.definition.StreamDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.siddhi.query.api.definition.StreamDefinition;
 import org.wso2.transport.http.netty.contract.websocket.ServerHandshakeFuture;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketBinaryMessage;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketCloseMessage;
