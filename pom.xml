@@ -28,7 +28,7 @@
     <groupId>io.siddhi.extension.io.websocket</groupId>
     <artifactId>siddhi-io-websocket-parent</artifactId>
     <packaging>pom</packaging>
-    <version>2.1.0-SNAPSHOT</version>
+    <version>3.0.0-SNAPSHOT</version>
 
     <modules>
         <module>component</module>
