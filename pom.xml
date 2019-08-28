@@ -35,9 +35,9 @@
     </modules>
 
     <scm>
-        <connection>scm:git:https://github.com/wso2-extensions/siddhi-io-websocket.git</connection>
-        <url>https://github.com/wso2-extensions/siddhi-io-websocket.git</url>
-        <developerConnection>scm:git:https://github.com/wso2-extensions/siddhi-io-websocket.git
+        <connection>scm:git:https://github.com/siddhi-io/siddhi-io-websocket.git</connection>
+        <url>https://github.com/siddhi-io/siddhi-io-websocket.git</url>
+        <developerConnection>scm:git:https://github.com/siddhi-io/siddhi-io-websocket.git
         </developerConnection>
         <tag>HEAD</tag>
     </scm>

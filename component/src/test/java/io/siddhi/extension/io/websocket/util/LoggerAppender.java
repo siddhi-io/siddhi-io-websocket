@@ -25,7 +25,7 @@ import org.apache.log4j.spi.LoggingEvent;
  * The custom log4j appender for appending the log event generated while running the tests in TestNG.
  * Configuration for the appender defined in the test/resource/log4j.property file.
  *
- * log4j.appender.testNG=org.wso2.extension.siddhi.store.rdbms.util.LoggerAppender
+ * log4j.appender.testNG=io.siddhi.extension.store.rdbms.util.LoggerAppender
  * log4j.appender.testNG.layout=org.apache.log4j.EnhancedPatternLayout
  * log4j.appender.testNG.layout.ConversionPattern=%d{ABSOLUTE} %5p %c{1}:%L - %m%
  *

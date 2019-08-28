@@ -155,14 +155,14 @@
         <import.package>
             javax.websocket;version="${websocket.version.range}",
             org.slf4j;version="${slf4j.log4j.version}",
-            org.wso2.extension.siddhi.io.websocket.util,
+            io.siddhi.extension.io.websocket.util,
             io.siddhi.annotation.*;version="${siddhi.version.range}",
             io.siddhi.core.*;version="${siddhi.version.range}",
             io.siddhi.query.api.definition;version="${siddhi.version.range}",
             org.wso2.transport.http.netty.*;version="${transport.version.range}",
         </import.package>
         <export.package>
-            org.wso2.extension.siddhi.io.websocket.*;version="${project.version}"
+            io.siddhi.extension.io.websocket.*;version="${project.version}"
         </export.package>
         <Include-Resource>
             META-INF=target/classes/META-INF
