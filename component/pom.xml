@@ -19,9 +19,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <parent>
+        <groupId>io.siddhi.extension.io.websocket</groupId>
         <artifactId>siddhi-io-websocket-parent</artifactId>
-        <groupId>org.wso2.extension.siddhi.io.websocket</groupId>
-        <version>2.0.1-SNAPSHOT</version>
+        <version>3.0.0-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -50,12 +50,12 @@
             <artifactId>slf4j-log4j12</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.extension.siddhi.map.xml</groupId>
+            <groupId>io.siddhi.extension.map.xml</groupId>
             <artifactId>siddhi-map-xml</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.wso2.extension.siddhi.map.binary</groupId>
+            <groupId>io.siddhi.extension.map.binary</groupId>
             <artifactId>siddhi-map-binary</artifactId>
             <scope>test</scope>
         </dependency>
@@ -155,14 +155,14 @@
         <import.package>
             javax.websocket;version="${websocket.version.range}",
             org.slf4j;version="${slf4j.log4j.version}",
-            org.wso2.extension.siddhi.io.websocket.util,
+            io.siddhi.extension.io.websocket.util,
             io.siddhi.annotation.*;version="${siddhi.version.range}",
             io.siddhi.core.*;version="${siddhi.version.range}",
             io.siddhi.query.api.definition;version="${siddhi.version.range}",
             org.wso2.transport.http.netty.*;version="${transport.version.range}",
         </import.package>
         <export.package>
-            org.wso2.extension.siddhi.io.websocket.*;version="${project.version}"
+            io.siddhi.extension.io.websocket.*;version="${project.version}"
         </export.package>
         <Include-Resource>
             META-INF=target/classes/META-INF

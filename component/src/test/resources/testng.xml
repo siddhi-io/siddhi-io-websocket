@@ -22,10 +22,10 @@
 <suite name="Generic Integration test suite">
     <test name="websocket testcases" parallel="false">
         <classes>
-            <class name="org.wso2.extension.siddhi.io.websocket.sink.WebSocketSinkTest" />
-            <class name="org.wso2.extension.siddhi.io.websocket.source.WebSocketSourceTest" />
-            <class name="org.wso2.extension.siddhi.io.websocket.sink.WebSocketServerSinkTest" />
-            <class name="org.wso2.extension.siddhi.io.websocket.source.WebSocketServerSourceTest" />
+            <class name="io.siddhi.extension.io.websocket.sink.WebSocketSinkTest" />
+            <class name="io.siddhi.extension.io.websocket.source.WebSocketSourceTest" />
+            <class name="io.siddhi.extension.io.websocket.sink.WebSocketServerSinkTest" />
+            <class name="io.siddhi.extension.io.websocket.source.WebSocketServerSourceTest" />
         </classes>
     </test>
 </suite>
