@@ -119,8 +119,8 @@ import java.util.concurrent.atomic.AtomicReference;
                                 "define stream Foo (attribute1 string, attribute2 int);",
                         description = "" +
                                 "A sink of type 'websocket' has been defined.\n" +
-                                "All events arriving at Foo stream via websocket will be sent " +
-                                "to the url ws://localhost:8025/abc."
+                                "All events arriving at Foo stream will be sent " +
+                                "to the url ws://localhost:8025/abc where the websocket server resides."
                 )
         }
 )
