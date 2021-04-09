@@ -45,7 +45,7 @@ import java.nio.ByteBuffer;
 @Extension(
         name = "websocket-server",
         namespace = "sink",
-        description = "A Siddhi application can be configured to publish events via the WebSocket transport by " +
+        description = "A Siddhi application can be configured to run as a websocket server by " +
                 "adding the @Sink(type = 'websocket-server') annotation at the top of an event stream definition.",
         parameters = {
                 @Parameter(
@@ -108,8 +108,8 @@ import java.nio.ByteBuffer;
                                 "define stream Foo (attribute1 string, attribute2 int);",
                         description = "" +
                                 "A sink of type 'websocket-server' has been defined.\n" +
-                                "All events arriving at Foo stream via websocket-server will be sent " +
-                                "to the url ws://localhost:9025/abc."
+                                "Clients can connect to ws://localhost:9025/abc. All events arriving at " +
+                                "Foo stream will be sent to all the clients who got connected."
                 )
         }
 )
