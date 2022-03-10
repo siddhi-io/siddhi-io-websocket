@@ -18,8 +18,16 @@
 
 package io.siddhi.extension.io.websocket.util;
 
-import org.apache.log4j.AppenderSkeleton;
-import org.apache.log4j.spi.LoggingEvent;
+import org.apache.logging.log4j.core.Appender;
+import org.apache.logging.log4j.core.Core;
+import org.apache.logging.log4j.core.Filter;
+import org.apache.logging.log4j.core.LogEvent;
+import org.apache.logging.log4j.core.appender.AbstractAppender;
+import org.apache.logging.log4j.core.config.plugins.Plugin;
+import org.apache.logging.log4j.core.config.plugins.PluginAttribute;
+import org.apache.logging.log4j.core.config.plugins.PluginElement;
+import org.apache.logging.log4j.core.config.plugins.PluginFactory;
+import org.mvel2.util.StringAppender;
 
 /**
  * The custom log4j appender for appending the log event generated while running the tests in TestNG.
@@ -32,27 +40,33 @@ import org.apache.log4j.spi.LoggingEvent;
  * To enable the appender, set in the root logger,
  * log4j.rootLogger=INFO, stdout, testNG
  */
-public class LoggerAppender extends AppenderSkeleton {
-    private static LoggerCallback loggerCallback;
+@Plugin(name = "LoggerAppender",
+        category = Core.CATEGORY_NAME, elementType = Appender.ELEMENT_TYPE)
+public class LoggerAppender extends AbstractAppender {
+    private StringAppender messages = new StringAppender();
 
-    public static void setLoggerCallback(LoggerCallback loggerCallback) {
-        LoggerAppender.loggerCallback = loggerCallback;
+    public LoggerAppender(String name, Filter filter) {
+        super(name, filter, null);
     }
 
-    @Override
-    protected void append(final LoggingEvent event) {
-        if (loggerCallback != null) {
-            loggerCallback.receiveLoggerEvent((String) event.getMessage());
+    @PluginFactory
+    public static LoggerAppender createAppender(
+            @PluginAttribute("name") String name,
+            @PluginElement("Filter") Filter filter) {
+
+        return new LoggerAppender(name, filter);
+    }
+
+    public String getMessages() {
+        String results = messages.toString();
+        if (results.isEmpty()) {
+            return null;
         }
+        return results;
     }
 
     @Override
-    public void close() {
-        loggerCallback = null;
-    }
-
-    @Override
-    public boolean requiresLayout() {
-        return true;
+    public void append(LogEvent event) {
+        messages.append(event.getMessage().getFormattedMessage());
     }
 }
