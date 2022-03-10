@@ -26,9 +26,11 @@ import io.siddhi.core.stream.input.InputHandler;
 import io.siddhi.extension.io.websocket.sink.util.ResultContainer;
 import io.siddhi.extension.io.websocket.sink.util.WebSocketReceiver;
 import io.siddhi.extension.io.websocket.util.LoggerAppender;
-import io.siddhi.extension.io.websocket.util.LoggerCallback;
 import io.siddhi.extension.io.websocket.util.WebSocketServer;
 import io.siddhi.query.api.exception.SiddhiAppValidationException;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.Logger;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -100,17 +102,16 @@ public class WebSocketSinkTest {
                         "Define stream BarStream1 (symbol string, price float, volume long);" +
                         "from FooStream1 select symbol, price, volume insert into BarStream1;");
 
-        LoggerCallback loggerCallback = new LoggerCallback(regexPattern) {
-            @Override
-            public void receive(String logEventMessage) {
-                isLogEventArrived = true;
-            }
-        };
-        LoggerAppender.setLoggerCallback(loggerCallback);
+        LoggerAppender appender = new LoggerAppender("LoggerAppender", null);
+        final Logger logger = (Logger) LogManager.getRootLogger();
+        logger.setLevel(Level.ALL);
+        logger.addAppender(appender);
+        appender.start();
         executionPlanRuntime.start();
         Thread.sleep(1000);
-        Assert.assertEquals(isLogEventArrived, true,
-                            "Matching log event not found for pattern: '" + regexPattern + "'");
+        Assert.assertTrue(
+                ((LoggerAppender) logger.getAppenders().get("LoggerAppender")).getMessages().contains(regexPattern),
+                "Matching log event not found for pattern: '" + regexPattern + "'");
         executionPlanRuntime.shutdown();
     }
 
@@ -127,17 +128,16 @@ public class WebSocketSinkTest {
                         "Define stream BarStream1 (symbol string, price float, volume long);" +
                         "from FooStream1 select symbol, price, volume insert into BarStream1;");
 
-        LoggerCallback loggerCallback = new LoggerCallback(regexPattern) {
-            @Override
-            public void receive(String logEventMessage) {
-                isLogEventArrived = true;
-            }
-        };
-        LoggerAppender.setLoggerCallback(loggerCallback);
+        LoggerAppender appender = new LoggerAppender("LoggerAppender", null);
+        final Logger logger = (Logger) LogManager.getRootLogger();
+        logger.setLevel(Level.ALL);
+        logger.addAppender(appender);
+        appender.start();
         executionPlanRuntime.start();
         Thread.sleep(1000);
-        Assert.assertEquals(isLogEventArrived, true,
-                            "Matching log event not found for pattern: '" + regexPattern + "'");
+        Assert.assertTrue(
+                ((LoggerAppender) logger.getAppenders().get("LoggerAppender")).getMessages().contains(regexPattern),
+                "Matching log event not found for pattern: '" + regexPattern + "'");
         executionPlanRuntime.shutdown();
     }
 
