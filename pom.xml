@@ -52,12 +52,12 @@
         <siddhi.map.binary.version>2.0.5</siddhi.map.binary.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jacoco.version>0.7.9</jacoco.version>
-        <transport.version>6.0.272</transport.version>
+        <transport.version>6.3.24</transport.version>
         <transport.version.range>[6.0,7)</transport.version.range>
         <slf4j.version>1.7.5</slf4j.version>
         <slf4j.version.range>[1.7,2)</slf4j.version.range>
         <slf4j.log4j.version>1.6.0</slf4j.log4j.version>
-        <msf4j.version>2.7.0</msf4j.version>
+        <msf4j.version>2.8.5-SNAPSHOT</msf4j.version>
         <websocket.version.range>[1.1,2)</websocket.version.range>
     </properties>
 
