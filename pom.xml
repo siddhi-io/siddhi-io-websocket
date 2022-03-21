@@ -28,7 +28,7 @@
     <groupId>io.siddhi.extension.io.websocket</groupId>
     <artifactId>siddhi-io-websocket-parent</artifactId>
     <packaging>pom</packaging>
-    <version>3.0.3-SNAPSHOT</version>
+    <version>3.0.3</version>
 
     <modules>
         <module>component</module>
@@ -39,7 +39,7 @@
         <url>https://github.com/siddhi-io/siddhi-io-websocket.git</url>
         <developerConnection>scm:git:https://github.com/siddhi-io/siddhi-io-websocket.git
         </developerConnection>
-        <tag>HEAD</tag>
+        <tag>v3.0.3</tag>
     </scm>
 
     <properties>
