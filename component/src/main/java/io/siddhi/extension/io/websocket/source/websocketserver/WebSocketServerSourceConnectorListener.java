@@ -33,6 +33,7 @@ import org.wso2.transport.http.netty.contract.websocket.WebSocketTextMessage;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * {@code WebSocketServerSourceConnectorListener } Handle the websocket connector listener tasks..
@@ -46,6 +47,7 @@ public class WebSocketServerSourceConnectorListener implements WebSocketConnecto
     private int idleTimeout;
     private SourceEventListener sourceEventListener = null;
     private final List<WebSocketConnection> webSocketConnectionList = new CopyOnWriteArrayList<>();
+    private final AtomicBoolean closed = new AtomicBoolean(false);
     private final WebSocketSourceHandShakeListener webSocketSourceHandShakeListener =
             new WebSocketSourceHandShakeListener();
 
@@ -57,10 +59,10 @@ public class WebSocketServerSourceConnectorListener implements WebSocketConnecto
     }
 
     void closeConnections() {
+        closed.set(true);
         for (WebSocketConnection connection : webSocketConnectionList) {
             connection.terminateConnection();
         }
-        webSocketConnectionList.clear();
     }
 
     @Override
@@ -115,6 +117,11 @@ public class WebSocketServerSourceConnectorListener implements WebSocketConnecto
         @Override
         public void onSuccess(WebSocketConnection webSocketConnection) {
             webSocketConnectionList.add(webSocketConnection);
+            if (closed.get()) {
+                webSocketConnectionList.remove(webSocketConnection);
+                webSocketConnection.terminateConnection();
+                return;
+            }
             webSocketConnection.startReadingFrames();
         }
 

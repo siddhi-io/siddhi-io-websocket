@@ -36,7 +36,6 @@ import io.siddhi.core.util.transport.OptionHolder;
 import io.siddhi.extension.io.websocket.util.WebSocketClientConnectorListener;
 import io.siddhi.extension.io.websocket.util.WebSocketProperties;
 import io.siddhi.extension.io.websocket.util.WebSocketUtil;
-import org.wso2.transport.http.netty.contract.HttpWsConnectorFactory;
 import org.wso2.transport.http.netty.contract.websocket.ClientHandshakeFuture;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketClientConnector;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketClientConnectorConfig;
@@ -122,6 +121,7 @@ import java.util.Objects;
 )
 
 public class WebSocketSource extends Source {
+    private DefaultHttpWsConnectorFactory httpConnectorFactory;
     private String url;
     private String subProtocol;
     private String headers;
@@ -196,7 +196,9 @@ public class WebSocketSource extends Source {
 
     @Override
     public void connect(ConnectionCallback connectionCallback, State state) throws ConnectionUnavailableException {
-        HttpWsConnectorFactory httpConnectorFactory = new DefaultHttpWsConnectorFactory();
+        if (httpConnectorFactory == null) {
+            httpConnectorFactory = new DefaultHttpWsConnectorFactory();
+        }
         WebSocketClientConnectorConfig configuration = new WebSocketClientConnectorConfig(url);
         if (subProtocol != null) {
             String[] subProtocol1 = WebSocketUtil.getSubProtocol(subProtocol);
@@ -223,6 +225,7 @@ public class WebSocketSource extends Source {
         try {
             handshakeListener.awaitHandshake();
         } catch (InterruptedException e) {
+            handshakeListener.cancel();
             Thread.currentThread().interrupt();
             throw new ConnectionUnavailableException("Interrupted while connecting with the websocket server '"
                     + url + "'.", e);
@@ -245,7 +248,10 @@ public class WebSocketSource extends Source {
 
     @Override
     public void destroy() {
-        //Not applicable
+        if (httpConnectorFactory != null) {
+            httpConnectorFactory.shutdownNow();
+            httpConnectorFactory = null;
+        }
     }
 
     @Override

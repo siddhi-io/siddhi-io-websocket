@@ -39,6 +39,7 @@ public class WebSocketSourceHandshakeListener implements ClientHandshakeListener
     private final CountDownLatch handshakeCompleted = new CountDownLatch(1);
     private volatile Throwable error;
     private volatile boolean succeeded = false;
+    private boolean cancelled = false;
 
     public WebSocketSourceHandshakeListener (WebSocketClientConnectorListener connectorListener,
                                             SourceEventListener sourceEventListener,
@@ -49,7 +50,12 @@ public class WebSocketSourceHandshakeListener implements ClientHandshakeListener
     }
 
     @Override
-    public void onSuccess(WebSocketConnection webSocketConnection, HttpCarbonResponse response) {
+    public synchronized void onSuccess(WebSocketConnection webSocketConnection, HttpCarbonResponse response) {
+        if (cancelled) {
+            webSocketConnection.terminateConnection();
+            handshakeCompleted.countDown();
+            return;
+        }
         connectorListener.setSourceEventListener(sourceEventListener);
         connectorListener.setCurrentConnection(webSocketConnection);
         connectorListener.setConnectionCallback(connectionCallback);
@@ -61,6 +67,10 @@ public class WebSocketSourceHandshakeListener implements ClientHandshakeListener
     public void onError(Throwable t, HttpCarbonResponse response) {
         error = t;
         handshakeCompleted.countDown();
+    }
+
+    public synchronized void cancel() {
+        cancelled = true;
     }
 
     public void awaitHandshake() throws InterruptedException {

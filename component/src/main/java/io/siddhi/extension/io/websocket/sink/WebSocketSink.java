@@ -39,7 +39,6 @@ import io.siddhi.extension.io.websocket.util.WebSocketUtil;
 import io.siddhi.query.api.definition.StreamDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.transport.http.netty.contract.HttpWsConnectorFactory;
 import org.wso2.transport.http.netty.contract.websocket.ClientHandshakeFuture;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketClientConnector;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketClientConnectorConfig;
@@ -136,6 +135,7 @@ public class WebSocketSink extends Sink {
     private int idleTimeout;
     private WebSocketClientConnectorListener connectorListener;
     private volatile WebSocketConnection webSocketConnection = null;
+    private DefaultHttpWsConnectorFactory httpConnectorFactory;
     private boolean sslEnabled = false;
     private String tlsstruststorePath;
     private String tlsstruststorePass;
@@ -225,7 +225,9 @@ public class WebSocketSink extends Sink {
 
     @Override
     public void connect() throws ConnectionUnavailableException {
-        HttpWsConnectorFactory httpConnectorFactory = new DefaultHttpWsConnectorFactory();
+        if (httpConnectorFactory == null) {
+            httpConnectorFactory = new DefaultHttpWsConnectorFactory();
+        }
         WebSocketClientConnectorConfig configuration = new WebSocketClientConnectorConfig(url);
         if (subProtocol != null) {
             String[] subProtocol1 = WebSocketUtil.getSubProtocol(subProtocol);
@@ -252,6 +254,7 @@ public class WebSocketSink extends Sink {
             handshakeFuture.setClientHandshakeListener(handshakeListener);
             semaphore.acquire();
         } catch (InterruptedException e) {
+            handshakeListener.cancel();
             Thread.currentThread().interrupt();
             throw new ConnectionUnavailableException("Interrupted while connecting with the websocket server '"
                     + url + "' defined in '" + streamDefinition + "'.", e);
@@ -277,6 +280,9 @@ public class WebSocketSink extends Sink {
 
     @Override
     public void destroy() {
-        //Not applicable
+        if (httpConnectorFactory != null) {
+            httpConnectorFactory.shutdownNow();
+            httpConnectorFactory = null;
+        }
     }
 }

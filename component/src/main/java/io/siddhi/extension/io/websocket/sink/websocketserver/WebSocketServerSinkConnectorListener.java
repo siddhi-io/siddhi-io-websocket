@@ -34,6 +34,7 @@ import org.wso2.transport.http.netty.contract.websocket.WebSocketTextMessage;
 import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * {@code WebSocketServerSinkConnectorListener } Handle the WebSocket connector listener tasks..
@@ -45,6 +46,7 @@ public class WebSocketServerSinkConnectorListener implements WebSocketConnectorL
             WebSocketServerSinkConnectorListener.class);
 
     private List<WebSocketConnection> webSocketConnectionList = new CopyOnWriteArrayList<>();
+    private final AtomicBoolean closed = new AtomicBoolean(false);
     private String[] subProtocol = null;
     private int idleTimeout;
 
@@ -56,16 +58,16 @@ public class WebSocketServerSinkConnectorListener implements WebSocketConnectorL
     @Override
     public void onHandshake(WebSocketHandshaker webSocketHandshaker) {
         WebSocketServerHandshakeListener serverHandshakeListener =
-                new WebSocketServerHandshakeListener(webSocketConnectionList);
+                new WebSocketServerHandshakeListener(webSocketConnectionList, closed);
         ServerHandshakeFuture handshake = webSocketHandshaker.handshake(subProtocol, idleTimeout);
         handshake.setHandshakeListener(serverHandshakeListener);
     }
 
     void closeConnections() {
+        closed.set(true);
         for (WebSocketConnection connection : webSocketConnectionList) {
             connection.terminateConnection();
         }
-        webSocketConnectionList.clear();
     }
 
     void send(Object message) {

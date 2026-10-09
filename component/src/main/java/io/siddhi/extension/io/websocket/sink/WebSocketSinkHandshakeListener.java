@@ -34,15 +34,28 @@ public class WebSocketSinkHandshakeListener implements ClientHandshakeListener {
     private AtomicReference<WebSocketConnection> webSocketConnectionAtomicReference = new AtomicReference<>();
     private Semaphore semaphore;
     private volatile Throwable error;
+    private boolean cancelled = false;
 
     public WebSocketSinkHandshakeListener(Semaphore semaphore) {
         this.semaphore = semaphore;
     }
 
     @Override
-    public void onSuccess(WebSocketConnection webSocketConnection, HttpCarbonResponse response) {
-        webSocketConnectionAtomicReference.set(webSocketConnection);
+    public synchronized void onSuccess(WebSocketConnection webSocketConnection, HttpCarbonResponse response) {
+        if (cancelled) {
+            webSocketConnection.terminateConnection();
+        } else {
+            webSocketConnectionAtomicReference.set(webSocketConnection);
+        }
         semaphore.release();
+    }
+
+    public synchronized void cancel() {
+        cancelled = true;
+        WebSocketConnection connection = webSocketConnectionAtomicReference.getAndSet(null);
+        if (connection != null) {
+            connection.terminateConnection();
+        }
     }
 
     @Override
