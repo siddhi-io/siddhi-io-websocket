@@ -26,6 +26,10 @@
             <class name="io.siddhi.extension.io.websocket.source.WebSocketSourceTest" />
             <class name="io.siddhi.extension.io.websocket.sink.WebSocketServerSinkTest" />
             <class name="io.siddhi.extension.io.websocket.source.WebSocketServerSourceTest" />
+            <class name="io.siddhi.extension.io.websocket.WebSocketReconnectTest" />
+            <class name="io.siddhi.extension.io.websocket.WebSocketClientCancelTest" />
+            <class name="io.siddhi.extension.io.websocket.sink.websocketserver.WebSocketSinkServerLateHandshakeTest" />
+            <class name="io.siddhi.extension.io.websocket.source.websocketserver.WebSocketSourceServerLateHandshakeTest" />
         </classes>
     </test>
 </suite>

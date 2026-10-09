@@ -24,6 +24,7 @@ import org.wso2.transport.http.netty.contract.websocket.ServerHandshakeListener;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketConnection;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Future listener for WebSocket handshake.
@@ -31,14 +32,21 @@ import java.util.List;
 
 public class WebSocketServerHandshakeListener implements ServerHandshakeListener {
     private List<WebSocketConnection> webSocketConnectionList;
+    private AtomicBoolean closed;
 
-    WebSocketServerHandshakeListener(List<WebSocketConnection> webSocketConnectionList) {
+    WebSocketServerHandshakeListener(List<WebSocketConnection> webSocketConnectionList, AtomicBoolean closed) {
         this.webSocketConnectionList = webSocketConnectionList;
+        this.closed = closed;
     }
 
     @Override
     public void onSuccess(WebSocketConnection webSocketConnection) {
         webSocketConnectionList.add(webSocketConnection);
+        if (closed.get()) {
+            webSocketConnectionList.remove(webSocketConnection);
+            webSocketConnection.terminateConnection();
+            return;
+        }
         webSocketConnection.startReadingFrames();
     }
 

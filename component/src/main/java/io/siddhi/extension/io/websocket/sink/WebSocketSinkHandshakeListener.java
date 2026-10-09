@@ -19,8 +19,6 @@
 
 package io.siddhi.extension.io.websocket.sink;
 
-import io.siddhi.core.exception.SiddhiAppRuntimeException;
-import io.siddhi.query.api.definition.StreamDefinition;
 import org.wso2.transport.http.netty.contract.websocket.ClientHandshakeListener;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketConnection;
 import org.wso2.transport.http.netty.message.HttpCarbonResponse;
@@ -33,26 +31,41 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 
 public class WebSocketSinkHandshakeListener implements ClientHandshakeListener {
-    private StreamDefinition streamDefinition;
     private AtomicReference<WebSocketConnection> webSocketConnectionAtomicReference = new AtomicReference<>();
     private Semaphore semaphore;
+    private volatile Throwable error;
+    private boolean cancelled = false;
 
-    public WebSocketSinkHandshakeListener(StreamDefinition streamDefinition, Semaphore semaphore) {
-        this.streamDefinition = streamDefinition;
+    public WebSocketSinkHandshakeListener(Semaphore semaphore) {
         this.semaphore = semaphore;
     }
 
     @Override
-    public void onSuccess(WebSocketConnection webSocketConnection, HttpCarbonResponse response) {
-        webSocketConnectionAtomicReference.set(webSocketConnection);
+    public synchronized void onSuccess(WebSocketConnection webSocketConnection, HttpCarbonResponse response) {
+        if (cancelled) {
+            webSocketConnection.terminateConnection();
+        } else {
+            webSocketConnectionAtomicReference.set(webSocketConnection);
+        }
         semaphore.release();
+    }
+
+    public synchronized void cancel() {
+        cancelled = true;
+        WebSocketConnection connection = webSocketConnectionAtomicReference.getAndSet(null);
+        if (connection != null) {
+            connection.terminateConnection();
+        }
     }
 
     @Override
     public void onError(Throwable t, HttpCarbonResponse response) {
+        error = t;
         semaphore.release();
-        throw new SiddhiAppRuntimeException("Error while connecting with the websocket server defined in '"
-                + streamDefinition + "'.", t);
+    }
+
+    public Throwable getError() {
+        return error;
     }
 
     public AtomicReference<WebSocketConnection> getWebSocketConnectionAtomicReference() {

@@ -39,7 +39,6 @@ import io.siddhi.extension.io.websocket.util.WebSocketUtil;
 import io.siddhi.query.api.definition.StreamDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.transport.http.netty.contract.HttpWsConnectorFactory;
 import org.wso2.transport.http.netty.contract.websocket.ClientHandshakeFuture;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketClientConnector;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketClientConnectorConfig;
@@ -135,8 +134,8 @@ public class WebSocketSink extends Sink {
     private String idleTimeoutString;
     private int idleTimeout;
     private WebSocketClientConnectorListener connectorListener;
-    private WebSocketConnection webSocketConnection = null;
-    private Semaphore semaphore = new Semaphore(0);
+    private volatile WebSocketConnection webSocketConnection = null;
+    private DefaultHttpWsConnectorFactory httpConnectorFactory;
     private boolean sslEnabled = false;
     private String tlsstruststorePath;
     private String tlsstruststorePass;
@@ -210,20 +209,25 @@ public class WebSocketSink extends Sink {
     public void publish(Object payload,
                         DynamicOptions dynamicOptions,
                         State state) throws ConnectionUnavailableException {
-        if (webSocketConnection != null) {
-            if (payload instanceof ByteBuffer) {
-                byte[] byteMessage = ((ByteBuffer) payload).array();
-                ByteBuffer binaryMessage = ByteBuffer.wrap(byteMessage);
-                webSocketConnection.pushBinary(binaryMessage);
-            } else {
-                webSocketConnection.pushText(payload.toString());
-            }
+        WebSocketConnection connection = webSocketConnection;
+        if (connection == null || !connection.isOpen()) {
+            throw new ConnectionUnavailableException("The websocket connection to '" + url + "' defined in '"
+                    + streamDefinition + "' is not open.");
+        }
+        if (payload instanceof ByteBuffer) {
+            byte[] byteMessage = ((ByteBuffer) payload).array();
+            ByteBuffer binaryMessage = ByteBuffer.wrap(byteMessage);
+            connection.pushBinary(binaryMessage);
+        } else {
+            connection.pushText(payload.toString());
         }
     }
 
     @Override
     public void connect() throws ConnectionUnavailableException {
-        HttpWsConnectorFactory httpConnectorFactory = new DefaultHttpWsConnectorFactory();
+        if (httpConnectorFactory == null) {
+            httpConnectorFactory = new DefaultHttpWsConnectorFactory();
+        }
         WebSocketClientConnectorConfig configuration = new WebSocketClientConnectorConfig(url);
         if (subProtocol != null) {
             String[] subProtocol1 = WebSocketUtil.getSubProtocol(subProtocol);
@@ -244,28 +248,41 @@ public class WebSocketSink extends Sink {
         WebSocketClientConnector clientConnector = httpConnectorFactory.createWsClientConnector(configuration);
         ClientHandshakeFuture handshakeFuture = clientConnector.connect();
         handshakeFuture.setWebSocketConnectorListener(connectorListener);
-        WebSocketSinkHandshakeListener handshakeListener = new WebSocketSinkHandshakeListener
-                (streamDefinition, semaphore);
+        Semaphore semaphore = new Semaphore(0);
+        WebSocketSinkHandshakeListener handshakeListener = new WebSocketSinkHandshakeListener(semaphore);
         try {
             handshakeFuture.setClientHandshakeListener(handshakeListener);
             semaphore.acquire();
         } catch (InterruptedException e) {
-            log.error("Error occurs while connecting with the server defined in " + streamDefinition, e);
+            handshakeListener.cancel();
+            Thread.currentThread().interrupt();
+            throw new ConnectionUnavailableException("Interrupted while connecting with the websocket server '"
+                    + url + "' defined in '" + streamDefinition + "'.", e);
         }
         AtomicReference<WebSocketConnection> sessionAtomicReference =
                 handshakeListener.getWebSocketConnectionAtomicReference();
-        webSocketConnection = sessionAtomicReference.get();
+        WebSocketConnection connection = sessionAtomicReference.get();
+        if (connection == null) {
+            throw new ConnectionUnavailableException("Error while connecting with the websocket server '" + url
+                    + "' defined in '" + streamDefinition + "'.", handshakeListener.getError());
+        }
+        webSocketConnection = connection;
     }
 
     @Override
     public void disconnect() {
-        if (webSocketConnection != null) {
-            webSocketConnection.terminateConnection();
+        WebSocketConnection connection = webSocketConnection;
+        webSocketConnection = null;
+        if (connection != null) {
+            connection.terminateConnection();
         }
     }
 
     @Override
     public void destroy() {
-        //Not applicable
+        if (httpConnectorFactory != null) {
+            httpConnectorFactory.shutdownNow();
+            httpConnectorFactory = null;
+        }
     }
 }

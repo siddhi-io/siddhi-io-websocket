@@ -87,6 +87,7 @@ class WebSocketServer {
      * Stop the WebSocket server.
      */
     void stop() {
+        serverSinkConnectorListener.closeConnections();
         if (serverConnector != null) {
             serverConnector.stop();
         }

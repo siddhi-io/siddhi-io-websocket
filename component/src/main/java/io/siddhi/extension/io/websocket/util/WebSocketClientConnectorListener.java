@@ -19,6 +19,8 @@
 
 package io.siddhi.extension.io.websocket.util;
 
+import io.siddhi.core.exception.ConnectionUnavailableException;
+import io.siddhi.core.stream.input.source.Source;
 import io.siddhi.core.stream.input.source.SourceEventListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,9 +39,31 @@ public class WebSocketClientConnectorListener implements WebSocketConnectorListe
     private static final Logger log = LoggerFactory.getLogger(WebSocketConnectorListener.class);
 
     private SourceEventListener sourceEventListener = null;
+    private volatile Source.ConnectionCallback connectionCallback = null;
+    private volatile WebSocketConnection currentConnection = null;
 
     public void setSourceEventListener(SourceEventListener eventListener) {
         sourceEventListener = eventListener;
+    }
+
+    public void setConnectionCallback(Source.ConnectionCallback callback) {
+        connectionCallback = callback;
+    }
+
+    public WebSocketConnection getCurrentConnection() {
+        return currentConnection;
+    }
+
+    public void setCurrentConnection(WebSocketConnection connection) {
+        currentConnection = connection;
+    }
+
+    private void notifyConnectionLost(WebSocketConnection connection, Throwable cause) {
+        Source.ConnectionCallback callback = connectionCallback;
+        if (callback != null && connection == currentConnection) {
+            currentConnection = null;
+            callback.onError(new ConnectionUnavailableException("The websocket connection was lost.", cause));
+        }
     }
 
     @Override
@@ -69,16 +93,18 @@ public class WebSocketClientConnectorListener implements WebSocketConnectorListe
 
     @Override
     public void onMessage(WebSocketCloseMessage closeMessage) {
-        //Not Applicable
+        notifyConnectionLost(closeMessage.getWebSocketConnection(), null);
     }
 
     @Override
     public void onClose(WebSocketConnection webSocketConnection) {
+        notifyConnectionLost(webSocketConnection, null);
     }
 
     @Override
     public void onError(WebSocketConnection webSocketConnection, Throwable throwable) {
         log.error("There is an error in the message format.", throwable);
+        notifyConnectionLost(webSocketConnection, throwable);
     }
 
     @Override

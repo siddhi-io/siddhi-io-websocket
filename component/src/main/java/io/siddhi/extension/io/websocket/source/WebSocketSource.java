@@ -36,10 +36,10 @@ import io.siddhi.core.util.transport.OptionHolder;
 import io.siddhi.extension.io.websocket.util.WebSocketClientConnectorListener;
 import io.siddhi.extension.io.websocket.util.WebSocketProperties;
 import io.siddhi.extension.io.websocket.util.WebSocketUtil;
-import org.wso2.transport.http.netty.contract.HttpWsConnectorFactory;
 import org.wso2.transport.http.netty.contract.websocket.ClientHandshakeFuture;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketClientConnector;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketClientConnectorConfig;
+import org.wso2.transport.http.netty.contract.websocket.WebSocketConnection;
 import org.wso2.transport.http.netty.contractimpl.DefaultHttpWsConnectorFactory;
 
 import java.net.URI;
@@ -121,6 +121,7 @@ import java.util.Objects;
 )
 
 public class WebSocketSource extends Source {
+    private DefaultHttpWsConnectorFactory httpConnectorFactory;
     private String url;
     private String subProtocol;
     private String headers;
@@ -195,7 +196,9 @@ public class WebSocketSource extends Source {
 
     @Override
     public void connect(ConnectionCallback connectionCallback, State state) throws ConnectionUnavailableException {
-        HttpWsConnectorFactory httpConnectorFactory = new DefaultHttpWsConnectorFactory();
+        if (httpConnectorFactory == null) {
+            httpConnectorFactory = new DefaultHttpWsConnectorFactory();
+        }
         WebSocketClientConnectorConfig configuration = new WebSocketClientConnectorConfig(url);
         if (subProtocol != null) {
             String[] subProtocol1 = WebSocketUtil.getSubProtocol(subProtocol);
@@ -217,18 +220,38 @@ public class WebSocketSource extends Source {
         ClientHandshakeFuture handshakeFuture = clientConnector.connect();
         handshakeFuture.setWebSocketConnectorListener(connectorListener);
         WebSocketSourceHandshakeListener handshakeListener = new WebSocketSourceHandshakeListener
-                (connectorListener, sourceEventListener);
+                (connectorListener, sourceEventListener, connectionCallback);
         handshakeFuture.setClientHandshakeListener(handshakeListener);
+        try {
+            handshakeListener.awaitHandshake();
+        } catch (InterruptedException e) {
+            handshakeListener.cancel();
+            Thread.currentThread().interrupt();
+            throw new ConnectionUnavailableException("Interrupted while connecting with the websocket server '"
+                    + url + "'.", e);
+        }
+        if (!handshakeListener.isSucceeded()) {
+            throw new ConnectionUnavailableException("Error while connecting with the websocket server '" + url
+                    + "' defined in '" + sourceEventListener + "'.", handshakeListener.getError());
+        }
     }
 
     @Override
     public void disconnect() {
-        //Not applicable
+        connectorListener.setConnectionCallback(null);
+        WebSocketConnection connection = connectorListener.getCurrentConnection();
+        connectorListener.setCurrentConnection(null);
+        if (connection != null) {
+            connection.terminateConnection();
+        }
     }
 
     @Override
     public void destroy() {
-        //Not applicable
+        if (httpConnectorFactory != null) {
+            httpConnectorFactory.shutdownNow();
+            httpConnectorFactory = null;
+        }
     }
 
     @Override
