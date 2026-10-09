@@ -40,6 +40,7 @@ import org.wso2.transport.http.netty.contract.HttpWsConnectorFactory;
 import org.wso2.transport.http.netty.contract.websocket.ClientHandshakeFuture;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketClientConnector;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketClientConnectorConfig;
+import org.wso2.transport.http.netty.contract.websocket.WebSocketConnection;
 import org.wso2.transport.http.netty.contractimpl.DefaultHttpWsConnectorFactory;
 
 import java.net.URI;
@@ -217,13 +218,29 @@ public class WebSocketSource extends Source {
         ClientHandshakeFuture handshakeFuture = clientConnector.connect();
         handshakeFuture.setWebSocketConnectorListener(connectorListener);
         WebSocketSourceHandshakeListener handshakeListener = new WebSocketSourceHandshakeListener
-                (connectorListener, sourceEventListener);
+                (connectorListener, sourceEventListener, connectionCallback);
         handshakeFuture.setClientHandshakeListener(handshakeListener);
+        try {
+            handshakeListener.awaitHandshake();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new ConnectionUnavailableException("Interrupted while connecting with the websocket server '"
+                    + url + "'.", e);
+        }
+        if (!handshakeListener.isSucceeded()) {
+            throw new ConnectionUnavailableException("Error while connecting with the websocket server '" + url
+                    + "' defined in '" + sourceEventListener + "'.", handshakeListener.getError());
+        }
     }
 
     @Override
     public void disconnect() {
-        //Not applicable
+        connectorListener.setConnectionCallback(null);
+        WebSocketConnection connection = connectorListener.getCurrentConnection();
+        connectorListener.setCurrentConnection(null);
+        if (connection != null) {
+            connection.terminateConnection();
+        }
     }
 
     @Override

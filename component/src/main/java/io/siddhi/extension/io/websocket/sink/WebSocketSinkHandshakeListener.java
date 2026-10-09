@@ -19,8 +19,6 @@
 
 package io.siddhi.extension.io.websocket.sink;
 
-import io.siddhi.core.exception.SiddhiAppRuntimeException;
-import io.siddhi.query.api.definition.StreamDefinition;
 import org.wso2.transport.http.netty.contract.websocket.ClientHandshakeListener;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketConnection;
 import org.wso2.transport.http.netty.message.HttpCarbonResponse;
@@ -33,12 +31,11 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 
 public class WebSocketSinkHandshakeListener implements ClientHandshakeListener {
-    private StreamDefinition streamDefinition;
     private AtomicReference<WebSocketConnection> webSocketConnectionAtomicReference = new AtomicReference<>();
     private Semaphore semaphore;
+    private volatile Throwable error;
 
-    public WebSocketSinkHandshakeListener(StreamDefinition streamDefinition, Semaphore semaphore) {
-        this.streamDefinition = streamDefinition;
+    public WebSocketSinkHandshakeListener(Semaphore semaphore) {
         this.semaphore = semaphore;
     }
 
@@ -50,9 +47,12 @@ public class WebSocketSinkHandshakeListener implements ClientHandshakeListener {
 
     @Override
     public void onError(Throwable t, HttpCarbonResponse response) {
+        error = t;
         semaphore.release();
-        throw new SiddhiAppRuntimeException("Error while connecting with the websocket server defined in '"
-                + streamDefinition + "'.", t);
+    }
+
+    public Throwable getError() {
+        return error;
     }
 
     public AtomicReference<WebSocketConnection> getWebSocketConnectionAtomicReference() {

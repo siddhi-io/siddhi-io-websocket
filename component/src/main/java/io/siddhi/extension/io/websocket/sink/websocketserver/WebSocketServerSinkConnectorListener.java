@@ -61,6 +61,11 @@ public class WebSocketServerSinkConnectorListener implements WebSocketConnectorL
         handshake.setHandshakeListener(serverHandshakeListener);
     }
 
+    void closeConnections() {
+        webSocketConnectionList.forEach(WebSocketConnection::terminateConnection);
+        webSocketConnectionList.clear();
+    }
+
     void send(Object message) {
         webSocketConnectionList.forEach(
                 currentWebSocketConnection -> {

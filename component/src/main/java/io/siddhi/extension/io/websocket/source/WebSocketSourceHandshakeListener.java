@@ -19,12 +19,14 @@
 
 package io.siddhi.extension.io.websocket.source;
 
-import io.siddhi.core.exception.SiddhiAppRuntimeException;
+import io.siddhi.core.stream.input.source.Source;
 import io.siddhi.core.stream.input.source.SourceEventListener;
 import io.siddhi.extension.io.websocket.util.WebSocketClientConnectorListener;
 import org.wso2.transport.http.netty.contract.websocket.ClientHandshakeListener;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketConnection;
 import org.wso2.transport.http.netty.message.HttpCarbonResponse;
+
+import java.util.concurrent.CountDownLatch;
 
 /**
  * Future listener for WebSocket handshake.
@@ -33,9 +35,15 @@ import org.wso2.transport.http.netty.message.HttpCarbonResponse;
 public class WebSocketSourceHandshakeListener implements ClientHandshakeListener {
     private SourceEventListener sourceEventListener;
     private WebSocketClientConnectorListener connectorListener;
+    private Source.ConnectionCallback connectionCallback;
+    private final CountDownLatch handshakeCompleted = new CountDownLatch(1);
+    private volatile Throwable error;
+    private volatile boolean succeeded = false;
 
     public WebSocketSourceHandshakeListener (WebSocketClientConnectorListener connectorListener,
-                                            SourceEventListener sourceEventListener) {
+                                            SourceEventListener sourceEventListener,
+                                            Source.ConnectionCallback connectionCallback) {
+        this.connectionCallback = connectionCallback;
         this.connectorListener = connectorListener;
         this.sourceEventListener = sourceEventListener;
     }
@@ -43,11 +51,27 @@ public class WebSocketSourceHandshakeListener implements ClientHandshakeListener
     @Override
     public void onSuccess(WebSocketConnection webSocketConnection, HttpCarbonResponse response) {
         connectorListener.setSourceEventListener(sourceEventListener);
+        connectorListener.setCurrentConnection(webSocketConnection);
+        connectorListener.setConnectionCallback(connectionCallback);
+        succeeded = true;
+        handshakeCompleted.countDown();
     }
 
     @Override
     public void onError(Throwable t, HttpCarbonResponse response) {
-        throw new SiddhiAppRuntimeException("Error while connecting with the websocket server defined in '"
-                + sourceEventListener + "'.", t);
+        error = t;
+        handshakeCompleted.countDown();
+    }
+
+    public void awaitHandshake() throws InterruptedException {
+        handshakeCompleted.await();
+    }
+
+    public boolean isSucceeded() {
+        return succeeded;
+    }
+
+    public Throwable getError() {
+        return error;
     }
 }

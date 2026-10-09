@@ -31,6 +31,9 @@ import org.wso2.transport.http.netty.contract.websocket.WebSocketControlMessage;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketHandshaker;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketTextMessage;
 
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 /**
  * {@code WebSocketServerSourceConnectorListener } Handle the websocket connector listener tasks..
  */
@@ -42,14 +45,20 @@ public class WebSocketServerSourceConnectorListener implements WebSocketConnecto
     private String[] subProtocols = null;
     private int idleTimeout;
     private SourceEventListener sourceEventListener = null;
-    private static WebSocketSourceHandShakeListener webSocketSourceHandShakeListener = new
-            WebSocketSourceHandShakeListener();
+    private final List<WebSocketConnection> webSocketConnectionList = new CopyOnWriteArrayList<>();
+    private final WebSocketSourceHandShakeListener webSocketSourceHandShakeListener =
+            new WebSocketSourceHandShakeListener();
 
     WebSocketServerSourceConnectorListener(String[] subProtocols, int idleTimeout,
                                            SourceEventListener sourceEventListener) {
         this.subProtocols = subProtocols;
         this.idleTimeout = idleTimeout;
         this.sourceEventListener = sourceEventListener;
+    }
+
+    void closeConnections() {
+        webSocketConnectionList.forEach(WebSocketConnection::terminateConnection);
+        webSocketConnectionList.clear();
     }
 
     @Override
@@ -85,12 +94,12 @@ public class WebSocketServerSourceConnectorListener implements WebSocketConnecto
 
     @Override
     public void onClose(WebSocketConnection webSocketConnection) {
-
+        webSocketConnectionList.remove(webSocketConnection);
     }
 
     @Override
     public void onError(WebSocketConnection webSocketConnection, Throwable throwable) {
-        //Not applicable
+        webSocketConnectionList.remove(webSocketConnection);
     }
 
     @Override
@@ -99,10 +108,11 @@ public class WebSocketServerSourceConnectorListener implements WebSocketConnecto
         webSocketConnection.terminateConnection(1001, "Connection timeout");
     }
 
-    private static class WebSocketSourceHandShakeListener implements ServerHandshakeListener {
+    private class WebSocketSourceHandShakeListener implements ServerHandshakeListener {
 
         @Override
         public void onSuccess(WebSocketConnection webSocketConnection) {
+            webSocketConnectionList.add(webSocketConnection);
             webSocketConnection.startReadingFrames();
         }
 
