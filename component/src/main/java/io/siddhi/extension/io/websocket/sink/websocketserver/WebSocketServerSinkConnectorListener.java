@@ -62,7 +62,9 @@ public class WebSocketServerSinkConnectorListener implements WebSocketConnectorL
     }
 
     void closeConnections() {
-        webSocketConnectionList.forEach(WebSocketConnection::terminateConnection);
+        for (WebSocketConnection connection : webSocketConnectionList) {
+            connection.terminateConnection();
+        }
         webSocketConnectionList.clear();
     }
 
